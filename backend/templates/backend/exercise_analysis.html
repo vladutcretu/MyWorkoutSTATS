@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Exercise analysis{% endblock title %}</title>
+
+    <!-- Link to chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <p>Exercise stats</p>
+
+    <form id="exerciseForm">
+        <label for="exerciseSelect">Exercise:</label>
+        <select id="exerciseSelect">
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="graphSelect">Graph:</label>
+        <select id="graphSelect">
+            <option value="{{ workingset.repetitions }}">Repetitions</option>
+            <option value="{{ workingset.weight }}">Weight</option>
+            <option value="{{ workingset.repetitions }} * {{ workingset.weight }}">Volume</option>
+        </select>
+
+        <br>
+
+        <button type="button" onclick="generateChart()">Generate Chart</button>
+    </form>
+
+    <div id="exerciseChart">
+        <!-- Display chart here -->
+    </div>
+</body>
+{% endblock content %}

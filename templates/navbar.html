@@ -1,0 +1,36 @@
+{% load static %}
+
+<header class="header">
+    <div class="header-content">
+
+         <div class="logo">
+            <a href="{% url 'home' %}"> {% comment %}?days_diff=0"{% endcomment %}
+                <img src="{% static 'img/logo.png' %}" width="50" height="50">
+            </a>
+        </div>
+
+        <div class="header-name">
+            {% comment %} <p><a href='{% url "home" %}'>My Workout STATS</a></p> {% endcomment %}
+            <p>My Workout STATS</p>
+        </div>
+
+        <div class="header-status"> 
+            {% if request.user.is_authenticated %}
+                <div class="logged">
+                    Logged in as <a href='{% url "account" %}'>{{ request.user }}</a>
+                </div>
+                <br>
+                <div class="logout">
+                    <a href='{% url "logout" %}'>Logout</a>
+                </div>
+            {% else %}
+                <div class="login">
+                    <a href='{% url "login" %}'>Login</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<hr>
+<br>

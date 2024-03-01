@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}View workout{% endblock title %}</title>
+</head>
+
+<body>
+{% if workout.user == request.user %}
+    <h3> Date: {{ workout.created }} </h3>
+    <h3>Workout name: {{ workout.name }}</h3>
+    <h3>Bodyweight: {% if workout_day.bodyweight  %} {{ workout_day.bodyweight }} kg {% else %} {% endif %}</h3>
+    <h3>Visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
+    <p>Exercises:</p>
+        {% for exercise in workout.exercises.all %}
+            <p><b>{{ forloop.counter }}. {{ exercise.name }}</b></p>
+
+            {% for workingset in workingsets %}
+                {% if workingset.exercise == exercise and workingset.created == workout.created %}
+                    <p>
+                        {% if workingset.weight and workingset.repetitions %}
+                        Weight: {{ workingset.weight }} kg, Reps: {{ workingset.repetitions }}
+                        {% elif workingset.distance and workingset.time %}
+                        Distance: {{ workingset.distance }} meters, Time: {{ workingset.time }} minutes
+                        {% endif %}
+                    </p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    <p><a href='{% url "import_workout" workout.id %}'>Import</a> to current day.</p>
+
+    {% else %}
+        {% if workout.public == "yes" %}
+        <h3>Workout name: {{ workout.name }}</h3>
+        <p>Exercises:
+            {% for exercise in workout.exercises.all %}
+                {{ exercise.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+            <a href='{% url "import_workout" workout.id %}'>Import</a> to current day.
+        </p>
+        {% else %}
+            <p>This workout is not yours and is not public</p>
+        {% endif %}
+{% endif %}
+</body>
+{% endblock content %}

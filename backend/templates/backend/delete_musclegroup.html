@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete muscle group{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>Delete muscle group</h1>
+    <div>
+        <p>
+            Are you sure you want to delete group "{{ musclegroup.name }}"?
+        </p>
+
+        <form method="POST" action="">
+        {% csrf_token %}
+
+        <input type="Submit" value="Confirm" />
+        </form>
+    </div>
+</body>
+{% endblock content %}

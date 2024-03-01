@@ -1,0 +1,29 @@
+/* Home */
+#oneDayBackBtn,
+#currentDayBtn,
+#oneDayLaterBtn {
+    background-color: #224d23;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#oneDayBackBtn:hover,
+#currentDayBtn:hover,
+#oneDayLaterBtn:hover {
+    background-color: #a7d41e;
+}
+
+#create-workout,
+#import-workout,
+#edit-workout,
+#delete-workout {
+    background-color: #bc9508;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}

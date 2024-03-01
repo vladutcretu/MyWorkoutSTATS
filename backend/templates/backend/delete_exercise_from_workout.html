@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete exercise{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>Delete exercise from workout</h1>
+    <div>
+        <p>
+            Are you sure you want to delete exercise "{{ exercise.name }}" from the workout?
+        </p>
+
+        <form method="post" action="">
+        {% csrf_token %}
+                    
+        <input type="submit" value="Delete">
+        </form>
+    </div>
+</body>
+{% endblock content %}

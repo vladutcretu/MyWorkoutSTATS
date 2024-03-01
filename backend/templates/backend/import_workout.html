@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Import workout{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>Import a workout</h1>
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            <button type="submit">Import Workout</button>
+        </form>
+    </div>
+</body>
+{% endblock content %}

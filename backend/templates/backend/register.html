@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Register{% endblock title %}</title>
+</head>
+
+<body>
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            <input type="submit" value="Register" />
+        </form>
+        <p>Already signed up?</p>
+        <a href="{% url 'login' %}">Log In</a>
+
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+{% endblock content %}

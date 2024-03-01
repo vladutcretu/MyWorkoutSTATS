@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Exercises{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>{{ request.user }} exercise list ({{ exercises_count }} in library)</h1>
+
+    <div>
+        <form method="GET" action="{% url "exercises" %}">
+            <input type="text" name="q" placeholder="Search exercise"/>
+        </form>
+    </div>
+
+    <div>
+        <p><a href='{% url "exercises" %}'>All exercises</a></p>
+    </div>
+    
+    <div>
+        <p><a href='{% url "create_exercise" %}'>Create exercise</a></p>
+    </div>
+    
+    <ul>
+        {% for exercise in exercises %}
+            <p>
+                {{exercise.name}} (muscle group: {{exercise.musclegroup.name}}) -- <a href='{% url "delete_exercise" exercise.id %}'>delete exercise</a>
+            </p>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock content %}

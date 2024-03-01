@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}User Account{% endblock title %}</title>
+</head>
+
+<body>
+    <div class="about">
+        <h3>About you</h3>
+        <p>You can see and manage workouts <a href='{% url "workouts" %}'>here</a></p>
+        <p>You can see and manage muscle groups <a href='{% url "musclegroups" %}'>here</a></p>
+        <p>You can see and manage exercises <a href='{% url "exercises" %}'>here</a></p>
+    </div>
+
+    <div class="analysis">
+        <h3>Analysis</h3>
+        <p>See your bodyweight chart <a href='{% url "bodyweight_analysis" %}'>here</a></p>
+        <p>See your exercises chart <a href='{% url "exercise_analysis" %}'>here</a></p>
+        <p>See your exercises records <a href='{% url "exercise_records" %}'>here</a></p>
+    </div>
+
+    <div class="help">
+        <h3>Community</h3>
+        <p>See workouts of other users <a href='{% url "public_workouts" %}'>here</a></p>
+        <p>See about, help and update page: <a href='{% url "about_help" %}'>here</a></p>
+    </div>
+</body>
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Exercise records{% endblock title %}</title>
+</head>
+
+<body>
+    <p>Exercise records</p>
+
+    <form id="exerciseForm">
+        <label for="exerciseSelect">Exercise:</label>
+        <select id="exerciseSelect">
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="recordSelect">Record type:</label>
+        <select id="recordSelect">
+            <option value="repetitions">Repetitions</option>
+            <option value="weight">Weight</option>
+            <option value="volume">Volume</option>
+        </select>
+
+        <br>
+
+        <button type="button" onclick="showRecord()">Show record</button>
+    </form>
+
+    <div id="recordContainer">
+         <!-- Display records here -->
+    </div>
+</body>
+{% endblock content %}

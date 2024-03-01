@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Add exercise{% endblock title %}</title>
+</head>
+
+<body>
+    <div class="add_exercise">
+        <div>
+            <h1>Muscle Groups</h1>
+            <hr>
+
+            <div>
+                <form method="GET" action="{% url "add_exercise" workout.id %}">
+                    <input type="text" name="q" placeholder="Search exercise"/>
+                </form>
+            </div>
+
+            <div>
+                <p><a href='{% url "add_exercise" workout.id %}'>All exercises</a></p>
+            </div>
+            
+            {% for musclegroup in musclegroups %}
+            <div>
+                <p><a href='{% url "add_exercise" workout.id %}?q={{musclegroup.name}}'>{{musclegroup.name}}</a></p>
+            </div>
+            {% endfor %}
+            <p><a href='{% url "create_musclegroup" %}'>New muscle group</a></p>
+        </div>
+
+        <div>
+            {% if user.is_authenticated %}
+                {% if exercises_count > 0 %}
+                    <h1>{{ exercises_count }} exercises that can be added</h1>
+
+                <hr>
+
+                <div>
+                    <p><a href='{% url "create_exercise" %}'>New exercise</a></p>
+                </div>
+
+                {% for exercise in exercises %}
+                    <div>
+                        <p>{{ exercise.name }} -- <a href='{% url "add_exercise_to_workout" exercise.id workout.id %}'>add to current workout</a></p>
+                    </div>
+                {% endfor %}
+
+                {% else %}
+                    <h1>No exercises that can be added</h1>
+                {% endif %}
+
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% include "navbar.html" %}
+<html>
+    <head>
+        <title>Add exercise</title>
+    </head>
+    <body>
+        <h1>Add an exercise to your current workout</h1>
+
+        <h1>Exercise List</h1>
+        <ul>
+        {% for exercise in exercises %}
+            <p>{{ exercise.name }} ({{ exercise.group }}) -- <a href='{% url "add_to_workout" exercise.id %}'>add to current workout</a></p>
+        {% endfor %}
+        </ul>
+    </body>
+</html> {% endcomment %}

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Public workouts{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>Public workouts list</h1>
+    <ul>
+        {% for public_workout in public_workouts %}
+            <p>
+                <a href='{% url "view_workout" public_workout.id %}'>{{ public_workout.name }}</a>
+                (created on {{ public_workout.created }}, updated on {{ public_workout.updated }}
+                by user: {{ public_workout.user }})
+                -- <a href='{% url "import_workout" public_workout.id %}'>import</a>
+            </p>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock content %}

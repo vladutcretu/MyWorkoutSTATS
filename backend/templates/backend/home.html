@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Home{% endblock title %}</title>
+</head>
+
+<body>
+<br>
+<div>
+    {% if user.is_authenticated %}
+        <button id="oneDayBackBtn">Previous Day</button>
+        <button id="currentDayBtn">Current Day</button>
+        <button id="oneDayLaterBtn">Next Day</button>
+    {% endif %}
+</div>
+
+<div class="selected_workout">
+    {% if not user.is_authenticated %}
+        <h2>Welcome to <i>My Workout STATS</i> - a clean, simple and newbie friendly workout tracking app.</h2>
+        
+        <p>Please <a href="{% url 'login' %}">log in</a> to add your workout. If you don't have an account, please <a href="{% url 'register' %}">register</a> to use our features:</p>  
+        <ul>
+            <li>after register, you will have 128 exercises assigned to 8 different muscle groups ready to be added to your workouts</li>
+            <li>you can add and delete exercises and muscle groups</li>
+            <li>you can navigate through days and create an workout for each day</li>
+            <li>you can add (and remove) unlimited exercises to your workout and working sets unlimited for every exercise</li>
+            <li>you can add bodyweight value and personal note for each workout</li>
+            <li>you can make your workout public to be seen by other community members</li>
+            <li>you can import your previous workouts or public workouts</li>
+            <li>you can see see a chart of your bodyweight progress</li>
+        </ul>
+        
+        <p>If you want to read about our app and see our development updates, please see <a href='{% url "about_help" %}'>About & Help</a> page.</p>
+
+    {% else %}
+
+        {% if workouts %}
+        <h1>Workout log for {{ target_date }}.</h1>
+        <ul>
+            {% for workout in workouts %}
+                {% comment %} <p>Date: {{ workout.created }}</p> {% endcomment %}
+                <p>Name: {{ workout.name }}</p>
+                <p>Bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} kg {% else %} Not added {% endif %}</p>
+                <p>Visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</p>
+
+                <p>Exercises -- <a href='{% url "add_exercise" workout.id %}'>add exercises</a></p>
+                {% for exercise in workout.exercises %}
+                <p>{{ forloop.counter }}. {{ exercise.name }} -- {{ exercise.musclegroup.name }} exercise --
+                        <a href='{% url "add_workingset_to_exercise" exercise.id workout.id %}' >add set</a>
+                        <a href='{% url "delete_exercise_from_workout" exercise.id %}'>delete exercise</a>
+                </p>
+                    {% for workingset in exercise.workingsets %}
+                        {% if workingset.workout == workout.id %}
+                        <li> 
+                            {% if workingset.weight and workingset.repetitions %}
+                                Weight: {{ workingset.weight }} kg, Reps: {{ workingset.repetitions }} --
+                            {% elif workingset.distance and workingset.time %}
+                                Distance: {{ workingset.distance }} meters, Time: {{ workingset.time }} minutes --
+                            {% endif %}
+                            <a href='{% url "edit_workingset" workingset.id %}'>edit set</a>
+                            <a href='{% url "delete_workingset_from_exercise" workingset.id %}'>delete set</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+                <p>Notes: {% if workout.note %} {{ workout.note }} {% else %} Not added {% endif %}</p>
+                <a href='{% url "edit_workout" workout.id %}'>Edit workout</a>
+                <a href='{% url "delete_workout" workout.id %}'>Delete workout</a>
+
+                <br><br><br>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <h1>Workout log for {{ target_date }} is empty.</h1>
+            <a href='{% url "create_workout" %}'>Create workout</a>
+            <a href='{% url "workouts" %}'>Import workout</a>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% load static %}
+<script src="{% static 'js/home.js' %}"></script>
+</body>
+{% endblock content %}

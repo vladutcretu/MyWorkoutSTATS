@@ -1,0 +1,110 @@
+/* Navbar */
+.header {
+    background-color: #282A35;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    vertical-align: middle;
+}
+
+.header-name {
+    display: center;
+}
+
+.header-status {
+    display: flex;
+}
+
+.logged,
+.logout,
+.login {
+    margin-left: 10px;
+}    
+
+.header p {
+    font-size: 20px;
+    line-height: 0.6;
+}
+
+.header a {
+    text-decoration: none;
+}
+
+
+/* Footer */
+.footer {
+    background-color: #282A35;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}
+
+.footer p {
+    font-size: 14px;
+    line-height: 0.6;
+}
+
+
+/* General */
+body {
+    background-color: #282A35;
+    font-family: sans-serif;
+    color: white;
+  }
+
+a {
+    text-decoration: none;
+}
+
+
+/* home.html */
+.selected_workout {
+    background-color: #1c1e26;
+    color: white;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+}
+
+
+/* account.html */
+.about {
+    background-color: grey;
+    color: white;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+}
+
+.analysis {
+    background-color: orange;
+    color: white;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+    }
+
+.help {
+    background-color: navy;
+    color: white;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+    }
+
+/* add_exercise.html */
+.add_exercise {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}

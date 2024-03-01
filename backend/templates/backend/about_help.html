@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title> {% block title %}About & Help{% endblock title %}</title>
+</head>
+
+<body>
+<h1>Help Overview</h1>
+    <ul>
+        <li>
+            <strong>Navigation Panel</strong>
+        </li>
+        <li>
+            <strong>Workout</strong>
+            <ul>
+                <li>Start a Workout</li>
+                <li>Edit a Workout</li>
+                <li>Share a Workout</li>
+                <li>Comment a Workout</li>
+                <li>Import a Workout</li>
+                <li>Delete a Workout</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Exercises</strong>
+            <ul>
+                <li>Exercise List
+                    <ul>
+                    <li>Add an Exercise</li>
+                    <li>Exercise Types</li>
+                    <li>Edit an Exercise</li>
+                    <li>Delete an Exercise</li>
+                    <li>Search for an Exercise</li>
+                    </ul>
+                </li>
+                <li>Muscle Group List
+                    <ul>
+                    <li>Add a Muscle Group</li>
+                    <li>Edit Muscle Group</li>
+                    <li>Delete Muscle Group</li>
+                    </ul>
+                </li>
+                <li>Working Sets
+                    <ul>
+                    <li>Create a Set</li>
+                    <li>Edit/Delete a Set</li>
+                    </ul>
+                </li>
+            </ul> 
+        <li>
+            <strong>Progress Tracking</strong>
+                <ul>
+                <li>Training History</li>
+                <li>Bodyweight Graph</li>
+                <li>Progress Graph</li>
+                <li>Personal Records</li>
+                </ul>
+        </li>
+    </ul>
+
+
+<br>
+<h1>Releases</h1>
+    <p>
+        <strong>Version: alpha.v.0.0 - december 2023</strong>
+        <ul>
+            <li>register, login, logout</li>
+            <li>CRUD workout</li>
+            <li>CRUD muscle group</li>
+            <li>CRUD exercise</li>
+            <li>CRUD working set</li>
+            <li>add exercise page</li>
+            <li>search bar and filter for finding exercise easily on add exercise page</li>
+            <li>add exercise to workout, delete exercise from workout</li>
+            <li>when delete an exercise from workout, his added working sets will be deleted aswell</li>
+            <li>add set to exercise, delete set from exercise</li>
+        </ul>
+    </p>
+    <br>
+    <p>
+        <strong>Version: alpha.v.0.1 - january 2024</strong>
+        <ul>
+            <li>account page with workouts, musclegroups, exercise</li>
+            <li>added previous day, current day, next day buttons to navigate through days</li>
+            <li>public workouts: added public workout option, page with all public workouts</li>
+            <li>import workout: user can import other users workouts (if public) and their previous workouts</li>
+        </ul>
+    </p>
+    <br>
+    <p>
+        <strong>Version: alpha.v.0.2 - february 2024</strong>
+        <ul>
+            <li>after each action (create/import workout, add/delete exercise, add/delete set) user will be redirected to home with selected date workout</li>
+            <li>on register, each user will have 8 muscle groups and 128 exercises on their account</li>
+            <li>create muscle group and/or exercise from a public imported workout if user does not have them</li>
+            <li>create model WorkoutExercise to order exercise by their time added in workout</li>
+            <li>added search bar and filter on workouts, exercises pages</li>
+            <li>added bodyweight and notes fields on workout</li>
+            <li>bodyweight chart</li>
+            <li>add andurance type of workingset</li>
+            <li>add design elements</li>
+        </ul>
+    </p>
+    <br>
+    <p>
+        <strong>Current version: beta.v.0.4 - march 2024</strong>
+        <ul>
+            <li>deployed for testing</li>
+        </ul>
+    </p>
+    <br>
+
+<br>
+<h1>Future features</h1>
+    <p>
+        <ul>
+            <li>develop account details and create a user profile: name, surname, age, bio, socials</li>
+            <li>develop community concept</li>
+            <ul>
+                <li>new page to see each public workout</li>
+                <li>on page ofeach workout, users can upvote the workout and can make comments (like twitter)</li>
+                <li>on public workouts page to filter workouts after most recents, most liked, most commented</li>
+                <li>to see profile of other users</p>
+            </ul>
+            <li>develop exercise chart and exercise records</li>
+            <li>export data</li>
+            <li>supersets</li>
+            <li>change password</li>
+        </ul>
+    </p>
+</body>
+{% endblock %}

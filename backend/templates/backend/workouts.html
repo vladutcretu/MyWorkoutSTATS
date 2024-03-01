@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Workouts{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>{{ request.user }}'s workouts list ({{ workouts_count }} logged)</h1>
+
+    <form method="get" action="{% url 'workouts' %}">
+        <label for="filter_by_created_date">Created:</label>
+        <input type="date" name="filter_by_created_date" value="{{ request.GET.filter_by_created_date }}">
+        <br>
+     
+        <label for="filter_by_updated_date">Updated:</label>
+        <input type="date" name="filter_by_updated_date" value="{{ request.GET.filter_by_updated_date }}">
+        <br>
+
+        <label for="filter_by_visibility">Public:</label>
+        <select name="filter_by_visibility">
+           <option value="">All</option>
+           <option value="yes" {% if request.GET.filter_by_visibility == 'yes' %}selected{% endif %}>Yes</option>
+           <option value="no" {% if request.GET.filter_by_visibility == 'no' %}selected{% endif %}>No</option>
+        </select>
+        <br>
+
+        <label for="filter_by_bodyweight">Bodyweight:</label>
+        <input type="text" name="filter_by_bodyweight" value="{{ request.GET.filter_by_bodyweight }}">
+        <br>
+        
+        <button type="submit">Filter</button>
+     </form>
+
+    <div>
+        <form method="GET" action="{% url "workouts" %}">
+            <input type="text" name="q" placeholder="Search workout by name"/>
+        </form>
+    </div>
+
+    <div>
+        <p><a href='{% url "workouts" %}'>All workouts</a></p>
+    </div>
+
+    <ul>
+        {% for workout in workouts %}
+            <p>
+                <a href='{% url "view_workout" workout.id %}'>{{ workout.name }}</a>
+                (created on {{ workout.created }}, updated on {{ workout.updated }})
+                -- <a href='{% url "edit_workout" workout.id %}'>visibility</a> (public now: {{ workout.public }})
+                -- <a href='{% url "import_workout" workout.id %}'>import</a>
+            </p>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock content %}

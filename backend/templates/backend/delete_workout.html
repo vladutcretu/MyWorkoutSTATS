@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete workout{% endblock title %}</title>
+</head>
+
+<body>
+    <h1>Delete a workout</h1>
+    <div>
+        <p>
+            Are you sure you want to delete workout "{{ workout.name }}" (date: {{ workout.created }})?
+        </p>
+
+        <form method="POST" action="">
+        {% csrf_token %}
+
+        <input type="Submit" value="Confirm" />
+        </form>
+    </div>
+</body>
+{% endblock content %}
