@@ -1,0 +1,30 @@
+{% block content %}
+<head>
+    <title>{% block title %}Recover account{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Only a test page, no recovery emails are sent :)</h1>
+    
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <input type="submit" value="Send recovery email" />
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br>
+    <p>You remembered account details? <a href="{% url 'login' %}">Log In</a></p>
+    <p>You don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+</div>
+</body>
+{% endblock content %}
