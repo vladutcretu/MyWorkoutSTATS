@@ -1,0 +1,34 @@
+{% block content %}
+<head>
+    <title>{% block title %}Log In{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <label>Username:</label>
+        <input type="text" name="username" placeholder="Enter username"/><br><br>
+
+        <label>Password:</label>
+        <input type="password" name="password" placeholder="Enter password"/><br><br>
+
+        <input type="submit" value="Log In" /><br><br>
+    </form>
+
+    {% if messages %}
+        <p>Login attempt unsuccessful:</p>
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br>
+    <p>Forget username or password? <a href="">Recover</a></p>
+    <p>Haven't signed up yet? <a href="{% url 'signup' %}">Sign Up</a></p>
+</div>
+</body>
+{% endblock content %}

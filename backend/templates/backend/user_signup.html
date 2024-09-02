@@ -1,0 +1,27 @@
+{% block content %}
+<head>
+    <title>{% block title %}Sign Up{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <input type="submit" value="Register" />
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br>
+    <p>Already signed up? <a href="{% url 'login' %}">Log In</a></p>
+</div>
+</body>
+{% endblock content %}
