@@ -139,3 +139,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles' # collectstatic location
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Use CustomUser model
+AUTH_USER_MODEL = 'backend.CustomUser'
+
+
+# Media (avatars)
+MEDIA_URL = 'profile_pics/'
+
+MEDIA_ROOT = BASE_DIR / 'static/profile_pics'

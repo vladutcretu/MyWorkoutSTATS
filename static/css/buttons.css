@@ -1,27 +1,31 @@
 /* General */
-.addBtn {
-    background-color: #00aa03;
-    color: white;
-    padding: 5px 5px;
+.button {
+    display: inline-block;
+    width: 150px; 
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    border-radius: 5px;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
 }
 
-.deleteBtn {
-    background-color: #b10000;
+.addBtn {
+    background-color: #28a745;
     color: white;
-    padding: 5px 5px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+}
+
+.deleteBtn {
+    background-color: #dc3545;
+    color: white;
 }
 
 .editBtn {
     background-color: #ddad00;
     color: white;
-    padding: 5px 5px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+}
+
+.button:hover {
+    opacity: 0.7;
 }

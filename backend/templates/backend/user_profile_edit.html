@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Edit Profile{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Edit your profile</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <button type="submit" class="button addBtn">Save changes</button>
+    </form>
+
+    <p><a href="{% url 'profile' request.user.id %}" class="button deleteBtn">Back to profile</a></p>
+</div>
+</body>
+{% endblock content %}

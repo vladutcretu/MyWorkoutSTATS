@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}User Profile{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+<center>
+    <h1>{{ user }}'s profile</h1>
+    <div class="profile-avatar">
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" />
+    </div>
+    <p>ID: {{ user.id }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>
+        Name:
+        {% if user.first_name and user.last_name %}
+            {{ user.first_name }} {{ user.last_name }}
+        {% elif user.first_name %}
+            {{ user.first_name }}
+        {% elif user.last_name %}
+            {{ user.last_name }}
+        {% else %}
+            Not added
+        {% endif %}
+    </p>
+    <p>Age: {% if user.age %}{{ user.age }} {% else %} Not added {% endif %}</p>
+    <p>City: {% if user.city %}{{ user.city}} {% else %} Not added {% endif %}</p>
+    <p>Your bio: {% if user.bio %}{{ user.bio }} {% else %} Not added {% endif %}</p>
+    <p>
+        Your instagram:
+    {% if 'instagram.com/' in user.instagram_url %}
+        <a href="{{ user.instagram_url }}">Instagram profile</a>
+    {% else %} Not added {% endif %}
+    </p>
+
+    <br />
+
+    {% if user == request.user %}
+        <p><a href="{% url "edit-profile" %}" class="button editBtn">Edit your profile</a></p>
+    {% else %}
+        <p><button class="button deleteBtn">Report user</button></p>
+    {% endif %}
+</center>
+</div>
+
+{% if user == request.user %}
+<div class="base-body">
+    <center><h1>Account settings</h1></center> 
+
+    <p>
+        See and manage your workouts, muscle groups and exercises.
+    </p>
+
+    <p>
+        See and analyze your bodyweight chart, exercise chart and exercise records
+    </p>
+
+    <p>
+        Account settings: change password
+    </p>
+</div>
+{% endif %}
+
+</body>
+{% endblock content %}

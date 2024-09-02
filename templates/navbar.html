@@ -18,7 +18,7 @@
             {% if request.user.is_authenticated %}
                 <div class="logged">
                     <div>
-                        <a href=""><b>{{ request.user }}'s account</b></a>
+                        <a href="{% url "profile" request.user.id %}"><b>{{ request.user }}'s account</b></a>
                     </div>
                     <div>
                         <a href='{% url "logout" %}'><b>Logout</b></a>

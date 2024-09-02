@@ -10,4 +10,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('signup/', views.user_signup, name='signup'),
     path('recover/', views.user_account_recovery, name='recover'),
+
+    # User profile and account urls
+    path('profile/<int:user_id>/', views.user_profile, name='profile'),
+    path('edit-profile/', views.user_profile_edit, name='edit-profile'),
 ]

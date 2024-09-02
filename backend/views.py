@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.models import User
-
-from .forms import CustomUserRegistrationForm, AccountRecoveryForm
+from .models import CustomUser
+from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm
 
 
 def main(request):
@@ -22,7 +22,7 @@ def user_login(request):
       password = request.POST.get('password')
 
       try: 
-         user = User.objects.get(username=username)
+         user = CustomUser.objects.get(username=username)
       except:
          messages.error(request, "User does not exist")
 
@@ -66,6 +66,7 @@ def user_signup(request):
    }
    return render (request, 'backend/user_signup.html', context)
 
+
 def user_account_recovery(request):
    if request.user.is_authenticated:
       return redirect('main')
@@ -84,3 +85,31 @@ def user_account_recovery(request):
       'form' : form
    }
    return render(request, 'backend/user_recover.html', context)
+
+
+@login_required(login_url='login')
+def user_profile(request, user_id):
+   """View for User Profile page"""
+   user = CustomUser.objects.get(pk=user_id)
+
+   context = {
+      'user': user
+   }
+   return render(request, 'backend/user_profile.html', context)
+
+
+@login_required(login_url='login')
+def user_profile_edit(request):
+   """View to edit user profile informations"""
+   if request.method == 'POST':
+      form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+      if form.is_valid():
+         form.save()
+         return redirect('profile', user_id=request.user.id)
+   else:
+      form = EditProfileForm(instance=request.user)
+   
+   context = {
+      'form': form
+   }
+   return render(request, 'backend/user_profile_edit.html', context)
