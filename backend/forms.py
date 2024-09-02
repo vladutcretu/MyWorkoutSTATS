@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
+
 from .models import CustomUser
 
 
@@ -29,3 +30,10 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['profile_picture', 'first_name', 'last_name', 'age', 'city', 'bio', 'instagram_url']
+
+
+class ChangePasswordForm(SetPasswordForm):
+    """Form used by user to change his account password"""
+    class Meta:
+        model = CustomUser
+        fields = ['new_password1', 'new_password2']

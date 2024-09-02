@@ -13,7 +13,7 @@
         {% csrf_token %}
 
         {{ form.as_p }}
-        <input type="submit" value="Send recovery email" />
+        <input type="submit" class="button addBtn" value="Send recovery email" />
     </form>
 
     {% if messages %}
