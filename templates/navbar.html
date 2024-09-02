@@ -1,0 +1,40 @@
+{% load static %}
+
+<header class="header">
+    <div class="header-content">
+
+        <div class="header-logo-and-name">
+            <div class="header-logo">
+                <a href="{% url 'main' %}">
+                    <img src="{% static 'img/logo.png' %}" width="50" height="50">
+                </a>
+            </div>
+            <div class="header-name">
+                <a href="{% url 'main' %}"><p>My Workout STATS</p></a>
+            </div>
+        </div>
+
+        <div class="header-status"> 
+            {% if request.user.is_authenticated %}
+                <div class="logged">
+                    <div>
+                        <a href=""><b>{{ request.user }}'s account</b></a>
+                    </div>
+                    <div>
+                        <a href='{% url "logout" %}'><b>Logout</b></a>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="login">
+                    <a href='{% url "login" %}'><b>Log In</b></a>
+                </div>
+
+            {% endif %}
+        </div>
+
+    </div>
+</header>
+
+<hr>
+<br>

@@ -1,0 +1,80 @@
+/* Navbar */
+.header {
+    background-color: #282A35;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo-and-name {
+    display: flex;          
+    align-items: center;    
+    gap: 0;                 
+}
+
+.header-status {
+    display: flex;
+}
+
+.logged {
+    display: flex;
+    align-items: center;    
+    gap: 30px;                
+}
+
+.header p {
+    color: white;
+    font-size: 20px;
+    line-height: 0.6;
+}
+
+.header a {
+    text-decoration: none;
+}
+
+.header b {
+    color: white;
+    text-decoration: none;
+}
+
+
+/* Footer */
+.footer {
+    background-color: #282A35;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}
+
+.footer p {
+    font-size: 14px;
+    line-height: 0.6;
+}
+
+
+/* General */
+body {
+    background-color: #282A35;
+    font-family: sans-serif;
+    color: white;
+  }
+
+a {
+    text-decoration: none;
+}
+
+.base-body {
+    background-color: #1c1e26;
+    color: white;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+}

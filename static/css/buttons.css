@@ -1,0 +1,27 @@
+/* General */
+.addBtn {
+    background-color: #00aa03;
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.deleteBtn {
+    background-color: #b10000;
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.editBtn {
+    background-color: #ddad00;
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}

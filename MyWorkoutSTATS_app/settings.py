@@ -24,8 +24,9 @@ SECRET_KEY = 'django-insecure-^*2r6=3hn9)vtr9+n2&inp&efdbm5=k3(l4l6n5$5@@c7n5fcj
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -43,6 +44,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # My middlewares
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # Default middlewares
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +61,9 @@ ROOT_URLCONF = 'MyWorkoutSTATS_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +125,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# When DEBUG = True
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# When DEBUG = False
+STATIC_ROOT = BASE_DIR / 'staticfiles' # collectstatic location
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
