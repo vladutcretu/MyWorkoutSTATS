@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
+from django.forms import ModelForm
 
-from .models import CustomUser
+from .models import CustomUser, MuscleGroup, Exercise
 
 
 class CustomUserRegistrationForm(UserCreationForm):
@@ -37,3 +38,24 @@ class ChangePasswordForm(SetPasswordForm):
     class Meta:
         model = CustomUser
         fields = ['new_password1', 'new_password2']
+
+
+class MuscleGroupForm(ModelForm):
+    """Form used when create muscle group"""
+    class Meta:
+        model = MuscleGroup
+        fields = ['name']
+
+
+class ExerciseForm(ModelForm):
+    """Form used when create exercise"""
+    def __init__(self, user, *args, **kwargs):
+        """Filter the muscle group options for the current user"""
+        super(ExerciseForm, self).__init__(*args, **kwargs)
+        self.fields['musclegroup'].queryset = MuscleGroup.objects.filter(user=user)
+        # Use only the muscle group's self.name, not his full database name
+        self.fields['musclegroup'].label_from_instance = lambda obj: obj.name
+    
+    class Meta:
+        model = Exercise
+        fields = ['name', 'musclegroup']

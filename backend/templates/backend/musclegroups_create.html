@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Create muscle group{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Create / Edit muscle group</h1>
+
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            {{form.as_p}}
+            <input class="button addBtn" type="Submit" value="Submit" />
+        </form>
+
+        <p>
+            <a href="{% url 'musclegroups' %}" class="button backBtn">Go back</a>
+        </p>
+    </div>
+</div>
+</body>
+{% endblock content %}

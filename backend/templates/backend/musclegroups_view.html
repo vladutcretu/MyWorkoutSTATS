@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Muscle groups{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>{{ request.user }}'s muscle group list ({{ musclegroups_count }} body parts)</h1>
+
+    <div>
+        <p>
+            <a href='{% url "create-musclegroup" %}' class="button addBtn">Create muscle group</a>
+            </p>
+    </div>
+
+    <ul>
+        {% for musclegroup in musclegroups %}
+            <p>
+                Muscle Group name: {{ musclegroup.name }}
+                <a href='{% url "edit-musclegroup" musclegroup.id %}' class="button editBtn">Edit muscle group</button></a>
+                <a href='{% url "delete-musclegroup" musclegroup.id %}' class="button deleteBtn">Delete muscle group</button></a>
+            </p>
+
+        {% endfor %}
+    </ul>
+</div>
+</body>
+{% endblock content %}

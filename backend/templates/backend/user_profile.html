@@ -50,16 +50,20 @@
 <div class="base-body">
     <center><h1>Account settings</h1></center> 
 
+    <h3>See and manage your:</h3>
     <p>
-        See and manage your workouts, muscle groups and exercises.
+        workouts<br /><br />
+        <a href='{% url "musclegroups" %}' class="button editBtn">muscle groups</a><br /><br />
+        <a href='{% url "exercises" %}' class="button editBtn">exercises</a><br /><br />
     </p>
 
     <p>
         See and analyze your bodyweight chart, exercise chart and exercise records
     </p>
 
-    <p>
-        Account settings: <a href="{% url "change-password" %}" class="button editBtn">Change password</a>
+    <h3>Account settings:</h3>
+    </p>
+        <a href="{% url "change-password" %}" class="button editBtn">Change password</a>
     </p>
 </div>
 {% endif %}

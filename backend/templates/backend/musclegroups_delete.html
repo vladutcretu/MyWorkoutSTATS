@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete muscle group{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Delete a muscle group</h1>
+
+    <div>
+        <p>
+            Are you sure you want to delete muscle group "{{ musclegroup.name }}" (all associated exercises will also be deleted)?
+        </p>
+
+        <form method="POST" action="">
+        {% csrf_token %}
+
+        <input class="button deleteBtn" type="Submit" value="Confirm" />
+        </form>
+
+        <p>
+            <a href="{% url 'musclegroups' %}" class="button backBtn">Go back</a>
+        </p>
+    </div>
+</div>
+</body>
+{% endblock content %}

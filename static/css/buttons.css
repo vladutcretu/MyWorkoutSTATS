@@ -26,6 +26,12 @@
     color: white;
 }
 
+.backBtn {
+    background-color: #ccc;
+    color: black;
+}
+
+
 .button:hover {
     opacity: 0.7;
 }
