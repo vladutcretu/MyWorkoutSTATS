@@ -35,4 +35,9 @@ urlpatterns = [
     path('workouts/edit/<int:workout_id>/', views.edit_workout, name='edit-workout'),
     path('workouts/delete/<int:workout_id>/', views.delete_workout, name='delete-workout'),
     path('workouts/view/<int:workout_id>/', views.view_private_workout, name='view-private-workout'),
+
+    # Exercise to Workout urls
+    path('workout/<int:workout_id>/select-exercise/', views.select_exercise, name='select-exercise'),
+    path('add-exercise-to-workout/<int:exercise_id>/<int:workout_id>/', views.add_exercise_to_workout, name='add-exercise-to-workout'),
+    path('remove-exercise-from-workout/<int:exercise_id>/', views.remove_exercise_from_workout, name='remove-exercise-from-workout')
 ]

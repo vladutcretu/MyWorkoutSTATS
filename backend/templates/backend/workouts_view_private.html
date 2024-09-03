@@ -13,6 +13,15 @@
     <h3>Bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} kg {% else %} Not added {% endif %}</h3>
     <h3>Visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
     <h3>Exercises:</h3>
+    {% for exercise in workout.exercises.all %}
+        <p>
+            {{ forloop.counter }}. {{ exercise.name }}
+            <a href='{% url "remove-exercise-from-workout" exercise.id %}' class="button deleteBtn">Remove exercise</a>
+        </p>
+    {% endfor %}
+
+
+    <p><a href='{% url "select-exercise" workout.id %}' class="button addBtn">Add exercise</a></p>
 {% else %}
     <p>This workout is not yours and is not public</p>
 {% endif %}

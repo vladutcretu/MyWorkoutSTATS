@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Select exercise{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+<div class="select-exercise">
+    <div>
+        <h2>Muscle Groups</h2>
+        <hr>
+
+        <div>
+            <form method="GET" action="{% url "select-exercise" workout.id %}">
+                <input type="text" name="q" placeholder="Search exercise"/>
+
+            <button class="button editBtn" type="submit">Search</button>
+            </form>
+        </div>
+
+        <br />
+
+        <div>
+            <p><a href='{% url "select-exercise" workout.id %}' class="button editBtn">All exercises</a></p>
+        </div>
+        
+        {% for musclegroup in musclegroups %}
+        <div>
+            <p><a href='{% url "select-exercise" workout.id %}?q={{musclegroup.name}}' class="button editBtn">{{ musclegroup.name }}</a></p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {% if user.is_authenticated %}
+            {% if exercises_count > 0 %}
+                <h2>{{ exercises_count }} exercises available to be added to the workout {{ workout.name }} ({{ workout.created }})</h2>
+            <hr>
+
+            {% for exercise in exercises %}
+                <div>
+                    <p>{{ exercise.name }} <a href='{% url "add-exercise-to-workout" exercise.id workout.id %}' class="button addBtn">Add to workout</a></p>
+                </div> 
+            {% endfor %}
+
+            {% else %}
+                <h2>No exercises that can be added</h2>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+</div>
+</body>
+{% endblock content %}

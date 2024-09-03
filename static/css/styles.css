@@ -99,3 +99,10 @@ a {
     object-fit: cover;
     border-radius: 50%;
 }
+
+
+/* select_exercise.html */
+.select-exercise {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
