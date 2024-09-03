@@ -28,4 +28,11 @@ urlpatterns = [
     path('exercises/create', views.create_exercises, name='create-exercise'),
     path('exercises/edit/<int:exercise_id>/', views.edit_exercises, name='edit-exercise'),
     path('exercises/delete/<int:exercise_id>/', views.delete_exercises, name='delete-exercise'),
+
+    # Workout urls
+    path('workouts/', views.view_workouts, name='workouts'),
+    path('workouts/create/', views.create_workouts, name='create-workout'),
+    path('workouts/edit/<int:workout_id>/', views.edit_workout, name='edit-workout'),
+    path('workouts/delete/<int:workout_id>/', views.delete_workout, name='delete-workout'),
+    path('workouts/view/<int:workout_id>/', views.view_private_workout, name='view-private-workout'),
 ]

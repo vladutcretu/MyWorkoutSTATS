@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from .models import CustomUser, MuscleGroup, Exercise
-from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm, MuscleGroupForm, ExerciseForm
+from .models import CustomUser, MuscleGroup, Exercise, Workout
+from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm
+from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm
 
 
 def main(request):
@@ -279,3 +280,112 @@ def delete_exercises(request, exercise_id):
       'exercise': exercise
    }
    return render(request, 'backend/exercises_delete.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Exercises VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def view_workouts(request):
+   """View used by user to see all his workouts, with search function by workout name or filter function to find a specific one(s)"""
+   workouts = Workout.objects.filter(user=request.user)
+   workouts_count = workouts.count()
+
+   if request.user.is_authenticated:
+      q = request.GET.get('q', '')
+      workouts = Workout.objects.filter(
+         Q(name__icontains = q),
+         user=request.user
+      )
+
+      filter_by_created_date = request.GET.get('filter_by_created_date', '')
+      if filter_by_created_date:
+         workouts = workouts.filter(created=filter_by_created_date)
+
+      filter_by_updated_date = request.GET.get('filter_by_updated_date', '')
+      if filter_by_updated_date:
+         workouts = workouts.filter(updated=filter_by_updated_date)
+
+      filter_by_visibility = request.GET.get('filter_by_visibility', '')
+      if filter_by_visibility:
+         workouts = workouts.filter(public=filter_by_visibility)
+
+      filter_by_bodyweight = request.GET.get('filter_by_bodyweight', '')
+      if filter_by_bodyweight.isnumeric():
+         # For integer values will be displayed results with floats number but integer part equal to filtered value
+         if filter_by_bodyweight.isdigit():
+            workouts = workouts.filter(bodyweight__icontains=int(filter_by_bodyweight))
+         else:
+            workouts = workouts.filter(bodyweight=filter_by_bodyweight)
+
+      workouts_count = workouts.count()
+   else:
+      workouts = []
+
+   context = {
+      'workouts': workouts,
+      'workouts_count': workouts_count
+   }
+
+   return render(request, 'backend/workouts_view.html', context)
+
+
+@login_required(login_url='login')
+def create_workouts(request):
+   """View used to create workout"""
+   if request.method == "POST":
+      form = WorkoutForm(request.POST)
+      if form.is_valid():
+         workout = form.save(commit=False)
+         workout.user = request.user
+         workout.save()
+         return redirect('workouts')
+   else:
+      form = WorkoutForm()
+
+   context = {
+      'form': form
+   }
+   return render(request, 'backend/workouts_create.html', context)
+
+
+@login_required(login_url='login')
+def edit_workout(request, workout_id):
+   """View used to edit fields from existing workout"""
+   workout = Workout.objects.get(pk=workout_id, user=request.user)
+   form = WorkoutForm(instance=workout)
+
+   if request.method == "POST":
+      form = WorkoutForm(request.POST, instance=workout)
+      if form.is_valid():
+         form.save()
+         return redirect('workouts')
+      
+   context = {
+      'form': form
+   }
+   return render(request, 'backend/workouts_create.html', context)
+
+
+@login_required(login_url='login')
+def delete_workout(request, workout_id):
+   """View used to delete existing workout"""
+   workout = get_object_or_404(Workout, pk=workout_id, user=request.user)
+
+   if request.method == "POST":
+      workout.delete()
+      return redirect('workouts')
+   
+   context = {
+      'workout': workout
+   }
+   return render(request, 'backend/workouts_delete.html', context)
+
+
+@login_required(login_url='login')
+def view_private_workout(request, workout_id):
+   """View used by user to see a specific owned workout"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+
+   context = {
+      'workout': workout,
+   }
+   return render(request, 'backend/workouts_view_private.html', context)

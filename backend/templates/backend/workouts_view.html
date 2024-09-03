@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Workouts{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>{{ request.user }}'s workouts list ({{ workouts_count }} logged)</h1>
+
+    <form method="get" action="{% url 'workouts' %}">
+        <label for="filter_by_created_date">Created:</label>
+        <input type="date" name="filter_by_created_date" value="{{ request.GET.filter_by_created_date }}">
+        <br>
+     
+        <label for="filter_by_updated_date">Updated:</label>
+        <input type="date" name="filter_by_updated_date" value="{{ request.GET.filter_by_updated_date }}">
+        <br>
+
+        <label for="filter_by_visibility">Public:</label>
+        <select name="filter_by_visibility">
+           <option value="">All</option>
+           <option value="yes" {% if request.GET.filter_by_visibility == 'yes' %}selected{% endif %}>Yes</option>
+           <option value="no" {% if request.GET.filter_by_visibility == 'no' %}selected{% endif %}>No</option>
+        </select>
+        <br>
+
+        <label for="filter_by_bodyweight">Bodyweight:</label>
+        <input type="text" name="filter_by_bodyweight" value="{{ request.GET.filter_by_bodyweight }}">
+        <br>
+        
+        <button class="button editBtn" type="submit">Filter</button>
+    </form>
+    
+    <br>
+
+    <div>
+        <form method="GET" action="{% url "workouts" %}">
+            <input type="text" name="q" placeholder="Search workout by name"/>
+
+        <button class="button editBtn" type="submit">Search</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div>
+        <p><a href='{% url "workouts" %}' class="button editBtn">All workouts</a></p>
+    </div>
+
+    <div>
+        <p><a href='{% url "create-workout" %}' class="button addBtn">Create workout</a></p>
+    </div>
+
+    <ul>
+        {% for workout in workouts %}
+            <p>
+                <a href='{% url "view-private-workout" workout.id %}'>{{ workout.name }}</a>
+                (created on {{ workout.created }}, updated on {{ workout.updated }})
+                -- public: {{ workout.public }}
+                <a href='{% url "edit-workout" workout.id %}' class="button editBtn">Edit workout</a>
+                <a href='{% url "delete-workout" workout.id %}' class="button deleteBtn">Delete workout</a>
+            </p>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+{% endblock content %}

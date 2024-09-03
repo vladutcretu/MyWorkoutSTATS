@@ -36,3 +36,39 @@ class Exercise(models.Model):
 
     def __str__(self):
         return f"{self.musclegroup} - Exercise: {self.name}"
+    
+
+class Workout(models.Model):
+    """Model for Workouts"""
+    PUBLIC_CHOICES = [
+        ("yes", "Yes"),
+        ("no", "No"),
+    ]
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+    exercises = models.ManyToManyField(Exercise, through='WorkoutExercise', related_name='workouts', blank=True)
+    bodyweight = models.FloatField(null=True, blank=True)
+    public = models.CharField(max_length=3, choices=PUBLIC_CHOICES, default="no")
+    note = models.TextField(max_length=100, null=True, blank=True)
+    updated = models.DateField(auto_now=True)
+    created = models.DateField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __str__(self):
+        return f"Owner: {self.user} - Workout: {self.name} - Date: {self.created}"
+    
+
+class WorkoutExercise(models.Model):
+    """Model to assign an exercise to a specific workout"""
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ['workout']
+    
+    def __str__(self):
+        return f"Exercise #{self.order} - {self.workout}"

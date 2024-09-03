@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.forms import ModelForm
 
-from .models import CustomUser, MuscleGroup, Exercise
+from .models import CustomUser, MuscleGroup, Exercise, Workout
 
 
 class CustomUserRegistrationForm(UserCreationForm):
@@ -41,14 +41,14 @@ class ChangePasswordForm(SetPasswordForm):
 
 
 class MuscleGroupForm(ModelForm):
-    """Form used when create muscle group"""
+    """Form used when create / edit muscle group"""
     class Meta:
         model = MuscleGroup
         fields = ['name']
 
 
 class ExerciseForm(ModelForm):
-    """Form used when create exercise"""
+    """Form used when create / edit exercise"""
     def __init__(self, user, *args, **kwargs):
         """Filter the muscle group options for the current user"""
         super(ExerciseForm, self).__init__(*args, **kwargs)
@@ -59,3 +59,10 @@ class ExerciseForm(ModelForm):
     class Meta:
         model = Exercise
         fields = ['name', 'musclegroup']
+
+
+class WorkoutForm(ModelForm):
+    """Form used when create / edit workout"""
+    class Meta:
+        model = Workout
+        fields = ['name', 'bodyweight', 'public', 'note']

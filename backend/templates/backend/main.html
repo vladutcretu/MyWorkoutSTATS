@@ -9,14 +9,13 @@
 <div class="base-body">
 {% if not user.is_authenticated %}
     <h2>Welcome to <i>My Workout STATS</i> - a clean, simple and newbie friendly workout tracking app.</h2>
-        
     <p>Please <a href="{% url 'login' %}"><strong>log in</strong></a> to add your workout. If you don't have an account, please <a href="{% url 'signup' %}"><strong>sign up</strong></a> to use our features.</p>  
 
 {% else %}
     <h2>You are logged in using username: {{ request.user }}.</h2>
-
     <p>You can <a href="{% url 'logout' %}"><strong>log out</strong></a> here.</p>
 
 {% endif %}
 </div>
+</body>
 {% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}View private workout{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+{% if workout.user == request.user %}
+    <h3>Date: {{ workout.created }}</h3>
+    <h3>Workout name: {{ workout.name }}</h3>
+    <h3>Bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} kg {% else %} Not added {% endif %}</h3>
+    <h3>Visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
+    <h3>Exercises:</h3>
+{% else %}
+    <p>This workout is not yours and is not public</p>
+{% endif %}
+
+<p>
+    <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
+</p>
+</div>
+</body>
+{% endblock content %}
