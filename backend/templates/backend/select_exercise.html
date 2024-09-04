@@ -41,7 +41,7 @@
 
             {% for exercise in exercises %}
                 <div>
-                    <p>{{ exercise.name }} <a href='{% url "add-exercise-to-workout" exercise.id workout.id %}' class="button addBtn">Add to workout</a></p>
+                    <p>{{ exercise.name }} <a href='{% url "add-exercise" exercise.id workout.id %}' class="button addBtn">Add to workout</a></p>
                 </div> 
             {% endfor %}
 

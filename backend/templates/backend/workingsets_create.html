@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Add working set{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Add working set to exercise</h1>
+
+    <div>
+        <button class="button editBtn" onclick="showForm('weight')">Weight type</button>
+        <button class="button editBtn" onclick="showForm('endurance')">Endurance type</button>
+    </div>
+    <br>
+
+    <form method="post" action="">
+
+        {% csrf_token %}
+
+        <div id="weightForm">
+            <label for="weight">Weight:</label>
+            <input type="text" name="weight" id="weight" required>
+            <br>
+            <label for="repetitions">Repetitions:</label>
+            <input type="number" name="repetitions" id="repetitions" required>
+        </div>
+
+        <div id="enduranceForm" style="display:none;">
+            <label for="distance">Distance:</label>
+            <input type="number" name="distance" id="distance" required>
+            <br>
+            <label for="time">Time:</label>
+            <input type="text" name="time" id="time" required>
+        </div>
+        
+        <br>
+        <input class="button addBtn" type="button" value="Add set" onclick="prepareForm()">
+    </form>
+</div>
+
+{% load static %}
+<script src="{% static 'js/script_workingsets_create.js' %}"></script>
+</body>
+{% endblock content %}

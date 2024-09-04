@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.forms import ModelForm
 
-from .models import CustomUser, MuscleGroup, Exercise, Workout
+from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkingSet
 
 
 class CustomUserRegistrationForm(UserCreationForm):
@@ -66,3 +66,18 @@ class WorkoutForm(ModelForm):
     class Meta:
         model = Workout
         fields = ['name', 'bodyweight', 'public', 'note']
+
+
+class WorkingSetForm(forms.ModelForm):
+    """Form used when create / edit working set"""
+    def __init__(self, *args, **kwargs):
+        # Exclude fields with None values only when editing
+        super(WorkingSetForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            fields_to_exclude = [field for field in self.fields if getattr(self.instance, field) is None]
+            for field in fields_to_exclude:
+                self.fields.pop(field)
+    
+    class Meta:
+        model = WorkingSet
+        fields = ['weight', 'repetitions', 'distance', 'time']

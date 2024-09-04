@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete working set{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Delete a working set</h1>
+
+    <div>
+        <p>
+            Are you sure you want to delete this working set
+                {% if workingset.repetitions and workingset.weight %}
+                    (Weight: {{ workingset.weight }} kg, Reps: {{ workingset.repetitions }})
+                {% else %}
+                    (Distance: {{ workingset.distance }} meters, Time: {{ workingset.time }} minutes)
+                {% endif %}
+            from the workout?
+        </p>
+
+        <form method="post" action="">
+        {% csrf_token %}
+                
+        <input class="button deleteBtn" type="submit" value="Submit">
+        </form>
+
+        <p>
+            <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
+        </p>
+    </div>
+</div>
+</body>
+{% endblock content %}

@@ -72,3 +72,19 @@ class WorkoutExercise(models.Model):
     
     def __str__(self):
         return f"Exercise #{self.order} - {self.workout}"
+    
+
+class WorkingSet(models.Model):
+    """Model for Working Sets"""
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE, null=True, blank=True)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='workingsets')
+    weight = models.FloatField(null=True, blank=True)
+    repetitions = models.IntegerField(null=True, blank=True)
+    distance = models.IntegerField(null=True, blank=True)
+    time = models.FloatField(null=True, blank=True)
+    updated = models.DateField(auto_now=True)
+    created = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.exercise} - Set: {self.weight} weight, {self.repetitions} reps | {self.distance} meters, {self.time} minutes"

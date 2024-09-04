@@ -38,6 +38,11 @@ urlpatterns = [
 
     # Exercise to Workout urls
     path('workout/<int:workout_id>/select-exercise/', views.select_exercise, name='select-exercise'),
-    path('add-exercise-to-workout/<int:exercise_id>/<int:workout_id>/', views.add_exercise_to_workout, name='add-exercise-to-workout'),
-    path('remove-exercise-from-workout/<int:exercise_id>/', views.remove_exercise_from_workout, name='remove-exercise-from-workout')
+    path('add-exercise/<int:exercise_id>/<int:workout_id>/', views.add_exercise_to_workout, name='add-exercise'),
+    path('remove-exercise/<int:exercise_id>/', views.remove_exercise_from_workout, name='remove-exercise'),
+
+    # Working sets urls
+    path('create-set/<int:exercise_id>/<int:workout_id>/', views.create_workingsets, name='create-workingset'),
+    path('edit-set/<int:workingset_id>/', views.edit_workingsets, name='edit-workingset'),
+    path('delete-set/<int:workingset_id>/', views.delete_workingsets, name='delete-workingset'),
 ]

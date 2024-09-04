@@ -4,9 +4,11 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise
+from datetime import date
+
+from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet
 from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm
-from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm
+from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm
 
 
 def main(request):
@@ -384,9 +386,11 @@ def delete_workout(request, workout_id):
 def view_private_workout(request, workout_id):
    """View used by user to see a specific owned workout"""
    workout = get_object_or_404(Workout, pk=workout_id)
+   workingsets = WorkingSet.objects.filter(user=request.user).order_by('id')
 
    context = {
       'workout': workout,
+      'workingsets': workingsets
    }
    return render(request, 'backend/workouts_view_private.html', context)
 
@@ -455,3 +459,69 @@ def remove_exercise_from_workout(request, exercise_id):
       'exercise': exercise
    }
    return render(request, 'backend/select_exercise_remove.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # WorkingSets VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def create_workingsets(request, exercise_id, workout_id):
+   """View used to add working set to an existing exercise in a workout"""
+   exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
+   workout = Workout.objects.get(pk=workout_id, user=request.user)
+
+   if request.method == "POST":
+      repetitions = request.POST.get('repetitions')
+      weight = request.POST.get('weight')
+      distance = request.POST.get('distance')
+      time = request.POST.get('time')
+
+      new_set = WorkingSet.objects.create(
+         user=request.user,
+         workout=workout,
+         exercise=exercise,
+         repetitions=repetitions if repetitions else None,
+         weight=weight if weight else None,
+         distance=distance if distance else None,
+         time=time if time else None,
+         created=date.today(),
+      )
+
+      return redirect('workouts')
+
+   context = {
+      'exercise': exercise,
+      'workout': workout
+   }
+   return render(request, 'backend/workingsets_create.html', context)
+
+
+@login_required(login_url='login')
+def edit_workingsets(request, workingset_id):
+    """View used to edit values of existing working set"""
+    workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
+    form = WorkingSetForm(instance=workingset)
+
+    if request.method == "POST":
+        form = WorkingSetForm(request.POST, instance=workingset)
+        if form.is_valid():
+            form.save()
+            return redirect('workouts')
+
+    context = {
+        'form': form
+    }
+    return render(request, 'backend/workingsets_edit.html', context)
+
+
+@login_required(login_url='login')
+def delete_workingsets(request, workingset_id):
+   """View used to delete working set from an existing exercise in a workout"""
+   workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
+
+   if request.method == "POST":
+         workingset.delete()
+         return redirect('workouts')
+
+   context = {
+      'workingset': workingset
+   }
+   return render(request, 'backend/workingsets_delete.html', context)
