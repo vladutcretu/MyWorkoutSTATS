@@ -20,10 +20,44 @@
     {% include "navbar.html" %}
 
     {% block content %}
-    
-    
+
+
     {% endblock content %}
 
     {% include "footer.html" %}
+
+<div id="cookieConsent" style="display: none;">
+    <div class="cookie-container">
+        <p>We use cookies so users can perform actions on our site. By continuing to use our website you consent to the use of cookies.</p>
+        <button id="acceptCookiesBtn">Accept</button>
+    </div>
+</div>
+
+<script>
+// Function to check if the cookie consent has been given
+function hasCookieConsent() {
+    return document.cookie.split(';').some((item) => item.trim().startsWith('cookieConsent='));
+}
+
+// Function to show the cookie consent message
+function showCookieConsent() {
+    if (!hasCookieConsent()) {
+        document.getElementById('cookieConsent').style.display = 'block';
+    }
+}
+
+// Function to accept cookies and hide the message
+function acceptCookies() {
+    document.cookie = "cookieConsent=true; path=/; max-age=" + 60 * 60 * 24 * 365; // 1 year
+    document.getElementById('cookieConsent').style.display = 'none';
+}
+
+// Add event listener for the "Accept" button
+document.getElementById('acceptCookiesBtn').addEventListener('click', acceptCookies);
+
+// Show the cookie consent message on page load
+window.onload = showCookieConsent;
+</script>
+
 </body>
 </html>

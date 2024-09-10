@@ -1,3 +1,35 @@
+/* Cookies */
+.cookie-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #1c1e26;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.cookie-container p {
+    display: inline-block;
+    margin: 0;
+    padding-right: 10px;
+}
+
+.cookie-container button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.cookie-container button:hover {
+    background-color: #45a049;
+}
+
+
 /* Navbar */
 .header {
     background-color: #282A35;

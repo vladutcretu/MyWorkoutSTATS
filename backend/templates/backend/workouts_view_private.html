@@ -10,43 +10,37 @@
 {% if workout.user == request.user %}
     <h3>Date: {{ workout.created }}</h3>
     <h3>Workout name: {{ workout.name }}</h3>
-    <h3>Bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} {% else %} Not added {% endif %}</h3>
-    <h3>Notes: {% if workout.note  %} {{ workout.note }} {% else %} Not added {% endif %}</h3>
-    <h3>Visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
-    <h3>Exercises:</h3>
-    {% for exercise in workout.exercises.all %}
-        <p>
-            Exercise #{{ forloop.counter }}: {{ exercise.name }}
-            <a href='{% url "create-workingset" exercise.id workout.id %}' class="button addBtn">Add set</a>
-            <a href='{% url "remove-exercise" exercise.id %}' class="button deleteBtn">Remove exercise</a>
-        </p>
+    <h3>My bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} {% else %} Not added {% endif %}</h3>
+    <h3>My notes: {% if workout.note %} {{ workout.note }} {% else %} Not added {% endif %}</h3>
+    <h3>Workout visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
 
-        {% for workingset in workingsets %}
-            {% if workingset.exercise == exercise %}
-                <ul>
+    <br />
+    <h3>Exercises:</h3>
+
+    {% for exercise in workout.exercises.all %}
+        <p><b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b> -- muscle group: {{ exercise.musclegroup.name }}:</p>
+
+        <ol type="1">
+            {% for workingset in workingsets %}
+                {% if workingset.exercise == exercise and workingset.created == workout.created %}
                     <li>
                         {% if workingset.weight and workingset.repetitions %}
                             Weight: {{ workingset.weight }}, Reps: {{ workingset.repetitions }}
                         {% elif workingset.distance and workingset.time %}
                             Distance: {{ workingset.distance }}, Time: {{ workingset.time }}
                         {% endif %}
-                        <a href='{% url "edit-workingset" workingset.id %}' class="button editBtn">Edit set</a>
-                        <a href='{% url "delete-workingset" workingset.id %}' class="button deleteBtn">Delete set</a>
                     </li>
-                </ul>
-            {% endif %}
-        {% endfor %}
-
+                {% endif %}
+            {% endfor %}
+        </ol>
     {% endfor %}
 
-    <p><a href='{% url "select-exercise" workout.id %}' class="button addBtn">Add exercise</a></p>
-{% else %}
-    <p>This workout is not yours and is not public</p>
-{% endif %}
-
-<p>
+    <a href='' class="button addBtn">Import workout</a>
     <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
-</p>
+
+{% else %}
+    <p>This workout is not yours and is not public.</p>
+{% endif %}
 </div>
 </body>
 {% endblock content %}

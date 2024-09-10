@@ -6,16 +6,80 @@
 </head>
 
 <body>
+<div>
+    <center>
+    {% if user.is_authenticated %}
+        <button id="oneDayBackBtn">Previous Day</button>
+        <button id="currentDayBtn">Current Day</button>
+        <button id="oneDayLaterBtn">Next Day</button>
+    {% endif %}
+    </center>
+</div>
+
 <div class="base-body">
 {% if not user.is_authenticated %}
     <h2>Welcome to <i>My Workout STATS</i> - a clean, simple and newbie friendly workout tracking app.</h2>
     <p>Please <a href="{% url 'login' %}"><strong>log in</strong></a> to add your workout. If you don't have an account, please <a href="{% url 'signup' %}"><strong>sign up</strong></a> to use our features.</p>  
 
 {% else %}
-    <h2>You are logged in using username: {{ request.user }}.</h2>
-    <p>You can <a href="{% url 'logout' %}"><strong>log out</strong></a> here.</p>
+    {% if workouts %}
+    <h1><center>Workout log for {{ target_date }}.</center></h1>
+    <br />
+        {% for workout in workouts %}
+            <h3>Workout name: {{ workout.name }}</h3>
+            <h3>My bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} {% else %} Not added {% endif %}</h3>
+            <h3>My notes: {% if workout.note %} {{ workout.note }} {% else %} Not added {% endif %}</h3>
+            <h3>Workout visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
 
+            <br />
+            <h3>Exercises: <a href='{% url "select-exercise" workout.id %}' class="button addBtn">Add exercise</a></h3>
+            
+            {% for exercise in workout.exercises.all %}
+            <p>
+                <b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b> -- muscle group: {{ exercise.musclegroup.name }}
+                <a href='{% url "create-workingset" exercise.id workout.id %}' class="button addBtn">Add set</a>
+                <a href='{% url "remove-exercise" exercise.id %}' class="button deleteBtn">Remove exercise</a>
+            </p>
+
+            <ol type="1">
+                {% for workingset in workingsets %}
+                    {% if workingset.exercise == exercise and workingset.created == workout.created %}
+                    <li> 
+                        {% if workingset.weight and workingset.repetitions %}
+                            Weight: {{ workingset.weight }}, Reps: {{ workingset.repetitions }}
+                        {% elif workingset.distance and workingset.time %}
+                            Distance: {{ workingset.distance }}, Time: {{ workingset.time }}
+                        {% endif %}
+                        <a href='{% url "edit-workingset" workingset.id %}' class="button editBtn">Edit set</a>
+                        <a href='{% url "delete-workingset" workingset.id %}' class="button deleteBtn">Remove set</a>
+                        <br /><br />
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+
+            {% endfor %}
+
+            <a href='{% url "edit-workout" workout.id %}' class="button editBtn">Edit workout</a>
+            <a href='{% url "delete-workout" workout.id %}' class="button deleteBtn">Delete workout</a>
+
+            <br/ ><br /><br />
+        {% endfor %}
+
+    {% else %}
+        <h1><center>Workout log for {{ target_date }} is empty.</center></h1>
+        <br />
+        <center>
+            <a href='{% url "create-workout" %}' class="button addBtn">Create new workout</a>
+            <a href='{% url "workouts" %}' class="button addBtn">Import private workout</a>
+            <a href='' class="button addBtn">Import public workout</a>
+        </center>
+        <br />
+    {% endif %}
 {% endif %}
 </div>
+
+{% load static %}
+<script src="{% static 'js/script_main.js' %}"></script>
 </body>
 {% endblock content %}

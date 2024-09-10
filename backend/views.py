@@ -3,8 +3,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse
 
-from datetime import date
+from datetime import date, timedelta
+from django.utils import timezone
 
 from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet
 from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm
@@ -12,8 +14,34 @@ from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm
 
 
 def main(request):
-   """View for Main page"""
-   return render (request, 'backend/main.html')
+   """View used to display in main page the correct workout based by user actions"""
+   # Obtain days_diff value from query string
+   days_diff = int(request.GET.get('days_diff', 0))
+
+   # Calculate the date for the desired day based on days_diff value (output is YYYY-MM-DD)
+   target_date = timezone.now().date() + timedelta(days=days_diff)
+
+   # If user logged in, get only the workout they want on the page
+   if request.user.is_authenticated:
+      workouts = Workout.objects.filter(user=request.user, created=target_date)
+      workingsets = WorkingSet.objects.filter(user=request.user, created=target_date)
+   # If user not logged in, workout is None so we'll display only basic info on page
+   else:
+      workouts, workingsets = [], []
+
+   context = {
+      'days_diff': days_diff,
+      'target_date': target_date,
+      'workouts': workouts,
+      'workingsets': workingsets
+   }
+
+   # Add days_diff & target_date in cookies to use it in other pages
+   response = render(request, 'backend/main.html', context)
+   response.set_cookie('daysDiff', days_diff)
+   response.set_cookie('targetDate', str(target_date))
+   return response
+
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Auth VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -333,13 +361,21 @@ def view_workouts(request):
 @login_required(login_url='login')
 def create_workouts(request):
    """View used to create workout"""
+   # Import cookie to use same target_data as the workout shown in main page (to create workout with the same date as date selected)
+   target_date = request.COOKIES.get('targetDate', date.today())
+   existing_workout = Workout.objects.filter(Q(user=request.user) & Q(created=target_date))
+   
+   if existing_workout:
+      return HttpResponse('You already have a workout created for this day. Delete it before creating another.')
+   
    if request.method == "POST":
       form = WorkoutForm(request.POST)
       if form.is_valid():
          workout = form.save(commit=False)
          workout.user = request.user
+         workout.created = target_date
          workout.save()
-         return redirect('workouts')
+         return redirect(build_redirect_url(request, default_url=''))
    else:
       form = WorkoutForm()
 
@@ -359,7 +395,7 @@ def edit_workout(request, workout_id):
       form = WorkoutForm(request.POST, instance=workout)
       if form.is_valid():
          form.save()
-         return redirect('workouts')
+         return redirect(build_redirect_url(request, default_url=''))
       
    context = {
       'form': form
@@ -374,7 +410,7 @@ def delete_workout(request, workout_id):
 
    if request.method == "POST":
       workout.delete()
-      return redirect('workouts')
+      return redirect(build_redirect_url(request, default_url=''))
    
    context = {
       'workout': workout
@@ -435,7 +471,7 @@ def add_exercise_to_workout(request, exercise_id, workout_id):
    # Add exercise to workout with their order using WorkoutExercise (models.py) created for this
    workout_exercise = WorkoutExercise.objects.create(workout=workout, exercise=exercise, order=order)
    
-   return redirect('workouts')
+   return redirect(build_redirect_url(request, default_url=''))
 
 
 @login_required(login_url='login')
@@ -450,10 +486,14 @@ def remove_exercise_from_workout(request, exercise_id):
       if workouts_with_exercise.exists():
          workout = workouts_with_exercise.first()
 
+         # Delete associated working sets for the exercise removed
+         working_sets_to_delete = WorkingSet.objects.filter(exercise=exercise, user=request.user)
+         working_sets_to_delete.delete()
+
          # Remove exercise from the workout
          workout.exercises.remove(exercise)
 
-         return redirect('workouts')
+         return redirect(build_redirect_url(request, default_url=''))
    
    context = {
       'exercise': exercise
@@ -467,6 +507,8 @@ def create_workingsets(request, exercise_id, workout_id):
    """View used to add working set to an existing exercise in a workout"""
    exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
    workout = Workout.objects.get(pk=workout_id, user=request.user)
+
+   target_date = request.COOKIES.get('targetDate', date.today())
 
    if request.method == "POST":
       repetitions = request.POST.get('repetitions')
@@ -482,10 +524,10 @@ def create_workingsets(request, exercise_id, workout_id):
          weight=weight if weight else None,
          distance=distance if distance else None,
          time=time if time else None,
-         created=date.today(),
+         created=target_date,
       )
 
-      return redirect('workouts')
+      return redirect(build_redirect_url(request, default_url=''))
 
    context = {
       'exercise': exercise,
@@ -504,7 +546,7 @@ def edit_workingsets(request, workingset_id):
         form = WorkingSetForm(request.POST, instance=workingset)
         if form.is_valid():
             form.save()
-            return redirect('workouts')
+            return redirect(build_redirect_url(request, default_url=''))
 
     context = {
         'form': form
@@ -519,9 +561,20 @@ def delete_workingsets(request, workingset_id):
 
    if request.method == "POST":
          workingset.delete()
-         return redirect('workouts')
+         return redirect(build_redirect_url(request, default_url=''))
 
    context = {
       'workingset': workingset
    }
    return render(request, 'backend/workingsets_delete.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Refactoring VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def build_redirect_url(request, default_url=''):
+   """Created for refactoring: after an action redirect users to the same page from which they initiated the action"""
+   days_diff = request.COOKIES.get('daysDiff')
+
+   if days_diff is not None:
+      return f'{default_url}/?days_diff={days_diff}'
+   else:
+      return default_url

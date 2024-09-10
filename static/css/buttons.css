@@ -35,3 +35,22 @@
 .button:hover {
     opacity: 0.7;
 }
+
+
+/* Main */
+#oneDayBackBtn,
+#currentDayBtn,
+#oneDayLaterBtn {
+    background-color: #224d23;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#oneDayBackBtn:hover,
+#currentDayBtn:hover,
+#oneDayLaterBtn:hover {
+    background-color: #a7d41e;
+}
