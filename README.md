@@ -12,3 +12,5 @@ A web app that works as a workout notebook. It help people to plan their workout
 - users can create workouts, for each one they can add a body weight value and a personal note
 - users can add and remove unlimited exercises to a workout
 - users can add and remove unlimited sets to an exercise from a workout
+- users can navigate through days and have a workout for each day
+- users can make their workouts public to be seen by other community members

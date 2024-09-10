@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}View public workout{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+{% if workout.public == "yes" %}
+    <h3>Workout name: {{ workout.name }}</h3>
+    <h3>
+        Workout details:
+        Created by {% if workout.user == request.user %}you {% else %}<a href='{% url "profile" workout.user.id %}'>{{ workout.user }}</a> {% endif %}
+        on {{ workout.created }} with latest update on {{ workout.updated }}
+    </h3>
+    <h3>Exercises:</h3>
+        {% for exercise in workout.exercises.all %}
+            <p>{{ forloop.counter }}. {{ exercise.name }}</p>
+
+            <ol type="1">
+            {% for workingset in workingsets %}
+                {% if workingset.exercise == exercise and workingset.created == workout.created %}
+                    <li>
+                        {% if workingset.weight and workingset.repetitions %}
+                            Weight: {{ workingset.weight }}, Reps: {{ workingset.repetitions }}
+                        {% elif workingset.distance and workingset.time %}
+                            Distance: {{ workingset.distance }}, Time: {{ workingset.time }}
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ol>
+        {% endfor %}
+
+        <a href='' class="button addBtn">Import workout</a>
+        <a href="{% url 'public-workouts' %}" class="button backBtn">Go back</a>
+
+{% else %}
+    <p>This workout is not yours and is not public.</p>
+{% endif %}                    
+</div>
+</body>
+{% endblock content %}

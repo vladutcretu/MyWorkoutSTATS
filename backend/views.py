@@ -312,7 +312,7 @@ def delete_exercises(request, exercise_id):
    return render(request, 'backend/exercises_delete.html', context)
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Exercises VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def view_workouts(request):
    """View used by user to see all his workouts, with search function by workout name or filter function to find a specific one(s)"""
@@ -429,6 +429,44 @@ def view_private_workout(request, workout_id):
       'workingsets': workingsets
    }
    return render(request, 'backend/workouts_view_private.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def view_public_workouts(request):
+   """View used by user to see all public workouts of other users (his included), 
+   with search function by workout name to find a specific one(s)"""
+   public_workouts = Workout.objects.filter(public="yes")
+   public_workouts_count = public_workouts.count()
+
+   if request.user.is_authenticated:
+      q = request.GET.get('q', '')
+      public_workouts = Workout.objects.filter(
+         Q(name__icontains = q),
+         public="yes"
+      )
+      public_workouts_count = public_workouts.count()
+   else:
+      public_workouts = []
+
+   context = {
+      'public_workouts': public_workouts,
+      'public_workouts_count': public_workouts_count
+   }
+   return render(request, 'backend/workouts_public.html', context)
+
+
+@login_required(login_url='login')
+def view_public_workout(request, workout_id):
+   """View used by user to see a specific public workout"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+   workingsets = WorkingSet.objects.filter().order_by('id')
+
+   context = {
+      'workout': workout,
+      'workingsets': workingsets
+   }
+   return render(request, 'backend/workouts_view_public.html', context)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Exercise to Workout VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

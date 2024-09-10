@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Public workouts{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <center><h1>Public workouts ({{ public_workouts_count }} available to explore)</h1></center>
+
+    <div>
+        <form method="GET" action="{% url "public-workouts" %}">
+            <input type="text" name="q" placeholder="Search workout by name"/>
+
+        <button class="button editBtn" type="submit">Search</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div>
+        <p><a href='{% url "public-workouts" %}' class="button editBtn">All public workouts</a></p>
+    </div>
+
+
+    <ul>
+        {% for public_workout in public_workouts %}
+            <p>
+                <a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a>
+                -- Created by {% if public_workout.user == request.user %}you {% else %}<a href='{% url "profile" public_workout.user.id %}'>{{ public_workout.user }}</a> {% endif %}
+                on {{ public_workout.created }} (latest update on {{ public_workout.updated }})
+                <a href='' class="button addBtn">Import workout</a>
+            </p>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+{% endblock content %}

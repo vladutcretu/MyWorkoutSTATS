@@ -21,6 +21,9 @@
                         <a href="{% url "profile" request.user.id %}"><b>{{ request.user }}'s account</b></a>
                     </div>
                     <div>
+                        <a href='{% url "public-workouts" %}'><b>Public workouts</b></a>
+                    </div>
+                    <div>
                         <a href='{% url "logout" %}'><b>Logout</b></a>
                     </div>
                 </div>
