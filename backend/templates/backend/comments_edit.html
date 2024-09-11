@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Edit comment{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h1>Edit comment</h1>
+
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            {{form.as_p}}
+            <input class="button addBtn" type="Submit" value="Submit" />
+        </form>
+
+        <p>
+            <a href="{% url 'view-public-workout' comment.workout.id %}" class="button backBtn">Go back</a>
+        </p>
+    </div>
+</div>
+</body>
+{% endblock content %}

@@ -17,7 +17,8 @@
         <div class="header-status"> 
             {% if request.user.is_authenticated %}
                 <div class="logged">
-                    <div>
+                    <div class="pfp-small">
+                        <img src='{{ request.user.profile_picture.url }}' />
                         <a href="{% url "profile" request.user.id %}"><b>{{ request.user }}'s account</b></a>
                     </div>
                     <div>

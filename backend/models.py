@@ -88,3 +88,18 @@ class WorkingSet(models.Model):
 
     def __str__(self):
         return f"{self.exercise} - Set: {self.weight} weight, {self.repetitions} reps | {self.distance} meters, {self.time} minutes"
+    
+
+class WorkoutComments(models.Model):
+    """Model for comments section on public workouts, allowing replies to other comments."""
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    workout = models.ForeignKey(Workout, related_name='comments', on_delete=models.CASCADE)
+    content = models.TextField()
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created']
+
+    def __str__(self):
+        return f"{self.workout} - {self.user.username}: {self.content[:30]}..."

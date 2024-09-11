@@ -36,10 +36,6 @@ urlpatterns = [
     path('workouts/delete/<int:workout_id>/', views.delete_workout, name='delete-workout'),
     path('workouts/view/<int:workout_id>/', views.view_private_workout, name='view-private-workout'),
 
-    # Public workout url
-    path('public-workouts/', views.view_public_workouts, name='public-workouts'),
-    path('public-workouts/view/<int:workout_id>/', views.view_public_workout, name='view-public-workout'),
-
     # Exercise to Workout urls
     path('workout/<int:workout_id>/select-exercise/', views.select_exercise, name='select-exercise'),
     path('add-exercise/<int:exercise_id>/<int:workout_id>/', views.add_exercise_to_workout, name='add-exercise'),
@@ -49,4 +45,12 @@ urlpatterns = [
     path('create-set/<int:exercise_id>/<int:workout_id>/', views.create_workingsets, name='create-workingset'),
     path('edit-set/<int:workingset_id>/', views.edit_workingsets, name='edit-workingset'),
     path('delete-set/<int:workingset_id>/', views.delete_workingsets, name='delete-workingset'),
+
+    # Public workout url
+    path('public-workouts/', views.view_public_workouts, name='public-workouts'),
+    path('public-workouts/view/<int:workout_id>/', views.view_public_workout, name='view-public-workout'),
+
+    # Comments to public workout url
+    path('public-workouts/comment/edit/<int:comment_id>/', views.edit_comment, name='edit-comment'),
+    path('public-workouts/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment')
 ]

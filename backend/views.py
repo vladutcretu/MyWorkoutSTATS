@@ -8,9 +8,9 @@ from django.http import HttpResponse
 from datetime import date, timedelta
 from django.utils import timezone
 
-from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet
+from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet, WorkoutComments
 from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm
-from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm
+from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm, WorkoutCommentsForm
 
 
 def main(request):
@@ -431,44 +431,6 @@ def view_private_workout(request, workout_id):
    return render(request, 'backend/workouts_view_private.html', context)
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-@login_required(login_url='login')
-def view_public_workouts(request):
-   """View used by user to see all public workouts of other users (his included), 
-   with search function by workout name to find a specific one(s)"""
-   public_workouts = Workout.objects.filter(public="yes")
-   public_workouts_count = public_workouts.count()
-
-   if request.user.is_authenticated:
-      q = request.GET.get('q', '')
-      public_workouts = Workout.objects.filter(
-         Q(name__icontains = q),
-         public="yes"
-      )
-      public_workouts_count = public_workouts.count()
-   else:
-      public_workouts = []
-
-   context = {
-      'public_workouts': public_workouts,
-      'public_workouts_count': public_workouts_count
-   }
-   return render(request, 'backend/workouts_public.html', context)
-
-
-@login_required(login_url='login')
-def view_public_workout(request, workout_id):
-   """View used by user to see a specific public workout"""
-   workout = get_object_or_404(Workout, pk=workout_id)
-   workingsets = WorkingSet.objects.filter().order_by('id')
-
-   context = {
-      'workout': workout,
-      'workingsets': workingsets
-   }
-   return render(request, 'backend/workouts_view_public.html', context)
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Exercise to Workout VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def select_exercise(request, workout_id):
@@ -605,6 +567,106 @@ def delete_workingsets(request, workingset_id):
       'workingset': workingset
    }
    return render(request, 'backend/workingsets_delete.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def view_public_workouts(request):
+   """View used by user to see all public workouts of other users (his included), 
+   with search function by workout name to find a specific one(s)"""
+   public_workouts = Workout.objects.filter(public="yes")
+   public_workouts_count = public_workouts.count()
+
+   if request.user.is_authenticated:
+      q = request.GET.get('q', '')
+      public_workouts = Workout.objects.filter(
+         Q(name__icontains = q),
+         public="yes"
+      )
+      public_workouts_count = public_workouts.count()
+   else:
+      public_workouts = []
+
+   context = {
+      'public_workouts': public_workouts,
+      'public_workouts_count': public_workouts_count
+   }
+   return render(request, 'backend/workouts_public.html', context)
+
+
+@login_required(login_url='login')
+def view_public_workout(request, workout_id):
+   """View used by user to see a specific public workout"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+   workingsets = WorkingSet.objects.filter().order_by('id')
+
+   # Filter only the comments that are not replies (top level comments)
+   top_level_comments = WorkoutComments.objects.filter(workout=workout)
+   top_level_comments_count = top_level_comments.count()
+
+   # Call the view responsible for creating new comments
+   response = create_comment(request, workout)
+   if response:
+      return response
+
+   context = {
+      'workout': workout,
+      'workingsets': workingsets,
+      'top_level_comments': top_level_comments,
+      'top_level_comments_count': top_level_comments_count
+   }
+   return render(request, 'backend/workouts_view_public.html', context)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Comment to Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def create_comment(request, workout):
+    """View used to create a comment for a public workout"""
+    if request.method == 'POST':
+        comment_content = request.POST.get('comment')
+        if len(comment_content) > 300:
+            messages.error(request, 'Comment cannot exceed 300 characters.')
+        else:
+            WorkoutComments.objects.create(
+                user=request.user,
+                workout=workout,
+                content=comment_content,
+            )
+        return redirect('view-public-workout', workout_id=workout.id)
+    
+
+@login_required(login_url='login')
+def edit_comment(request, comment_id):
+   """View used to edit a specific self comment made by the user"""
+   comment = get_object_or_404(WorkoutComments, pk=comment_id, user=request.user)
+   form = WorkoutCommentsForm(instance=comment)
+
+   if request.method == 'POST':
+      form = WorkoutCommentsForm(request.POST, instance=comment)
+      if form.is_valid():
+         form.save()
+         return redirect('view-public-workout', workout_id=comment.workout.id)
+
+   context = {
+      'form': form,
+      'comment': comment
+   }
+   return render(request, 'backend/comments_edit.html', context)
+
+
+@login_required(login_url='login')
+def delete_comment(request, comment_id):
+   """View used to delete a specific self comment made by the user"""
+   comment = get_object_or_404(WorkoutComments, pk=comment_id, user=request.user)
+
+   if request.method == 'POST':
+      comment.delete()
+      return redirect('view-public-workout', workout_id=comment.workout.id)
+
+   context = {
+      'comment': comment
+   }
+   return render(request, 'backend/comments_delete.html', context)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Refactoring VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

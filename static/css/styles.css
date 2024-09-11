@@ -75,6 +75,12 @@
     text-decoration: none;
 }
 
+.pfp-small img {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+  }
+
 
 /* Footer */
 .footer {

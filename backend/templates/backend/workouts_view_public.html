@@ -38,7 +38,54 @@
 
 {% else %}
     <p>This workout is not yours and is not public.</p>
-{% endif %}                    
+{% endif %}
+</div>
+
+<div class="base-body">
+    <h3>
+        {% if top_level_comments_count > 1 %}{{ top_level_comments_count }} comments
+        {% elif top_level_comments_count == 1 %} {{ top_level_comments_count }} comment
+        {% else %} No comments
+        {% endif %}
+    </h3>
+
+    <!-- Form to add a comment -->
+    <form method="POST">
+        {% csrf_token %}
+        {% comment %} <textarea name="comment" placeholder="Add a comment..." required></textarea> {% endcomment %}
+        <input name="comment" placeholder="Add a comment..." required/>
+        <button class="button addBtn" type="submit">Submit comment</button>
+    </form>
+
+    <!-- Display errors -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Display comments and replies -->
+    <div>
+        {% for comment in top_level_comments %}
+            <div class="pfp-small">
+                <p>
+                    <img src='{{ comment.user.profile_picture.url }}' />
+                    
+                    <a href='{% url "profile" comment.user.id %}'>{{ comment.user.username }}</a>: <b>{{ comment.content }}</b>
+                    (Posted on: {{ comment.created }}, Latest update on: {{ comment.updated }})
+                    {% if comment.user == request.user %}
+                        <a href='{% url "edit-comment" comment.id %}' class="button editBtn">Edit comment</a>
+                        <a href='{% url "delete-comment" comment.id %}' class="button deleteBtn">Delete comment</a>
+                    {% else %}
+                        <a href='' class="button deleteBtn">Report comment</a>
+                    {% endif %}
+
+                </p>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 </body>
 {% endblock content %}

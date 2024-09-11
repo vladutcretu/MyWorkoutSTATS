@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.forms import ModelForm
 
-from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkingSet
+from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkingSet, WorkoutComments
 
 
 class CustomUserRegistrationForm(UserCreationForm):
@@ -81,3 +81,10 @@ class WorkingSetForm(forms.ModelForm):
     class Meta:
         model = WorkingSet
         fields = ['weight', 'repetitions', 'distance', 'time']
+
+
+class WorkoutCommentsForm(ModelForm):
+    """Form used when edit a self comment from a public workout"""
+    class Meta:
+        model = WorkoutComments
+        fields = ['content']
