@@ -50,7 +50,9 @@ urlpatterns = [
     path('public-workouts/', views.view_public_workouts, name='public-workouts'),
     path('public-workouts/view/<int:workout_id>/', views.view_public_workout, name='view-public-workout'),
 
-    # Comments to public workout url
-    path('public-workouts/comment/edit/<int:comment_id>/', views.edit_comment, name='edit-comment'),
-    path('public-workouts/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment')
+    # Comments (and replies) to public workout url
+    path('public-workouts/view/<int:workout_id>/comment/create/', views.create_comment_or_reply, name='create-comment'),
+    path('public-workouts/view/<int:workout_id>/comment/reply/<int:parent_id>/', views.create_comment_or_reply, name='create-reply'),
+    path('public-workouts/view/<int:workout_id>/comment/edit/<int:comment_id>/', views.edit_comment, name='edit-comment'),
+    path('public-workouts/view/<int:workout_id>/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment')
 ]

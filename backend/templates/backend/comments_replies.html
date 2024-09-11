@@ -1,0 +1,35 @@
+<div style="margin-left: 20px;">
+    {% for reply in comments %}
+        <div>
+            <p>
+                <img src='{{ reply.user.profile_picture.url }}' class="pfp-small" />
+                <a href='{% url "profile" reply.user.id %}'>{{ reply.user.username }}</a>: 
+                <b>{{ reply.content }}</b> 
+                (Posted on: {{ reply.created }}, Latest update on: {{ reply.updated }})
+
+                <!-- Edit and delete options for reply -->
+                {% if reply.user == request.user %}
+                    <a href='{% url "edit-comment" workout.id reply.id %}' class="button editBtn">Edit comment</a>
+                    <a href='{% url "delete-comment" workout.id reply.id %}' class="button deleteBtn">Delete comment</a>
+                {% else %}
+                    <a href='' class="button addBtn" onclick="document.getElementById('reply-form-{{ reply.id }}').style.display='block'; return false;">Reply to comment</a>
+                    <a href='' class="button deleteBtn">Report comment</a>
+                {% endif %}
+            </p>
+
+            <!-- Reply form for this reply -->
+            <div id="reply-form-{{ reply.id }}" style="display: none;">
+                <form method="POST" action="{% url 'create-reply' workout.id reply.id %}">
+                    {% csrf_token %}
+
+                    {% comment %} <textarea name="comment" placeholder="Write your reply..." required></textarea> {% endcomment %}
+                    <input name="comment" placeholder="Add a reply to comment..." required/>
+                    <button class="button addBtn" type="submit">Submit reply</button>
+                </form>
+            </div>
+
+            <!-- Recursively include replies to this reply -->
+            {% include 'backend/comments_replies.html' with comments=reply.replies.all %}
+        </div>
+    {% endfor %}
+</div>

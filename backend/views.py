@@ -8,9 +8,9 @@ from django.http import HttpResponse
 from datetime import date, timedelta
 from django.utils import timezone
 
-from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet, WorkoutComments
+from .models import CustomUser, MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet, WorkoutComment
 from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileForm, ChangePasswordForm
-from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm, WorkoutCommentsForm
+from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm, WorkoutCommentForm
 
 
 def main(request):
@@ -599,71 +599,78 @@ def view_public_workout(request, workout_id):
    """View used by user to see a specific public workout"""
    workout = get_object_or_404(Workout, pk=workout_id)
    workingsets = WorkingSet.objects.filter().order_by('id')
-
-   # Filter only the comments that are not replies (top level comments)
-   top_level_comments = WorkoutComments.objects.filter(workout=workout)
-   top_level_comments_count = top_level_comments.count()
-
-   # Call the view responsible for creating new comments
-   response = create_comment(request, workout)
-   if response:
-      return response
-
+   comments = WorkoutComment.objects.filter(workout=workout, parent=None)
+   
    context = {
       'workout': workout,
       'workingsets': workingsets,
-      'top_level_comments': top_level_comments,
-      'top_level_comments_count': top_level_comments_count
+      'comments': comments
    }
    return render(request, 'backend/workouts_view_public.html', context)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Comment to Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
-def create_comment(request, workout):
-    """View used to create a comment for a public workout"""
-    if request.method == 'POST':
-        comment_content = request.POST.get('comment')
-        if len(comment_content) > 300:
-            messages.error(request, 'Comment cannot exceed 300 characters.')
-        else:
-            WorkoutComments.objects.create(
-                user=request.user,
-                workout=workout,
-                content=comment_content,
-            )
-        return redirect('view-public-workout', workout_id=workout.id)
-    
+def create_comment_or_reply(request, workout_id, parent_id=None):
+   """View used to create either a comment or a reply to a comment for a public workout"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+   parent_comment = None
 
-@login_required(login_url='login')
-def edit_comment(request, comment_id):
-   """View used to edit a specific self comment made by the user"""
-   comment = get_object_or_404(WorkoutComments, pk=comment_id, user=request.user)
-   form = WorkoutCommentsForm(instance=comment)
+   # Creating a reply to a comment if parent_id is provided
+   if parent_id:
+      parent_comment = get_object_or_404(WorkoutComment, pk=parent_id)
 
    if request.method == 'POST':
-      form = WorkoutCommentsForm(request.POST, instance=comment)
+      comment_content = request.POST.get('comment')
+      if len(comment_content) > 300:
+         messages.error(request, 'Comment cannot exceed 300 characters.')
+      else:
+         # Create either a top-level comment or a reply
+         WorkoutComment.objects.create(
+               user=request.user,
+               workout=workout,
+               content=comment_content,
+               parent=parent_comment  # This will be None for top-level comments
+         )
+         messages.success(request, 'Your comment has been added.')
+      return redirect('view-public-workout', workout_id=workout.id)
+   
+   return redirect('view-public-workout', workout_id=workout.id)
+
+
+@login_required(login_url='login')
+def edit_comment(request, workout_id, comment_id):
+   """View used to edit a specific self comment made by the user"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+   comment = get_object_or_404(WorkoutComment, pk=comment_id, user=request.user)
+   form = WorkoutCommentForm(instance=comment)
+
+   if request.method == 'POST':
+      form = WorkoutCommentForm(request.POST, instance=comment)
       if form.is_valid():
          form.save()
          return redirect('view-public-workout', workout_id=comment.workout.id)
 
    context = {
       'form': form,
+      'workout': workout,
       'comment': comment
    }
    return render(request, 'backend/comments_edit.html', context)
 
 
 @login_required(login_url='login')
-def delete_comment(request, comment_id):
+def delete_comment(request, workout_id, comment_id):
    """View used to delete a specific self comment made by the user"""
-   comment = get_object_or_404(WorkoutComments, pk=comment_id, user=request.user)
+   workout = get_object_or_404(Workout, pk=workout_id)
+   comment = get_object_or_404(WorkoutComment, pk=comment_id, user=request.user)
 
    if request.method == 'POST':
       comment.delete()
       return redirect('view-public-workout', workout_id=comment.workout.id)
 
    context = {
+      'workout': workout,
       'comment': comment
    }
    return render(request, 'backend/comments_delete.html', context)

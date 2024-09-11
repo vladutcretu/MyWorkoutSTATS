@@ -42,16 +42,12 @@
 </div>
 
 <div class="base-body">
-    <h3>
-        {% if top_level_comments_count > 1 %}{{ top_level_comments_count }} comments
-        {% elif top_level_comments_count == 1 %} {{ top_level_comments_count }} comment
-        {% else %} No comments
-        {% endif %}
-    </h3>
+    <h3>Comments</h3>
 
     <!-- Form to add a comment -->
-    <form method="POST">
+    <form method="POST" action="{% url 'create-comment' workout.id %}">
         {% csrf_token %}
+
         {% comment %} <textarea name="comment" placeholder="Add a comment..." required></textarea> {% endcomment %}
         <input name="comment" placeholder="Add a comment..." required/>
         <button class="button addBtn" type="submit">Submit comment</button>
@@ -68,21 +64,36 @@
 
     <!-- Display comments and replies -->
     <div>
-        {% for comment in top_level_comments %}
+        {% for comment in comments %}
             <div class="pfp-small">
                 <p>
                     <img src='{{ comment.user.profile_picture.url }}' />
-                    
-                    <a href='{% url "profile" comment.user.id %}'>{{ comment.user.username }}</a>: <b>{{ comment.content }}</b>
+                    <a href='{% url "profile" comment.user.id %}'>{{ comment.user.username }}</a>: 
+                    <b>{{ comment.content }}</b>
                     (Posted on: {{ comment.created }}, Latest update on: {{ comment.updated }})
+
                     {% if comment.user == request.user %}
-                        <a href='{% url "edit-comment" comment.id %}' class="button editBtn">Edit comment</a>
-                        <a href='{% url "delete-comment" comment.id %}' class="button deleteBtn">Delete comment</a>
+                        <a href='{% url "edit-comment" workout.id comment.id %}' class="button editBtn">Edit comment</a>
+                        <a href='{% url "delete-comment" workout.id comment.id %}' class="button deleteBtn">Delete comment</a>
                     {% else %}
+                        <a href='' class="button addBtn" onclick="document.getElementById('reply-form-{{ comment.id }}').style.display='block'; return false;">Reply to comment</a>
                         <a href='' class="button deleteBtn">Report comment</a>
                     {% endif %}
-
                 </p>
+
+                <!-- Form to add a reply to a top-level comment (parent) -->
+                <div id="reply-form-{{ comment.id }}" style="display: none;">
+                    <form method="POST" action="{% url 'create-reply' workout.id comment.id %}">
+                        {% csrf_token %}
+
+                        {% comment %} <textarea name="comment" placeholder="Write your reply..." required></textarea> {% endcomment %}
+                        <input name="comment" placeholder="Add a reply to comment..." required/>
+                        <button class="button addBtn" type="submit">Submit reply</button>
+                    </form>
+                </div>
+
+                <!-- Include replies recursively -->
+                {% include 'backend/comments_replies.html' with comments=comment.replies.all %}
             </div>
         {% endfor %}
     </div>
