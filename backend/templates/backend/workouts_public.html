@@ -37,7 +37,7 @@
                 -- Created by {% if public_workout.user == request.user %}you {% else %}<a href='{% url "profile" public_workout.user.id %}'>{{ public_workout.user }}</a> {% endif %}
                 on {{ public_workout.created }} (latest update on {{ public_workout.updated }})
                 -- liked by {{ public_workout.total_likes }} users
-                <a href='' class="button addBtn">Import workout</a>
+                <a href='{% url "import-workout" public_workout.id %}' class="button addBtn">Import workout</a>
             </p>
         {% endfor %}
     </ul>

@@ -365,7 +365,7 @@ def create_workouts(request):
    """View used to create workout"""
    # Import cookie to use same target_data as the workout shown in main page (to create workout with the same date as date selected)
    target_date = request.COOKIES.get('targetDate', date.today())
-   existing_workout = Workout.objects.filter(Q(user=request.user) & Q(created=target_date))
+   existing_workout = Workout.objects.filter(user=request.user, created=target_date)
    
    if existing_workout:
       return HttpResponse('You already have a workout created for this day. Delete it before creating another.')
@@ -385,6 +385,44 @@ def create_workouts(request):
       'form': form
    }
    return render(request, 'backend/workouts_create.html', context)
+
+
+@login_required(login_url='login')
+def import_workouts(request, workout_id):
+   """View used to import a workout (copy exercises and workingsets), owned by user or public one"""
+   # Import cookie to use same target_data as the workout shown in main page (to create workout with the same date as date selected)
+   target_date = request.COOKIES.get('targetDate', date.today())
+   existing_workout = Workout.objects.filter(user=request.user, created=target_date).exists()
+
+   if existing_workout:
+      return HttpResponse('You already have a workout created for this day. Delete it before creating another.')
+
+   # Get the workout to be imported
+   imported_workout = get_object_or_404(Workout, pk=workout_id)
+
+   # Create a new workout for user
+   new_workout = Workout.objects.create(
+      user=request.user,
+      name=imported_workout.name,
+      created=target_date
+   )
+
+   # Import exercises to workout
+   for order, imported_exercise in enumerate(imported_workout.exercises.all(), start=1):
+      # Create exercise or use existing one
+      exercise = get_or_create_musclegroup_and_exercise(imported_exercise, request.user)
+
+      # Add exercise to newly imported workout
+      new_workout_exercise = WorkoutExercise.objects.create(
+         workout=new_workout,
+         exercise=exercise,
+         order=order
+      )
+
+      # Import workingsets from imported exercise
+      import_workingsets(imported_exercise, request.user, new_workout, exercise, target_date)
+
+   return redirect(build_redirect_url(request, default_url=''))
 
 
 @login_required(login_url='login')
@@ -709,3 +747,34 @@ def build_redirect_url(request, default_url=''):
       return f'{default_url}/?days_diff={days_diff}'
    else:
       return default_url
+   
+
+def get_or_create_musclegroup_and_exercise(imported_exercise, user):
+   """Created for refactoring: get musclegroup and exercise from imported workout or create if user does not have it"""
+   musclegroup, _ = MuscleGroup.objects.get_or_create(
+      user=user,
+      name=imported_exercise.musclegroup.name,
+      defaults={'created': date.today()}
+   )
+   exercise, _ = Exercise.objects.get_or_create(
+      user=user,
+      name=imported_exercise.name,
+      musclegroup=musclegroup,
+      defaults={'created': date.today()}
+   )
+   return exercise
+
+
+def import_workingsets(imported_exercise, user, workout, exercise, created):
+   """Created for refactoring: creating (importing) workingsets of an exercise from an imported workout"""
+   for imported_workingset in imported_exercise.workingsets.all():
+      WorkingSet.objects.create(
+         user=user,
+         workout=workout,
+         exercise=exercise,
+         weight=imported_workingset.weight,
+         repetitions=imported_workingset.repetitions,
+         distance=imported_workingset.distance,
+         time=imported_workingset.time,
+         created=created
+      )

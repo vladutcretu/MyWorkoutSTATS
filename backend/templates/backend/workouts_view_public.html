@@ -52,8 +52,8 @@
                     {% endif %}
                 </form>
             {% endif %}
-            <a href='' class="button addBtn">Import workout</a>
-            <a href="{% url 'public-workouts' %}" class="button backBtn">Go back</a>
+            <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
+            <a href='{% url "public-workouts" %}' class="button backBtn">Go back</a>
     </div>
     </div>
 

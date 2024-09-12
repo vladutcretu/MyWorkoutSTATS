@@ -59,6 +59,7 @@
                 <a href='{% url "view-private-workout" workout.id %}'>{{ workout.name }}</a>
                 (created on {{ workout.created }}, updated on {{ workout.updated }})
                 -- public: {{ workout.public }}
+                <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
                 <a href='{% url "edit-workout" workout.id %}' class="button editBtn">Edit workout</a>
                 <a href='{% url "delete-workout" workout.id %}' class="button deleteBtn">Delete workout</a>
             </p>

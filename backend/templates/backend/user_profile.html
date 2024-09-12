@@ -52,23 +52,26 @@
 
 {% if user == request.user %}
 <div class="base-body">
-    <center><h1>Account settings</h1></center> 
+    <center><h1>Account</h1></center> 
 
-    <h3>See and manage your:</h3>
-    <p>
-        <a href='{% url "workouts" %}' class="button editBtn">workouts</a><br /><br />
-        <a href='{% url "musclegroups" %}' class="button editBtn">muscle groups</a><br /><br />
-        <a href='{% url "exercises" %}' class="button editBtn">exercises</a><br /><br />
-    </p>
+    <div class="workout-inline-buttons">
+        <h3>Manage workouts, muscle groups and exercises:</h3>
+        <a href='{% url "workouts" %}' class="button editBtn">workouts</a>
+        <a href='{% url "musclegroups" %}' class="button editBtn">muscle groups</a>
+        <a href='{% url "exercises" %}' class="button editBtn">exercises</a>
+    </div>
 
-    <p>
-        See and analyze your bodyweight chart, exercise chart and exercise records
-    </p>
+    <div class="workout-inline-buttons">
+        <h3>Analyze bodyweight, exercises evolution and records:</h3>
+        <a href='' class="button editBtn">bodyweight graph</a>
+        <a href='' class="button editBtn">exercises graph</a>
+        <a href='' class="button editBtn">exercises records</a>
+    </div>
 
-    <h3>Account settings:</h3>
-    </p>
+    <div class="workout-inline-buttons">
+        <h3>Settings:</h3>
         <a href="{% url "change-password" %}" class="button editBtn">Change password</a>
-    </p>
+    </div>
 </div>
 {% endif %}
 

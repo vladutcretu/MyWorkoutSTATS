@@ -18,3 +18,4 @@ A web app that works as a workout notebook. It help people to plan their workout
 - users from community can leave, edit and delete comments on a public workout 
 - users from community can like and unlike a public workout
 - users can sort public workouts by number of likes
+- users can import his personal previous workouts or public workouts (copy exercises and sets)

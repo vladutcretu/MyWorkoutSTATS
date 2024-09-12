@@ -72,7 +72,7 @@
         <center>
             <a href='{% url "create-workout" %}' class="button addBtn">Create new workout</a>
             <a href='{% url "workouts" %}' class="button addBtn">Import private workout</a>
-            <a href='' class="button addBtn">Import public workout</a>
+            <a href='{% url "public-workouts" %}' class="button addBtn">Import public workout</a>
         </center>
         <br />
     {% endif %}

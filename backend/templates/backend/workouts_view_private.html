@@ -35,8 +35,8 @@
         </ol>
     {% endfor %}
 
-    <a href='' class="button addBtn">Import workout</a>
-    <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
+    <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
+    <a href='{% url "workouts" %}' class="button backBtn">Go back</a>
 
 {% else %}
     <p>This workout is not yours and is not public.</p>
