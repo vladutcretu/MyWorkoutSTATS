@@ -9,19 +9,25 @@
 <div class="base-body">
     <center><h1>Public workouts ({{ public_workouts_count }} available to explore)</h1></center>
 
-    <div>
-        <form method="GET" action="{% url "public-workouts" %}">
-            <input type="text" name="q" placeholder="Search workout by name"/>
+
+    <form method="GET">
+        <!-- Search bar -->
+        <input type="text" name="q" placeholder="Search workouts by name" value="{{ q }}">
 
         <button class="button editBtn" type="submit">Search</button>
-        </form>
-    </div>
 
-    <br>
+        <br /><br />
+        
+        <!-- Sorting options -->
+        <select name="sort" onchange="this.form.submit()">
+            <option value="created" {% if sort_by == 'created' %}selected{% endif %}>Sort by date</option>
+            <option value="likes" {% if sort_by == 'likes' %}selected{% endif %}>Sort by likes</option>
+        </select>
+    </form>
 
-    <div>
-        <p><a href='{% url "public-workouts" %}' class="button editBtn">All public workouts</a></p>
-    </div>
+    <br /><br />
+
+    <p><a href='{% url "public-workouts" %}' class="button editBtn">All public workouts</a></p>
 
 
     <ul>
@@ -30,6 +36,7 @@
                 <a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a>
                 -- Created by {% if public_workout.user == request.user %}you {% else %}<a href='{% url "profile" public_workout.user.id %}'>{{ public_workout.user }}</a> {% endif %}
                 on {{ public_workout.created }} (latest update on {{ public_workout.updated }})
+                -- liked by {{ public_workout.total_likes }} users
                 <a href='' class="button addBtn">Import workout</a>
             </p>
         {% endfor %}

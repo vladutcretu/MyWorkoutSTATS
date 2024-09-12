@@ -65,7 +65,7 @@ class WorkoutForm(ModelForm):
     """Form used when create / edit workout"""
     class Meta:
         model = Workout
-        fields = ['name', 'bodyweight', 'public', 'note']
+        fields = ['name', 'bodyweight', 'note', 'public']
 
 
 class WorkingSetForm(forms.ModelForm):

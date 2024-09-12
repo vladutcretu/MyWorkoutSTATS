@@ -144,3 +144,16 @@ a {
     display: grid;
     grid-template-columns: 1fr 3fr;
 }
+
+
+/* workouts_view_public.html */
+.workout-inline-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.workout-inline-buttons a, .workout-inline-buttons form {
+    display: inline-block;
+    margin: 0;
+}

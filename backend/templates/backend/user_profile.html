@@ -13,7 +13,7 @@
         <img src="{{ user.profile_picture.url }}" alt="Profile Picture" />
     </div>
     <p>ID: {{ user.id }}</p>
-    <p>Email: {{ user.email }}</p>
+    {% if user == request.user %}<p>Email: {{ user.email }}</p>{% endif %}
     <p>
         Name:
         {% if user.first_name and user.last_name %}
@@ -28,15 +28,19 @@
     </p>
     <p>Age: {% if user.age %}{{ user.age }} {% else %} Not added {% endif %}</p>
     <p>City: {% if user.city %}{{ user.city}} {% else %} Not added {% endif %}</p>
-    <p>Your bio: {% if user.bio %}{{ user.bio }} {% else %} Not added {% endif %}</p>
-    <p>
-        Your instagram:
-    {% if 'instagram.com/' in user.instagram_url %}
-        <a href="{{ user.instagram_url }}">Instagram profile</a>
-    {% else %} Not added {% endif %}
-    </p>
-
+    <p>Bio: {% if user.bio %}{{ user.bio }} {% else %} Not added {% endif %}</p>
+    <p>Instagram: {% if 'instagram.com/' in user.instagram_url %} <a href="{{ user.instagram_url }}">Instagram profile</a>{% else %} Not added {% endif %}</p>
     <br />
+    <p>Public workouts:</p>
+    {% if public_workouts %}
+        {% for public_workout in public_workouts %}
+            <p><a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a> created on {{ public_workout.created }}</p>
+        {% endfor %}
+    {% else %}
+        Not added
+    {% endif %}
+
+    <br /><br />
 
     {% if user == request.user %}
         <p><a href="{% url "edit-profile" %}" class="button editBtn">Edit your profile</a></p>

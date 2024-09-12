@@ -32,9 +32,30 @@
             {% endfor %}
             </ol>
         {% endfor %}
+    <br />
+        <p>
+            {% if not workout.total_likes %} No one liked this workout yet😔. Be first!
+            {% elif workout.total_likes == 1 %}</b>{{ workout.total_likes }}</b> member liked this workout.
+            {% else %} </b>{{ workout.total_likes }}</b> members liked this workout.
+            {% endif %}
+        </p>
+        <div class="workout-inline-buttons">
+            <!-- Workout like button -->
+             {% if workout.user != request.user %}
+                <form method="POST" action="{% url 'like-workout' workout.id %}">
+                    {% csrf_token %}
 
-        <a href='' class="button addBtn">Import workout</a>
-        <a href="{% url 'public-workouts' %}" class="button backBtn">Go back</a>
+                    {% if user in workout.likes.all %}
+                        <button class="button deleteBtn" type="submit">Unlike</button>
+                    {% else %}
+                        <button class="button addBtn"type="submit">Like</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+            <a href='' class="button addBtn">Import workout</a>
+            <a href="{% url 'public-workouts' %}" class="button backBtn">Go back</a>
+    </div>
+    </div>
 
 {% else %}
     <p>This workout is not yours and is not public.</p>
@@ -71,13 +92,13 @@
                     <a href='{% url "profile" comment.user.id %}'>{{ comment.user.username }}</a>: 
                     <b>{{ comment.content }}</b>
                     (Posted on: {{ comment.created }}, Latest update on: {{ comment.updated }})
-
+                
                     {% if comment.user == request.user %}
                         <a href='{% url "edit-comment" workout.id comment.id %}' class="button editBtn">Edit comment</a>
                         <a href='{% url "delete-comment" workout.id comment.id %}' class="button deleteBtn">Delete comment</a>
                     {% else %}
-                        <a href='' class="button addBtn" onclick="document.getElementById('reply-form-{{ comment.id }}').style.display='block'; return false;">Reply to comment</a>
-                        <a href='' class="button deleteBtn">Report comment</a>
+                            <a href='' class="button addBtn" onclick="document.getElementById('reply-form-{{ comment.id }}').style.display='block'; return false;">Reply to comment</a>
+                            <a href='' class="button deleteBtn">Report comment</a>
                     {% endif %}
                 </p>
 

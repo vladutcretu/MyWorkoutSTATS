@@ -54,5 +54,6 @@ urlpatterns = [
     path('public-workouts/view/<int:workout_id>/comment/create/', views.create_comment_or_reply, name='create-comment'),
     path('public-workouts/view/<int:workout_id>/comment/reply/<int:parent_id>/', views.create_comment_or_reply, name='create-reply'),
     path('public-workouts/view/<int:workout_id>/comment/edit/<int:comment_id>/', views.edit_comment, name='edit-comment'),
-    path('public-workouts/view/<int:workout_id>/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment')
+    path('public-workouts/view/<int:workout_id>/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment'),
+    path('public-workouts/view/<int:workout_id>/like/', views.like_workout, name='like-workout'),
 ]

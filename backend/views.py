@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse
 
 from datetime import date, timedelta
@@ -124,9 +124,11 @@ def user_account_recovery(request):
 def user_profile(request, user_id):
    """View for User Profile page"""
    user = CustomUser.objects.get(pk=user_id)
+   public_workouts = Workout.objects.filter(user=user_id, public="yes")
 
    context = {
-      'user': user
+      'user': user,
+      'public_workouts': public_workouts
    }
    return render(request, 'backend/user_profile.html', context)
 
@@ -572,24 +574,33 @@ def delete_workingsets(request, workingset_id):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def view_public_workouts(request):
-   """View used by user to see all public workouts of other users (his included), 
-   with search function by workout name to find a specific one(s)"""
+   """View used by user to see all public workouts of other users (his included),
+   with search function by workout name and sorting options (by most recent created and number of likes)."""
    public_workouts = Workout.objects.filter(public="yes")
    public_workouts_count = public_workouts.count()
 
-   if request.user.is_authenticated:
-      q = request.GET.get('q', '')
-      public_workouts = Workout.objects.filter(
-         Q(name__icontains = q),
-         public="yes"
-      )
-      public_workouts_count = public_workouts.count()
+   # Retrieve search query and sorting option from URL parameters
+   q = request.GET.get('q', '')
+   sort_by = request.GET.get('sort', 'created')  # Default sorting by creation date
+
+   # Filter by search query
+   if q:
+      public_workouts = public_workouts.filter(name__icontains=q)
+
+   # Sorting logic
+   if sort_by == 'likes':
+      # Sort by the number of likes (descending)
+      public_workouts = public_workouts.annotate(total_likes=Count('likes')).order_by('-total_likes')
    else:
-      public_workouts = []
+      # Default sorting by created date (descending)
+      public_workouts = public_workouts.order_by('-created')
 
    context = {
       'public_workouts': public_workouts,
-      'public_workouts_count': public_workouts_count
+      'public_workouts_count': public_workouts_count,
+      'q': q,
+      'sort_by': sort_by
+
    }
    return render(request, 'backend/workouts_public.html', context)
 
@@ -609,7 +620,7 @@ def view_public_workout(request, workout_id):
    return render(request, 'backend/workouts_view_public.html', context)
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Comment to Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Comment, Reply and Like to Public Workouts VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def create_comment_or_reply(request, workout_id, parent_id=None):
    """View used to create either a comment or a reply to a comment for a public workout"""
@@ -674,6 +685,19 @@ def delete_comment(request, workout_id, comment_id):
       'comment': comment
    }
    return render(request, 'backend/comments_delete.html', context)
+
+
+@login_required(login_url='login')
+def like_workout(request, workout_id):
+   """View for liking or unliking a workout"""
+   workout = get_object_or_404(Workout, pk=workout_id)
+
+   if request.user in workout.likes.all():
+      workout.likes.remove(request.user)
+   else:
+      workout.likes.add(request.user)
+
+   return redirect('view-public-workout', workout_id=workout.id)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Refactoring VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

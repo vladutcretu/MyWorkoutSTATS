@@ -49,8 +49,9 @@ class Workout(models.Model):
     name = models.CharField(max_length=30)
     exercises = models.ManyToManyField(Exercise, through='WorkoutExercise', related_name='workouts', blank=True)
     bodyweight = models.FloatField(null=True, blank=True)
-    public = models.CharField(max_length=3, choices=PUBLIC_CHOICES, default="no")
     note = models.TextField(max_length=100, null=True, blank=True)
+    public = models.CharField(max_length=3, choices=PUBLIC_CHOICES, default="no")
+    likes = models.ManyToManyField(CustomUser, related_name='workout_likes', blank=True)
     updated = models.DateField(auto_now=True)
     created = models.DateField(null=True, blank=True)
 
@@ -59,6 +60,9 @@ class Workout(models.Model):
 
     def __str__(self):
         return f"Owner: {self.user} - Workout: {self.name} - Date: {self.created}"
+
+    def total_likes(self):
+        return self.likes.count()
     
 
 class WorkoutExercise(models.Model):
