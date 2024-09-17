@@ -24,10 +24,11 @@
             {% for workingset in workingsets %}
                 {% if workingset.exercise == exercise and workingset.created == workout.created %}
                     <li>
+                        Set type: <b>{{ workingset.get_type_display }}</b> --
                         {% if workingset.weight and workingset.repetitions %}
-                            Weight: {{ workingset.weight }}, Reps: {{ workingset.repetitions }}
+                            Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
                         {% elif workingset.distance and workingset.time %}
-                            Distance: {{ workingset.distance }}, Time: {{ workingset.time }}
+                            Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                         {% endif %}
                     </li>
                 {% endif %}

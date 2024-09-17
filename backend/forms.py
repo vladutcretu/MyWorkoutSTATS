@@ -80,7 +80,7 @@ class WorkingSetForm(forms.ModelForm):
     
     class Meta:
         model = WorkingSet
-        fields = ['weight', 'repetitions', 'distance', 'time']
+        fields = ['type', 'weight', 'repetitions', 'distance', 'time']
 
 
 class WorkoutCommentForm(ModelForm):

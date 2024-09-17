@@ -20,6 +20,17 @@
         {% csrf_token %}
 
         <div id="weightForm">
+            <label for="set_type">Set Type:</label>
+            <select name="type" id="set_type">
+                <option value="warmpup">Warm Up Set</option>
+                <option value="working">Working Set</option>
+                <option value="dropset">Drop Set</option>
+                <option value="restpause">Rest Pause Set</option>
+                <option value="myo">Myo Set</option>
+                <option value="cluster">Cluster Set</option>
+                <option value="super">Super Set</option>
+            </select>
+            <br />
             <label for="weight">Weight:</label>
             <input type="text" name="weight" id="weight" required>
             <br>
@@ -28,6 +39,17 @@
         </div>
 
         <div id="enduranceForm" style="display:none;">
+            <label for="set_type">Set Type:</label>
+            <select name="type" id="set_type">
+                <option value="warmpup">Warm Up Set</option>
+                <option value="working">Working Set</option>
+                <option value="dropset">Drop Set</option>
+                <option value="restpause">Rest Pause Set</option>
+                <option value="myo">Myo Set</option>
+                <option value="cluster">Cluster Set</option>
+                <option value="super">Super Set</option>
+            </select>
+            <br />
             <label for="distance">Distance:</label>
             <input type="number" name="distance" id="distance" required>
             <br>

@@ -42,7 +42,7 @@ class Workout(models.Model):
     """Model for Workouts"""
     PUBLIC_CHOICES = [
         ("yes", "Yes"),
-        ("no", "No"),
+        ("no", "No")
     ]
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -80,9 +80,20 @@ class WorkoutExercise(models.Model):
 
 class WorkingSet(models.Model):
     """Model for Working Sets"""
+    TYPE_CHOICES = [
+        ("warmpup", "Warm Up set"),
+        ("working", "Working set"),
+        ("dropset", "Drop set"),
+        ("restpause", "Rest pause set"),
+        ("myo", "Myo set"),
+        ("cluster", "Cluster set"),
+        ("super", "Super set")
+    ]
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE, null=True, blank=True)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='workingsets')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default="working")
     weight = models.FloatField(null=True, blank=True)
     repetitions = models.IntegerField(null=True, blank=True)
     distance = models.IntegerField(null=True, blank=True)

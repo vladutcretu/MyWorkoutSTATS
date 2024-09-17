@@ -551,6 +551,7 @@ def create_workingsets(request, exercise_id, workout_id):
    target_date = request.COOKIES.get('targetDate', date.today())
 
    if request.method == "POST":
+      type = request.POST.get('type', 'working')
       repetitions = request.POST.get('repetitions')
       weight = request.POST.get('weight')
       distance = request.POST.get('distance')
@@ -560,6 +561,7 @@ def create_workingsets(request, exercise_id, workout_id):
          user=request.user,
          workout=workout,
          exercise=exercise,
+         type = type,
          repetitions=repetitions if repetitions else None,
          weight=weight if weight else None,
          distance=distance if distance else None,
