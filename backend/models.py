@@ -81,7 +81,7 @@ class WorkoutExercise(models.Model):
 class WorkingSet(models.Model):
     """Model for Working Sets"""
     TYPE_CHOICES = [
-        ("warmpup", "Warm Up set"),
+        ("warmup", "Warm Up set"),
         ("working", "Working set"),
         ("dropset", "Drop set"),
         ("restpause", "Rest pause set"),

@@ -12,7 +12,7 @@ A web app that works as a workout notebook. It help people to plan their workout
 - users can create, edit and delete exercises and muscle groups
 - users can create, edit and delete workouts, for each one they can add a body weight value and a personal note
 - users can add and remove unlimited exercises to a workout
-- users can add, edit and remove unlimited sets to an exercise from a workout
+- users can add, copy, edit and remove unlimited sets to an exercise from a workout
 - users can select their set type from options: warmup, working, drop, rest pause, myo, cluster or superset
 - users can navigate through days and have a workout for each day
 - users can make their workouts public to be seen by other community members

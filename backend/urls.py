@@ -44,6 +44,7 @@ urlpatterns = [
 
     # Working sets urls
     path('create-set/<int:exercise_id>/<int:workout_id>/', views.create_workingsets, name='create-workingset'),
+    path('copy-set/<int:workingset_id>', views.copy_workingsets, name='copy-workingset'),
     path('edit-set/<int:workingset_id>/', views.edit_workingsets, name='edit-workingset'),
     path('delete-set/<int:workingset_id>/', views.delete_workingsets, name='delete-workingset'),
 

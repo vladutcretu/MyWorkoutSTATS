@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='workingset',
             name='type',
-            field=models.CharField(choices=[('warmpup', 'Warm Up set'), ('working', 'Working set'), ('dropset', 'Drop set'), ('restpause', 'Rest pause set'), ('myo', 'Myo set'), ('cluster', 'Cluster set'), ('super', 'Super set')], default='working', max_length=10),
+            field=models.CharField(choices=[('warmup', 'Warm Up set'), ('working', 'Working set'), ('dropset', 'Drop set'), ('restpause', 'Rest pause set'), ('myo', 'Myo set'), ('cluster', 'Cluster set'), ('super', 'Super set')], default='working', max_length=10),
         ),
     ]

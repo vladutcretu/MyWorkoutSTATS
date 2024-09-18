@@ -551,7 +551,8 @@ def create_workingsets(request, exercise_id, workout_id):
    target_date = request.COOKIES.get('targetDate', date.today())
 
    if request.method == "POST":
-      type = request.POST.get('type', 'working')
+      type_weight = request.POST.get('type_weight')
+      type_endurance = request.POST.get('type_endurance')
       repetitions = request.POST.get('repetitions')
       weight = request.POST.get('weight')
       distance = request.POST.get('distance')
@@ -561,12 +562,12 @@ def create_workingsets(request, exercise_id, workout_id):
          user=request.user,
          workout=workout,
          exercise=exercise,
-         type = type,
+         type=type_weight if weight else type_endurance,
          repetitions=repetitions if repetitions else None,
          weight=weight if weight else None,
          distance=distance if distance else None,
          time=time if time else None,
-         created=target_date,
+         created=target_date
       )
 
       return redirect(build_redirect_url(request, default_url=''))
@@ -576,6 +577,26 @@ def create_workingsets(request, exercise_id, workout_id):
       'workout': workout
    }
    return render(request, 'backend/workingsets_create.html', context)
+
+
+@login_required(login_url='login')
+def copy_workingsets(request, workingset_id):
+   """View used to duplicate a working set already created for an exercise in a workout"""
+   workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
+
+   new_workingset = WorkingSet.objects.create(
+      user=request.user,
+      workout=workingset.workout,
+      exercise=workingset.exercise,
+      type=workingset.type,
+      repetitions=workingset.repetitions,
+      weight=workingset.weight,
+      distance=workingset.distance,
+      time=workingset.time,
+      created=workingset.created
+   )
+
+   return redirect(build_redirect_url(request, default_url=''))
 
 
 @login_required(login_url='login')
