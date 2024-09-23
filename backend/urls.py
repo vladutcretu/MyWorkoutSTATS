@@ -6,6 +6,11 @@ urlpatterns = [
     # Main page urls
     path('', views.main, name='main'),
 
+    # Utility urls
+    path('about/', views.page_about, name='about'),
+    path('help/', views.page_help, name='help'),
+    path('privacy/', views.page_privacy, name='privacy'),
+
     # Auth urls
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
@@ -14,6 +19,7 @@ urlpatterns = [
     path('change-password/', views.user_change_password, name='change-password'),
 
     # User profile and account urls
+    path('account/', views.user_account, name='account'),
     path('profile/<int:user_id>/', views.user_profile, name='profile'),
     path('edit-profile/', views.user_profile_edit, name='edit-profile'),
 

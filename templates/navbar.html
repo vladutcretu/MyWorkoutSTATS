@@ -2,43 +2,43 @@
 
 <header class="header">
     <div class="header-content">
-
+        <!-- Logo -->
         <div class="header-logo-and-name">
             <div class="header-logo">
-                <a href="{% url 'main' %}">
-                    <img src="{% static 'img/logo.png' %}" width="50" height="50">
+                <a href="{% url "main" %}">
+                    <img src="{% static 'img/logo.png' %}" width="50" height="50" alt="Logo">
                 </a>
             </div>
             <div class="header-name">
-                <a href="{% url 'main' %}"><p>My Workout STATS</p></a>
+                <a href="{% url "main" %}"><p>My Workout STATS</p></a>
             </div>
         </div>
 
-        <div class="header-status"> 
-            {% if request.user.is_authenticated %}
-                <div class="logged">
-                    <div class="pfp-small">
-                        <img src='{{ request.user.profile_picture.url }}' />
-                        <a href="{% url "profile" request.user.id %}"><b>{{ request.user }}'s account</b></a>
-                    </div>
-                    <div>
-                        <a href='{% url "public-workouts" %}'><b>Public workouts</b></a>
-                    </div>
-                    <div>
-                        <a href='{% url "logout" %}'><b>Logout</b></a>
-                    </div>
-                </div>
-
-            {% else %}
-                <div class="login">
-                    <a href='{% url "login" %}'><b>Log In</b></a>
-                </div>
-
-            {% endif %}
+        <!-- Hamberger menu (for mobile) -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span>☰</span>
         </div>
 
+        <!-- Navbar links-->
+        <nav class="header-links">
+            {% if request.user.is_authenticated %}
+                <a href="{% url "account" %}"><b>Account</b></a>
+                <a href="{% url "profile" request.user.id %}"><b>Profile</b></a>
+                <a href="{% url "public-workouts" %}"><b>Public workouts</b></a>
+                <a href="{% url "logout" %}"><b>Logout</b></a>
+            {% else %}
+                <a href="{% url "login" %}"><b>Log In</b></a>
+                <a href="{% url "signup" %}"><b>Sign up</b></a>
+            {% endif %}
+        </nav>
     </div>
 </header>
 
-<hr>
-<br>
+
+<script>
+// Function to show hamburger menu on small resolutions
+function toggleMenu() {
+    const navLinks = document.querySelector('.header-links');
+    navLinks.classList.toggle('active');
+}
+</script>

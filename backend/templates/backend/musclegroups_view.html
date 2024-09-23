@@ -7,24 +7,30 @@
 
 <body>
 <div class="base-body">
-    <h1>{{ request.user }}'s muscle group list ({{ musclegroups_count }} body parts)</h1>
+    <h3>{{ request.user }}'s muscle group list ({{ musclegroups_count }} body parts)</h3>
+    <hr>
+    <br>
 
     <div>
-        <p>
-            <a href='{% url "create-musclegroup" %}' class="button addBtn">Create muscle group</a>
-            </p>
+        <p><a href='{% url "create-musclegroup" %}' class="button addBtn">Create muscle group</a></p>
     </div>
 
     <ul>
         {% for musclegroup in musclegroups %}
             <p>
                 Muscle Group name: {{ musclegroup.name }}
-                <a href='{% url "edit-musclegroup" musclegroup.id %}' class="button editBtn">Edit muscle group</button></a>
-                <a href='{% url "delete-musclegroup" musclegroup.id %}' class="button deleteBtn">Delete muscle group</button></a>
+                <div class="inline-buttons">
+                    <a href='{% url "edit-musclegroup" musclegroup.id %}' class="button editBtn">Edit muscle group</button></a>
+                    <a href='{% url "delete-musclegroup" musclegroup.id %}' class="button deleteBtn">Delete muscle group</button></a>
+                </div>
             </p>
 
         {% endfor %}
     </ul>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+
 </div>
 </body>
 {% endblock content %}

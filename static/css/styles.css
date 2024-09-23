@@ -32,9 +32,8 @@
 
 /* Navbar */
 .header {
-    background-color: #282A35;
-    color: white;
-    padding: 20px 0;
+    background-color: #1c1e26;
+    padding: 0px 50px;
     text-align: center;
 }
 
@@ -45,56 +44,112 @@
 }
 
 .header-logo-and-name {
-    display: flex;          
-    align-items: center;    
-    gap: 0;                 
-}
-
-.header-status {
     display: flex;
-}
-
-.logged {
-    display: flex;
-    align-items: center;    
-    gap: 30px;                
-}
-
-.header p {
-    color: white;
-    font-size: 20px;
-    line-height: 0.6;
+    align-items: center;
+    gap: 0;
 }
 
 .header a {
     text-decoration: none;
-}
-
-.header b {
     color: white;
-    text-decoration: none;
 }
 
-.pfp-small img {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-  }
+.header p {
+    font-size: 20px;
+    line-height: 0.6;
+}
 
+.hamburger {
+    display: none; /* Not shown on high resolutions  */
+}
+
+.header-links {
+    display: flex;
+    gap: 40px;
+}
+
+.header-links a:hover {
+    background-color: #444;
+}
+
+/* Hamburger menu for small resolutions (mobile) */
+@media screen and (max-width: 768px) {
+    .header-links {
+        display: none;
+        flex-direction: column;
+        background-color: #1c1e26;
+        position: absolute;
+        top: 50px; /* Menu starts under header */
+        right: 0; /* Menu starts right side */
+        width: 25%;
+        text-align: center;
+    }
+
+    .header-links.active {
+        display: flex;
+    }
+
+    .header-links a {
+        padding: 0px 5px;
+        display: block; /* New line for every element */
+        color: white;
+        text-decoration: none;
+    }
+
+    .header-links a:hover {
+        background-color: #444;
+    }
+
+    .hamburger {
+        display: block; /* Shown on small resolutions */
+        cursor: pointer;
+    }
+}
+
+
+/* Wrapper (used for footer) */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    min-height: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
 
 /* Footer */
 .footer {
-    background-color: #282A35;
+    background-color: #1c1e26;
     color: white;
     padding: 20px 0;
     text-align: center;
-    width: 500px;
-    margin: auto;
+    width: 100%;
+}
+
+.footer-links {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
 }
 
 .footer p {
     font-size: 14px;
-    line-height: 0.6;
+    margin: 0;
 }
 
 
@@ -103,6 +158,7 @@ body {
     background-color: #282A35;
     font-family: sans-serif;
     color: white;
+    margin: 0;
   }
 
 a {
@@ -116,6 +172,23 @@ a {
     margin: 20px;
     padding: 20px;
 }
+
+.inline-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.inline-buttons a, .inline-buttons form {
+    display: inline-block;
+    margin: 0;
+}
+
+.pfp-small img {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+  }
 
 
 /* User Profile */
@@ -143,17 +216,4 @@ a {
 .select-exercise {
     display: grid;
     grid-template-columns: 1fr 3fr;
-}
-
-
-/* workouts_view_public.html */
-.workout-inline-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.workout-inline-buttons a, .workout-inline-buttons form {
-    display: inline-block;
-    margin: 0;
 }

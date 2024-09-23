@@ -2,7 +2,7 @@
 
 {% block content %}
 <head>
-    <title>{% block title %}User Profile{% endblock title %}</title>
+    <title>{% block title %}{{ user }}'s Profile{% endblock title %}</title>
 </head>
 
 <body>
@@ -49,31 +49,6 @@
     {% endif %}
 </center>
 </div>
-
-{% if user == request.user %}
-<div class="base-body">
-    <center><h1>Account</h1></center> 
-
-    <div class="workout-inline-buttons">
-        <h3>Manage workouts, muscle groups and exercises:</h3>
-        <a href='{% url "workouts" %}' class="button editBtn">workouts</a>
-        <a href='{% url "musclegroups" %}' class="button editBtn">muscle groups</a>
-        <a href='{% url "exercises" %}' class="button editBtn">exercises</a>
-    </div>
-
-    <div class="workout-inline-buttons">
-        <h3>Analyze bodyweight, exercises evolution and records:</h3>
-        <a href='' class="button editBtn">bodyweight graph</a>
-        <a href='' class="button editBtn">exercises graph</a>
-        <a href='' class="button editBtn">exercises records</a>
-    </div>
-
-    <div class="workout-inline-buttons">
-        <h3>Settings:</h3>
-        <a href="{% url "change-password" %}" class="button editBtn">Change password</a>
-    </div>
-</div>
-{% endif %}
 
 </body>
 {% endblock content %}

@@ -35,13 +35,16 @@
             {% endfor %}
         </ol>
     {% endfor %}
-
-    <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
-    <a href='{% url "workouts" %}' class="button backBtn">Go back</a>
+    
+    <div class="inline-buttons">
+        <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
+        <a href='{% url "workouts" %}' class="button backBtn">Go back</a>
+    </div>
 
 {% else %}
     <p>This workout is not yours and is not public.</p>
 {% endif %}
+
 </div>
 </body>
 {% endblock content %}

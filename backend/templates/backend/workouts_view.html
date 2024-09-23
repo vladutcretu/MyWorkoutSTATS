@@ -7,7 +7,9 @@
 
 <body>
 <div class="base-body">
-    <h1>{{ request.user }}'s workouts list ({{ workouts_count }} logged)</h1>
+    <h3>{{ request.user }}'s workouts list ({{ workouts_count }} logged)</h3>
+    <hr>
+    <br>
 
     <form method="get" action="{% url 'workouts' %}">
         <label for="filter_by_created_date">Created:</label>
@@ -59,12 +61,18 @@
                 <a href='{% url "view-private-workout" workout.id %}'>{{ workout.name }}</a>
                 (created on {{ workout.created }}, updated on {{ workout.updated }})
                 -- public: {{ workout.public }}
-                <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
-                <a href='{% url "edit-workout" workout.id %}' class="button editBtn">Edit workout</a>
-                <a href='{% url "delete-workout" workout.id %}' class="button deleteBtn">Delete workout</a>
+                <div class="inline-buttons">
+                    <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
+                    <a href='{% url "edit-workout" workout.id %}' class="button editBtn">Edit workout</a>
+                    <a href='{% url "delete-workout" workout.id %}' class="button deleteBtn">Delete workout</a>
+                </div>
             </p>
         {% endfor %}
     </ul>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+
 </div>
 </body>
 {% endblock content %}

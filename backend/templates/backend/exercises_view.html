@@ -7,7 +7,9 @@
 
 <body>
 <div class="base-body">
-    <h1>{{ request.user }}'s' exercise list ({{ exercises_count }} in library)</h1>
+    <h3>{{ request.user }}'s' exercise list ({{ exercises_count }} in library)</h3>
+    <hr>
+    <br>
 
     <div>
         <form method="GET" action="{% url "exercises" %}">
@@ -18,9 +20,7 @@
     </div>
 
     <div>
-        <p>
-            <a href='{% url "exercises" %}' class="button editBtn">All exercises</button></a>
-        </p>
+        <p><a href='{% url "exercises" %}' class="button editBtn">All exercises</button></a></p>
     </div>
     
     <div>
@@ -31,11 +31,17 @@
         {% for exercise in exercises %}
             <p>
                 Exercise name: {{ exercise.name }} (muscle group: {{ exercise.musclegroup.name }})
-                <a href='{% url "edit-exercise" exercise.id %}' class="button editBtn">Edit exercise</button></a>
-                <a href='{% url "delete-exercise" exercise.id %}' class="button deleteBtn">Delete exercise</button></a>
+                <div class="inline-buttons">
+                    <a href='{% url "edit-exercise" exercise.id %}' class="button editBtn">Edit exercise</button></a>
+                    <a href='{% url "delete-exercise" exercise.id %}' class="button deleteBtn">Delete exercise</button></a>
+                </div>
             </p>
         {% endfor %}
     </ul>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+
 </div>
 </body>
 {% endblock content %}

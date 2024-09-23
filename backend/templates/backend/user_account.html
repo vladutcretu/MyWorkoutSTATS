@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Account{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Account</h3>
+    <hr>
+    <br>
+
+    <div class="inline-buttons">
+        <h3>Manage:</h3>
+        <a href='{% url "workouts" %}' class="button editBtn">workouts</a>
+        <a href='{% url "musclegroups" %}' class="button editBtn">muscle groups</a>
+        <a href='{% url "exercises" %}' class="button editBtn">exercises</a>
+    </div>
+
+    <div class="inline-buttons">
+        <h3>Analyze:</h3>
+        <a href='' class="button editBtn">bodyweight graph</a>
+        <a href='' class="button editBtn">exercises graph</a>
+        <a href='' class="button editBtn">exercises records</a>
+    </div>
+
+    <div class="inline-buttons">
+        <h3>Settings:</h3>
+        <a href="{% url "change-password" %}" class="button editBtn">Change password</a>
+    </div>
+
+</div>
+</body>
+{% endblock content %}

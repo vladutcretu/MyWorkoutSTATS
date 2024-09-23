@@ -18,6 +18,7 @@
 
 <body>
     {% include "navbar.html" %}
+    <br />
 
     {% block content %}
 
@@ -28,8 +29,8 @@
 
 <div id="cookieConsent" style="display: none;">
     <div class="cookie-container">
-        <p>We use cookies so users can perform actions on our site. By continuing to use our website you consent to the use of cookies.</p>
-        <button id="acceptCookiesBtn">Accept</button>
+        <p>We use cookies. By continuing to use our website you consent to the use of cookies: <a href="{% url "privacy" %}">find out more</a>.</p>
+        <button id="acceptCookiesBtn">Close</button>
     </div>
 </div>
 

@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Help{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+
+    <h1>Help</h1>
+    <hr>
+    <br>
+
+
+    <p>if you need guidance to use the application, this is the right place.</p>
+    <br>
+
+    <h3>Help Overview (Under construction!)</h3>
+    <ul>
+        <li>
+            <b>Navigation Panel</b>
+        </li>
+        <li>
+            <b>Workout</b>
+            <ul>
+                <li>Start a Workout</li>
+                <li>Edit a Workout</li>
+                <li>Share a Workout</li>
+                <li>Import a Workout</li>
+                <li>Delete a Workout</li>
+            </ul>
+        </li>
+        <li>
+            <b>Exercises, Muscle Groups and Sets</b>
+            <ul>
+                <li>Exercise
+                    <ul>
+                    <li>Add an Exercise</li>
+                    <li>Exercise Types</li>
+                    <li>Edit a Exercise</li>
+                    <li>Delete an Exercise</li>
+                    <li>Search for an Exercise</li>
+                    </ul>
+                </li>
+                <li>Muscle Group
+                    <ul>
+                    <li>Add a Muscle Group</li>
+                    <li>Edit a Muscle Group</li>
+                    <li>Delete Muscle Group</li>
+                    </ul>
+                </li>
+                <li>Set
+                    <ul>
+                    <li>Create a Set</li>
+                    <li>Set Types</li>
+                    <li>Edit a Set</li>
+                    <li>Delete a Set</li>
+                    </ul>
+                </li>
+            </ul> 
+        <li>
+            <b>Progress Tracking</b>
+                <ul>
+                <li>Training History</li>
+                <li>Bodyweight Graph</li>
+                <li>Progress Graph</li>
+                <li>Personal Records</li>
+                </ul>
+        </li>
+        <li>
+            <b>Community concepts</b>
+            <ul>
+            <li>Public Workouts</li>
+            <li>View Public Workout</li>
+            <li>Users Profile</li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
+</body>
+{% endblock content %}

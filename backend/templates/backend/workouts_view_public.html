@@ -40,7 +40,7 @@
             {% else %} </b>{{ workout.total_likes }}</b> members liked this workout.
             {% endif %}
         </p>
-        <div class="workout-inline-buttons">
+        <div class="inline-buttons">
             <!-- Workout like button -->
              {% if workout.user != request.user %}
                 <form method="POST" action="{% url 'like-workout' workout.id %}">
@@ -55,7 +55,7 @@
             {% endif %}
             <a href='{% url "import-workout" workout.id %}' class="button addBtn">Import workout</a>
             <a href='{% url "public-workouts" %}' class="button backBtn">Go back</a>
-    </div>
+        </div>
     </div>
 
 {% else %}

@@ -13,6 +13,8 @@ from .forms import CustomUserRegistrationForm, AccountRecoveryForm, EditProfileF
 from .forms import MuscleGroupForm, ExerciseForm, WorkoutForm, WorkingSetForm, WorkoutCommentForm
 
 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Main VIEW # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def main(request):
    """View used to display in main page the correct workout based by user actions"""
    # Obtain days_diff value from query string
@@ -42,6 +44,16 @@ def main(request):
    response.set_cookie('targetDate', str(target_date))
    return response
 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Utility VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def page_about(request):
+   return render(request, 'backend/page_about.html')
+
+def page_help(request):
+   return render(request, 'backend/page_help.html')
+
+def page_privacy(request):
+   return render(request, 'backend/page_privacy.html')
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Auth VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -120,6 +132,9 @@ def user_account_recovery(request):
    return render(request, 'backend/user_recover.html', context)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Profile VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def user_account(request):
+   return render(request, 'backend/user_account.html')
+
 @login_required(login_url='login')
 def user_profile(request, user_id):
    """View for User Profile page"""
