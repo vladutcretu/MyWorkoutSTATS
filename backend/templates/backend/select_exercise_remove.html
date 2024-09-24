@@ -7,12 +7,12 @@
 
 <body>
 <div class="base-body">
-    <h1>Delete exercise from workout</h1>
+    <h3>Delete exercise from workout</h3>
+    <hr>
+    <br>
 
     <div>
-        <p>
-            Are you sure you want to remove exercise "{{ exercise.name }}" from the workout?
-        </p>
+        <p>Are you sure you want to remove exercise "{{ exercise.name }}" from the workout?</p>
 
         <form method="POST" action="">
         {% csrf_token %}
@@ -20,9 +20,7 @@
         <input class="button deleteBtn" type="submit" value="Confirm">
         </form>
 
-        <p>
-            <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
-        </p>
+        <p><a href="{% url 'main' %}" class="button backBtn">Go back</a></p>
     </div>
 </div>
 </body>

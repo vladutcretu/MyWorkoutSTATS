@@ -6,9 +6,12 @@
 </head>
 
 <body>
-<div class="base-body">
 <center>
-    <h1>{{ user }}'s profile</h1>
+<div class="base-body">
+    <h3>{{ user }}'s profile</h3>
+    <hr>
+    <br>
+
     <div class="profile-avatar">
         <img src="{{ user.profile_picture.url }}" alt="Profile Picture" />
     </div>
@@ -34,7 +37,7 @@
     <p>Public workouts:</p>
     {% if public_workouts %}
         {% for public_workout in public_workouts %}
-            <p><a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a> created on {{ public_workout.created }}</p>
+            <p><a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a> -- created on {{ public_workout.created }}</p>
         {% endfor %}
     {% else %}
         Not added
@@ -49,6 +52,5 @@
     {% endif %}
 </center>
 </div>
-
 </body>
 {% endblock content %}

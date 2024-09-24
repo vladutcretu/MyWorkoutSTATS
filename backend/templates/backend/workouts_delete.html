@@ -7,11 +7,14 @@
 
 <body>
 <div class="base-body">
-    <h1>Delete a workout</h1>
+    <h3>Delete workout</h3>
+    <hr>
+    <br>
     
     <div>
         <p>
             Are you sure you want to delete workout "{{ workout.name }}" (date: {{ workout.created }})?
+            All data (bodyweight, sets) related to this workout will be deleted as well.
         </p>
 
         <form method="POST" action="">
@@ -20,9 +23,7 @@
         <input class="button deleteBtn" type="Submit" value="Confirm" />
         </form>
 
-        <p>
-            <a href="{% url 'workouts' %}" class="button backBtn">Go back</a>
-        </p>
+        <p><a href="{% url 'main' %}" class="button backBtn">Go back</a></p>
     </div>
 </div>
 </body>

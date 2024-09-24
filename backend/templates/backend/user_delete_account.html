@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Delete account{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Delete account</h3>
+    <hr>
+    <br>
+
+     <p>Are you sure you want to delete your account?</p>
+        <form method="POST" action="">
+        {% csrf_token %}
+
+        <input class="button deleteBtn" type="Submit" value="Confirm" />
+        </form>
+
+    <p><a href="{% url 'account' %}" class="button backBtn">Go back</a></p>
+</div>
+</body>
+{% endblock content %}

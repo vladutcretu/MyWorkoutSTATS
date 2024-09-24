@@ -8,13 +8,20 @@
 <body>
 <div class="base-body">
 {% if workout.public == "yes" %}
-    <h3>Workout name: {{ workout.name }}</h3>
-    <h3>
+    <h3>View Public Workout</h3>
+    <hr>
+    <br>
+
+
+    <h4>Workout name: {{ workout.name }}</h4>
+    <h4>
         Workout details:
         Created by {% if workout.user == request.user %}you {% else %}<a href='{% url "profile" workout.user.id %}'>{{ workout.user }}</a> {% endif %}
         on {{ workout.created }} with latest update on {{ workout.updated }}
-    </h3>
-    <h3>Exercises:</h3>
+    </h4>
+    <br />
+
+    <h4>Exercises:</h4>
         {% for exercise in workout.exercises.all %}
             <p>{{ forloop.counter }}. {{ exercise.name }}</p>
 
@@ -23,9 +30,9 @@
                 {% if workingset.exercise == exercise and workingset.created == workout.created %}
                     <li>
                         Set type: <b>{{ workingset.get_type_display }}</b> --
-                        {% if workingset.weight and workingset.repetitions %}
+                        {% if workingset.weight or workingset.repetitions %}
                             Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
-                        {% elif workingset.distance and workingset.time %}
+                        {% elif workingset.distance or workingset.time %}
                             Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                         {% endif %}
                     </li>

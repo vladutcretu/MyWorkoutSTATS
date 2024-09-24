@@ -7,6 +7,10 @@
 
 <body>
 <div class="base-body">
+    <h3>Sign Up</h3>
+    <hr>
+    <br>
+
     <form method="POST" action="">
         {% csrf_token %}
 
@@ -15,6 +19,7 @@
     </form>
 
     {% if messages %}
+        <p>Sign up attempt unsuccessful:</p>
         <ul class="messages">
         {% for message in messages %}
             {{ message }}
@@ -23,7 +28,7 @@
     {% endif %}
 
     <br>
-    <p>Already signed up? <a href="{% url 'login' %}">Log In</a></p>
+    <p>Already signed up? <a href="{% url 'login' %}"><b>Log In</b></a></p>
 </div>
 </body>
 {% endblock content %}

@@ -186,6 +186,22 @@ def user_change_password(request):
    return render (request, 'backend/user_change_password.html', context)
 
 
+@login_required(login_url='login')
+def user_delete_account(request):
+   """View used by an user to delete his account"""
+   user = request.user
+
+   if request.method == 'POST':
+      user.delete()
+      return redirect("main")
+   
+   context = {
+      'user': user
+   }
+
+   return render(request, 'backend/user_delete_account.html', context)
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # MuscleGroups VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def view_musclegroups(request):

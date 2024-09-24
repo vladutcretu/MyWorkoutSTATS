@@ -7,7 +7,9 @@
 
 <body>
 <div class="base-body">
-    <h1>Edit comment</h1>
+    <h3>Edit comment</h3>
+    <hr>
+    <br>
 
     <div>
         <form method="POST" action="">
@@ -17,9 +19,7 @@
             <input class="button addBtn" type="Submit" value="Submit" />
         </form>
 
-        <p>
-            <a href="{% url 'view-public-workout' comment.workout.id %}" class="button backBtn">Go back</a>
-        </p>
+        <p><a href="{% url 'view-public-workout' comment.workout.id %}" class="button backBtn">Go back</a> </p>
     </div>
 </div>
 </body>

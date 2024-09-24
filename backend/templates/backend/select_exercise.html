@@ -9,7 +9,7 @@
 <div class="base-body">
 <div class="select-exercise">
     <div>
-        <h2>Muscle Groups</h2>
+        <h3>Muscle Groups</h3>
         <hr>
 
         <div>
@@ -36,7 +36,7 @@
     <div>
         {% if user.is_authenticated %}
             {% if exercises_count > 0 %}
-                <h2>{{ exercises_count }} exercises available to be added to the workout {{ workout.name }} ({{ workout.created }})</h2>
+                <h3>{{ exercises_count }} exercises available to be added to the workout {{ workout.name }} ({{ workout.created }})</h3>
             <hr>
 
             {% for exercise in exercises %}

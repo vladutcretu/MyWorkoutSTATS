@@ -7,12 +7,12 @@
 
 <body>
 <div class="base-body">
-    <h1>Delete a comment</h1>
+    <h3>Delete comment</h3>
+    <hr>
+    <br>
 
     <div>
-        <p>
-            Are you sure you want to delete comment "<b>{{ comment.content }}</b>"?
-        </p>
+        <p>Are you sure you want to delete comment "<b>{{ comment.content }}</b>"?</p>
 
         <form method="POST" action="">
         {% csrf_token %}
@@ -20,9 +20,7 @@
         <input class="button deleteBtn" type="Submit" value="Confirm" />
         </form>
 
-        <p>
-            <a href="{% url 'view-public-workout' comment.workout.id %}" class="button backBtn">Go back</a>
-        </p>
+        <p><a href="{% url 'view-public-workout' comment.workout.id %}" class="button backBtn">Go back</a></p>
     </div>
 </div>
 </body>

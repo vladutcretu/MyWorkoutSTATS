@@ -6,6 +6,7 @@
 </head>
 
 <body>
+<br>
 <div>
     <center>
     {% if user.is_authenticated %}
@@ -19,7 +20,22 @@
 <div class="base-body">
 {% if not user.is_authenticated %}
     <h2>Welcome to <i>My Workout STATS</i> - a clean, simple and newbie friendly workout tracking app.</h2>
-    <p>Please <a href="{% url 'login' %}"><strong>log in</strong></a> to add your workout. If you don't have an account, please <a href="{% url 'signup' %}"><strong>sign up</strong></a> to use our features.</p>  
+    <p>Please <a href="{% url 'login' %}"><strong>log in</strong></a> to add your workout. If you don't have an account, please <a href="{% url 'signup' %}"><strong>sign up</strong></a> to use our features:</p>
+    <ul>
+        <li>newly registered users have 128 exercises assigned to 8 different muscle groups ready to be added to personal workouts</li>
+        <li>users have a profile with personal informations and workouts made public</li>
+        <li>users can create, edit and delete exercises and muscle groups</li>
+        <li>users can create, edit and delete workouts, and for each one they can add a body weight value and a personal note</li>
+        <li>users can add and remove unlimited exercises to a workout</li>
+        <li>users can add, copy, edit and remove unlimited sets to an exercise from a workout</li>
+        <li>users can select their set type from options: warmup, working, drop, rest pause, myo, cluster or superset</li>
+        <li>users can navigate through days and have a workout for each day</li>
+        <li>users can make their workouts public to be seen by other community users</li>
+        <li>users from community can leave, edit and delete comments on a public workout</li>
+        <li>users from community can like and unlike a public workout</li>
+        <li>users can sort public workouts by number of likes and date</li>
+        <li>users can import their personal previous workouts or public workouts (copy exercises and sets)</li>
+    </ul>
 
 {% else %}
     {% if workouts %}
@@ -48,9 +64,9 @@
                     {% if workingset.exercise == exercise and workingset.created == workout.created %}
                     <li>
                         Set type: <b>{{ workingset.get_type_display }}</b> --
-                        {% if workingset.weight and workingset.repetitions %}
+                        {% if workingset.weight or workingset.repetitions %}
                             Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
-                        {% elif workingset.distance and workingset.time %}
+                        {% elif workingset.distance or workingset.time %}
                             Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                         {% endif %}
                         <div class="inline-buttons">

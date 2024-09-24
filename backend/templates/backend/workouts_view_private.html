@@ -8,15 +8,18 @@
 <body>
 <div class="base-body">
 {% if workout.user == request.user %}
-    <h3>Date: {{ workout.created }}</h3>
-    <h3>Workout name: {{ workout.name }}</h3>
-    <h3>My bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} {% else %} Not added {% endif %}</h3>
-    <h3>My notes: {% if workout.note %} {{ workout.note }} {% else %} Not added {% endif %}</h3>
-    <h3>Workout visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h3>
+    <h3>View Private Workout</h3>
+    <hr>
+    <br>
 
+    <h4>Workout name: {{ workout.name }}</h4>
+    <h4> Workout details: Created on {{ workout.created }} with latest update on {{ workout.updated }} </h4>
+    <h4>My bodyweight: {% if workout.bodyweight  %} {{ workout.bodyweight }} {% else %} Not added {% endif %}</h4>
+    <h4>My notes: {% if workout.note %} {{ workout.note }} {% else %} Not added {% endif %}</h4>
+    <h4>Workout visibility: {% if workout.public == "yes" %} Public {% else %} Private {% endif %}</h4>
     <br />
-    <h3>Exercises:</h3>
 
+    <h4>Exercises:</h4>
     {% for exercise in workout.exercises.all %}
         <p><b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b> -- muscle group: {{ exercise.musclegroup.name }}:</p>
 
@@ -25,9 +28,9 @@
                 {% if workingset.exercise == exercise and workingset.created == workout.created %}
                     <li>
                         Set type: <b>{{ workingset.get_type_display }}</b> --
-                        {% if workingset.weight and workingset.repetitions %}
+                        {% if workingset.weight or workingset.repetitions %}
                             Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
-                        {% elif workingset.distance and workingset.time %}
+                        {% elif workingset.distance or workingset.time %}
                             Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                         {% endif %}
                     </li>

@@ -17,6 +17,7 @@ urlpatterns = [
     path('signup/', views.user_signup, name='signup'),
     path('recover/', views.user_account_recovery, name='recover'),
     path('change-password/', views.user_change_password, name='change-password'),
+    path('delete-account/', views.user_delete_account, name='delete-account'),
 
     # User profile and account urls
     path('account/', views.user_account, name='account'),
