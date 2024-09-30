@@ -792,6 +792,19 @@ def like_workout(request, workout_id):
    return redirect('view-public-workout', workout_id=workout.id)
 
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Analysis VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+@login_required(login_url='login')
+def analysis_bodyweight(request):
+   """View used by user to see his bodyweight analysis"""
+   workouts = Workout.objects.filter(user=request.user)
+
+   context = {
+      'workouts': workouts
+   }
+
+   return render(request, 'backend/analysis_bodyweight.html', context)
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Refactoring VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def build_redirect_url(request, default_url=''):
    """Created for refactoring: after an action redirect users to the same page from which they initiated the action"""

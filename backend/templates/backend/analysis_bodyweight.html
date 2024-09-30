@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Bodyweight analysis{% endblock title %}</title>
+
+    <!-- Link to chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Bodyweight graph</h3>
+    <hr>
+    <br>
+
+    <canvas id="bodyweightChart" width="50" height="25"></canvas>
+    <br><br><br>
+
+    <h3>Bodyweight table</h3>
+    <hr>
+    <br>
+
+    {% for workout in workouts %}
+        Entry #{{ forloop.revcounter }} | Date: {{ workout.created }} | Weight: {{ workout.bodyweight}}<br> 
+    {% endfor %}
+</div>
+
+<script>
+    // Obtain data from backend and convert them into an accessible format for chart.js
+    var workoutData = [
+        {% for workout in workouts reversed %}
+            { x: "{{ workout.created }}", y: {{ workout.bodyweight }} },
+        {% endfor %}
+    ];
+
+    // Configure data for chart.js
+    var chartData = {
+        labels: workoutData.map(function(workout) { return workout.x; }),
+        datasets: [{
+            label: 'Bodyweight',
+            data: workoutData.map(function(workout) { return workout.y; }),
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            fill: true
+        }]
+    };
+
+    // Obtain canvas and create chart
+    var ctx = document.getElementById('bodyweightChart').getContext('2d');
+    var bodyweightChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+    });
+</script>
+</body>
+{% endblock content %}

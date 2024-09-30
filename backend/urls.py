@@ -22,7 +22,7 @@ urlpatterns = [
     # User profile and account urls
     path('account/', views.user_account, name='account'),
     path('profile/<int:user_id>/', views.user_profile, name='profile'),
-    path('edit-profile/', views.user_profile_edit, name='edit-profile'),
+    path('profile/edit-profile/', views.user_profile_edit, name='edit-profile'),
 
     # Muscle groups urls
     path('musclegroups/', views.view_musclegroups, name='musclegroups'),
@@ -65,4 +65,7 @@ urlpatterns = [
     path('public-workouts/view/<int:workout_id>/comment/edit/<int:comment_id>/', views.edit_comment, name='edit-comment'),
     path('public-workouts/view/<int:workout_id>/comment/delete/<int:comment_id>/', views.delete_comment, name='delete-comment'),
     path('public-workouts/view/<int:workout_id>/like/', views.like_workout, name='like-workout'),
+
+    # Analysis urls
+    path('analysis/bodyweight/', views.analysis_bodyweight, name='analyze-bodyweight'),
 ]
