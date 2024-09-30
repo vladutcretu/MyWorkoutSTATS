@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Sets{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>{{ request.user }}'s sets list ({{ workingsets_count }} sets logged)</h3>
+    <hr>
+    <br>
+
+    <form method="get" action="{% url 'sets' %}">
+        <label for="filter_by_created_date">Created:</label>
+        <input type="date" name="filter_by_created_date" value="{{ request.GET.filter_by_created_date }}">
+        <br>
+
+        <label for="filter_by_exercise">Exercise:</label>
+        <select name="filter_by_exercise">
+            <option value="">All</option>
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="filter_by_type">Type:</label>
+        <select name="filter_by_type">
+            <option value="">All</option>
+            <option value="warmup" {% if request.GET.filter_by_type == 'warmup' %}selected{% endif %}>Warm Up sets</option>
+            <option value="working" {% if request.GET.filter_by_type == 'working' %}selected{% endif %}>Working sets</option>
+            <option value="dropset" {% if request.GET.filter_by_type == 'dropset' %}selected{% endif %}>Drop sets</option>
+            <option value="restpause" {% if request.GET.filter_by_type == 'restpause' %}selected{% endif %}>Rest pause sets</option>
+            <option value="myo" {% if request.GET.filter_by_type == 'myo' %}selected{% endif %}>Myo sets</option>
+            <option value="cluster" {% if request.GET.filter_by_type == 'cluster' %}selected{% endif %}>Cluster sets</option>
+            <option value="super" {% if request.GET.filter_by_type == 'super' %}selected{% endif %}>Super sets</option>
+        </select>
+        <br>
+
+        <button class="button editBtn" type="submit">Filter</button>
+    </form>
+
+    <br>
+
+    <div>
+        <p><a href='{% url "sets" %}' class="button editBtn">All sets</a></p>
+    </div>
+
+    <ul>
+        {% if workingsets %}
+            {% for workingset in workingsets reversed %}
+                <p>
+                Set <b>#{{ forloop.revcounter }}</b> logged for exercise: <b>{{ workingset.exercise.name }}</b><br> 
+                Created on: <b>{{ workingset.created }}</b> -- Type: <b>{{ workingset.get_type_display }}</b> --
+                {% if workingset.weight or workingset.repetitions %}
+                    Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
+                {% elif workingset.distance or workingset.time %}
+                    Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
+                {% endif %}
+                    <div class="inline-buttons">
+                        <a href='{% url "edit-workingset" workingset.id %}' class="button editBtn">Edit set</button></a>
+                        <a href='{% url "delete-workingset" workingset.id %}' class="button deleteBtn">Delete set</button></a>
+                    </div>
+                </p>
+            {% endfor %}
+        {% else %}
+                <p>No sets logged for this exercise.</p>
+        {% endif %}
+    </ul>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+
+</div>
+</body>
+{% endblock content %}

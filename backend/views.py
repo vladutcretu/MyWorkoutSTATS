@@ -271,9 +271,10 @@ def delete_musclegroups(request, musclegroup_id):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Exercises VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
 def view_exercises(request):
-   """View used by user to see all exercises, and search them by their name"""
+   """View used by user to see all exercises, with search them by their name or filter by muscle group options"""
    exercises = Exercise.objects.filter(user=request.user)
    exercises_count = exercises.count()
+   musclegroups = MuscleGroup.objects.filter(user=request.user)
 
    if request.user.is_authenticated:
       q = request.GET.get('q', '')
@@ -282,6 +283,11 @@ def view_exercises(request):
          Q(name__icontains = q),
          user=request.user
       )
+
+      filter_by_musclegroup = request.GET.get('filter_by_musclegroup', '')
+      if filter_by_musclegroup:
+         exercises = exercises.filter(musclegroup=filter_by_musclegroup)
+
       exercises_count = exercises.count()
    else:
       exercises = []
@@ -289,6 +295,7 @@ def view_exercises(request):
    context = {
       'exercises': exercises,
       'exercises_count': exercises_count,
+      'musclegroups': musclegroups
    }
    return render(request, 'backend/exercises_view.html', context)
 
@@ -574,6 +581,39 @@ def remove_exercise_from_workout(request, exercise_id):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # WorkingSets VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 @login_required(login_url='login')
+def view_workingsets(request):
+   """View used by user to see all sets, with filter options"""
+   workingsets = WorkingSet.objects.filter(user=request.user)
+   workingsets_count = workingsets.count()
+   exercises = Exercise.objects.filter(user=request.user)
+
+   if request.user.is_authenticated:
+      filter_by_created_date = request.GET.get('filter_by_created_date', '')
+      if filter_by_created_date:
+         workingsets = workingsets.filter(created=filter_by_created_date)
+
+      filter_by_exercise = request.GET.get('filter_by_exercise', '')
+      if filter_by_exercise:
+         workingsets = workingsets.filter(exercise=filter_by_exercise)
+
+      filter_by_type = request.GET.get('filter_by_type', '')
+      if filter_by_type:
+         workingsets = workingsets.filter(type=filter_by_type)
+
+      workingsets_count = workingsets.count()
+   else:
+      workingsets = []
+
+   context = {
+      'workingsets': workingsets,
+      'workingsets_count': workingsets_count,
+      'exercises': exercises
+   }
+   return render(request, 'backend/workingsets_view.html', context)
+
+
+
+@login_required(login_url='login')
 def create_workingsets(request, exercise_id, workout_id):
    """View used to add working set to an existing exercise in a workout"""
    exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
@@ -834,7 +874,7 @@ def get_or_create_musclegroup_and_exercise(imported_exercise, user):
 
 def import_workingsets(imported_exercise, user, workout, exercise, created):
    """Created for refactoring: creating (importing) workingsets of an exercise from an imported workout"""
-   for imported_workingset in imported_exercise.workingsets.all():
+   for imported_workingset in imported_exercise.workingsets.filter(created=imported_exercise.created):
       WorkingSet.objects.create(
          user=user,
          workout=workout,

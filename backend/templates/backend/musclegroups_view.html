@@ -7,7 +7,7 @@
 
 <body>
 <div class="base-body">
-    <h3>{{ request.user }}'s muscle group list ({{ musclegroups_count }} body parts)</h3>
+    <h3>{{ request.user }}'s muscle groups list ({{ musclegroups_count }} body parts)</h3>
     <hr>
     <br>
 
@@ -18,7 +18,7 @@
     <ul>
         {% for musclegroup in musclegroups %}
             <p>
-                Muscle Group name: {{ musclegroup.name }}
+                Muscle Group name: <b>{{ musclegroup.name }}</b>
                 <div class="inline-buttons">
                     <a href='{% url "edit-musclegroup" musclegroup.id %}' class="button editBtn">Edit muscle group</button></a>
                     <a href='{% url "delete-musclegroup" musclegroup.id %}' class="button deleteBtn">Delete muscle group</button></a>

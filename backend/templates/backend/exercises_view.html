@@ -7,8 +7,23 @@
 
 <body>
 <div class="base-body">
-    <h3>{{ request.user }}'s' exercise list ({{ exercises_count }} in library)</h3>
+    <h3>{{ request.user }}'s exercises list ({{ exercises_count }} in library)</h3>
     <hr>
+    <br>
+
+    <form method="get" action="{% url 'exercises' %}">
+        <label for="filter_by_musclegroup">Muscle Group:</label>
+        <select name="filter_by_musclegroup">
+            <option value="">All</option>
+            {% for musclegroup in musclegroups %}
+                <option value="{{ musclegroup.id }}">{{ musclegroup.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <button class="button editBtn" type="submit">Filter</button>
+    </form>
+
     <br>
 
     <div>
@@ -19,18 +34,20 @@
         </form>
     </div>
 
+    <br>
+
     <div>
-        <p><a href='{% url "exercises" %}' class="button editBtn">All exercises</button></a></p>
+        <p><a href='{% url "exercises" %}' class="button editBtn">All exercises</a></p>
     </div>
     
     <div>
-        <p><a href='{% url "create-exercise" %}' class="button addBtn">Create exercise</button></a></p>
+        <p><a href='{% url "create-exercise" %}' class="button addBtn">Create exercise</a></p>
     </div>
     
     <ul>
         {% for exercise in exercises %}
             <p>
-                Exercise name: {{ exercise.name }} (muscle group: {{ exercise.musclegroup.name }})
+                Exercise name: <b>{{ exercise.name }}</b> (muscle group: {{ exercise.musclegroup.name }})
                 <div class="inline-buttons">
                     <a href='{% url "edit-exercise" exercise.id %}' class="button editBtn">Edit exercise</button></a>
                     <a href='{% url "delete-exercise" exercise.id %}' class="button deleteBtn">Delete exercise</button></a>
