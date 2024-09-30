@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Records analysis{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Records analysis</h3>
+    <hr>
+    <br>
+
+    <form id="recordForm">
+        <label for="exerciseSelect">Exercise:</label>
+        <select id="exerciseSelect">
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="recordSelect">Record type:</label>
+        <select id="recordSelect">
+            <option value="weight">Weight</option>
+            <option value="repetitions">Repetitions</option>
+            <option value="distance">Distance</option>
+            <option value="time">Time</option>
+        </select>
+        <br>
+
+        <button class="button editBtn" type="button" onclick="showRecord()">Show record</button>
+    </form>
+
+    <br>
+
+    <!-- Record will be shown here -->
+    <div id="recordResult">
+    </div>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+</div>
+
+<script>
+    // Function to get record data from backend and display it
+    function showRecord() {
+        const exerciseId = document.getElementById('exerciseSelect').value;
+        const recordType = document.getElementById('recordSelect').value;
+
+        // Ajax call to obtain and show data
+        fetch(`/get-record-data/?exercise_id=${exerciseId}&record_type=${recordType}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('recordResult').innerText = data.error;
+                } else {
+                    let resultHTML = `Record for <b>${data.exercise}</b> logged on <b>${data.date}</b>:<br>`;
+
+                    if (data.weight != null) {
+                        resultHTML += `- weight: <b>${data.weight}</b><br>`;
+                    }
+                    if (data.reps != null) {
+                        resultHTML += `- repetitions: <b>${data.reps}</b><br>`;
+                    }
+
+                    if (data.distance != null) {
+                        resultHTML += `- distance: <b>${data.distance}</b><br>`;
+                    }
+                    if (data.time != null) {
+                        resultHTML += `- time: <b>${data.time}</b><br>`;
+                    }
+
+                    document.getElementById('recordResult').innerHTML = resultHTML;
+                }
+            });
+    }
+</script>
+</body>
+{% endblock content %}

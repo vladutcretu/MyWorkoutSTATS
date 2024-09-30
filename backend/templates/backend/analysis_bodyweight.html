@@ -24,13 +24,18 @@
     {% for workout in workouts %}
         Entry #{{ forloop.revcounter }} | Date: {{ workout.created }} | Weight: {{ workout.bodyweight}}<br> 
     {% endfor %}
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
 </div>
 
 <script>
     // Obtain data from backend and convert them into an accessible format for chart.js
     var workoutData = [
         {% for workout in workouts reversed %}
-            { x: "{{ workout.created }}", y: {{ workout.bodyweight }} },
+            {% if workout.bodyweight %}
+                { x: "{{ workout.created }}", y: {{ workout.bodyweight }} },
+            {% endif %}
         {% endfor %}
     ];
 

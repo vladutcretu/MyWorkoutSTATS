@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from datetime import date, timedelta
 from django.utils import timezone
@@ -458,7 +458,7 @@ def import_workouts(request, workout_id):
       )
 
       # Import workingsets from imported exercise
-      import_workingsets(imported_exercise, request.user, new_workout, exercise, target_date)
+      import_workingsets(imported_exercise, imported_workout.created, request.user, new_workout, exercise, target_date)
 
    return redirect(build_redirect_url(request, default_url=''))
 
@@ -845,6 +845,102 @@ def analysis_bodyweight(request):
    return render(request, 'backend/analysis_bodyweight.html', context)
 
 
+@login_required(login_url='login')
+def analysis_volume(request):
+   """View used by user to see the volume analysis for a selected exercise"""
+   exercises = Exercise.objects.filter(user=request.user)
+
+   context = {
+      'exercises': exercises
+   }
+
+   return render(request, 'backend/analysis_volume.html', context)
+
+
+@login_required(login_url='login')
+def get_volume_data(request):
+   """Ajax view to return the volume data for a specific (target) exercise"""
+   exercise_id = request.GET.get('exercise_id')
+
+   workingsets = WorkingSet.objects.filter(user=request.user, exercise_id=exercise_id)
+
+   # Group sets by days and calculate the total volume (weight * repetitions)
+   volume_data = {}
+   for workingset in workingsets:
+      date_str = workingset.created.strftime('%Y-%m-%d')  # Group all sets from specific day
+      volume = workingset.weight * workingset.repetitions
+      if date_str in volume_data:
+         volume_data[date_str] += volume
+      else:
+         volume_data[date_str] = volume
+
+   # Return chronologically ordered data
+   sorted_volume_data = sorted(volume_data.items())  # List tuple(data, volume)
+   data = {
+      'dates': [item[0] for item in sorted_volume_data],
+      'volumes': [item[1] for item in sorted_volume_data]
+   }
+
+   return JsonResponse(data)
+
+
+@login_required(login_url='login')
+def analysis_records(request):
+   """View used by user to see each exercise record, based by his sets logged"""
+   exercises = Exercise.objects.filter(user=request.user)
+   workingsets = WorkingSet.objects.filter(user=request.user)
+
+   context = {
+      'exercises': exercises,
+      'workingsets': workingsets
+   }
+
+   return render(request, 'backend/analysis_records.html', context)
+
+
+@login_required(login_url='login')
+def get_record_data(request):
+   """Ajax view to return the highest set based on set type and exercise"""
+   exercise_id = request.GET.get('exercise_id')
+   record_type = request.GET.get('record_type')
+
+   workingsets = WorkingSet.objects.filter(user=request.user, exercise_id=exercise_id)
+
+   if record_type == "weight" and workingsets:
+      record_set = workingsets.order_by('-weight').first()  # Biggest weight
+      if not record_set.weight and not record_set.repetitions:
+         record_set = None
+   elif record_type == "repetitions" and workingsets:
+      record_set = workingsets.order_by('-repetitions').first()  # Most reps
+      if not record_set.weight and not record_set.repetitions:
+         record_set = None
+   elif record_type == "distance" and workingsets:
+      record_set = workingsets.order_by('-distance').first()  # Longest distance
+      if not record_set.distance and not record_set.time:
+         record_set = None
+   elif record_type == "time" and workingsets:
+      record_set = workingsets.order_by('-time').first()  # Highest time
+      if not record_set.distance and not record_set.time:
+         record_set = None
+   else:
+         record_set = None
+
+   if record_set:
+      data = {
+         'exercise': record_set.exercise.name,
+         'type': record_set.type,
+         'weight': record_set.weight,
+         'reps': record_set.repetitions,
+         'distance': record_set.distance,
+         'time': record_set.time,
+         'date': record_set.created.strftime('%b. %d, %Y'),
+      }
+   else:
+      data = {'error': 'No record found.'}
+
+   return JsonResponse(data)
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Refactoring VIEWS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def build_redirect_url(request, default_url=''):
    """Created for refactoring: after an action redirect users to the same page from which they initiated the action"""
@@ -872,9 +968,9 @@ def get_or_create_musclegroup_and_exercise(imported_exercise, user):
    return exercise
 
 
-def import_workingsets(imported_exercise, user, workout, exercise, created):
+def import_workingsets(imported_exercise, imported_workout_created, user, workout, exercise, created):
    """Created for refactoring: creating (importing) workingsets of an exercise from an imported workout"""
-   for imported_workingset in imported_exercise.workingsets.filter(created=imported_exercise.created):
+   for imported_workingset in imported_exercise.workingsets.filter(created=imported_workout_created):
       WorkingSet.objects.create(
          user=user,
          workout=workout,

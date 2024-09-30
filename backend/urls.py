@@ -69,4 +69,8 @@ urlpatterns = [
 
     # Analysis urls
     path('analysis/bodyweight/', views.analysis_bodyweight, name='analyze-bodyweight'),
+    path('analysis/volume/', views.analysis_volume, name='analyze-volume'),
+    path('get-volume-data/', views.get_volume_data, name='get-volume-data'),
+    path('analysis/records/', views.analysis_records, name='analyze-records'),
+    path('get-record-data/', views.get_record_data, name='get-record-data'),
 ]

@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Volume analysis{% endblock title %}</title>
+
+    <!-- Link to chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Volume analysis</h3>
+    <hr>
+    <br>
+
+    <form id="volumeForm">
+        <label for="exerciseSelect">Exercise:</label>
+        <select id="exerciseSelect">
+            <option value="">Select exercise</option>
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <button class="button editBtn" type="button" onclick="showVolume()">Show Volume</button>
+    </form>
+
+    <br>
+
+    <canvas id="volumeChart" width="50" height="25"></canvas>
+
+    <br>
+    <a href='{% url "account" %}' class="button backBtn">Go back</a>
+</div>
+
+<script>
+    // Obtain data from backend and convert them into an accessible format for chart.js
+    function showVolume() {
+        const exerciseId = document.getElementById('exerciseSelect').value;
+    
+        // Check if an exercise was selected (alert if not)
+        if (!exerciseId) {
+            alert('Please select an exercise.');
+            return;
+        }
+    
+        // Ajax call to obtain data
+        fetch(`/get-volume-data/?exercise_id=${exerciseId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.dates.length > 0) {
+                    const ctx = document.getElementById('volumeChart').getContext('2d');
+    
+                    // Check if a chart already exists (destroy if true)
+                    if (window.volumeChart instanceof Chart) {
+                        window.volumeChart.destroy();
+                    }
+    
+                    // Configure data for chart.js
+                    const chartData = {
+                        labels: data.dates,  // X axis
+                        datasets: [{
+                            label: 'Volume (Weight * Reps)',
+                            data: data.volumes,  // Y axis
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+                            fill: true
+                        }]
+                    };
+    
+                    // Obtain canvas and create / edit chart (if data exists)
+                    window.volumeChart = new Chart(ctx, {
+                        type: 'line',
+                        data: chartData,
+                    });
+                } else {
+                    alert('No data available for this exercise.');
+                }
+            })
+    }    
+</script>
+</body>
+{% endblock content %}
