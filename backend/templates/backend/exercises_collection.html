@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}Exercises collection{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+    <h3>Exercise collection</h3>
+    <hr>
+    <br>
+
+    <p>Want to discover new exercises? Here is the right place!<p>
+    <p>
+        Muscle groups and exercises are provided by <a href="https://wger.de/en/software/api" target="_blank">WGER API.</a>
+        (We are sorry if an exercise/description is not in English, but it is due to the provider.)
+    </p>
+    <br>
+
+    <div class="select-exercise">
+        <div>
+            <h3>Muscle Groups</h3>
+            <hr>
+
+            <div>
+                <form method="POST" action="{% url 'collection-exercise' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="musclegroup_id" value=" ">
+                    <button type="submit" class="button editBtn">All exercises</button>
+                </form>
+                <br>
+            </div>
+
+            {% for id, name in musclegroups %}
+            <div>
+                <form method="POST" action="{% url 'collection-exercise' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="musclegroup_id" value="{{ id }}">
+                    <button type="submit" class="button editBtn">{{ name }}</button>
+                </form>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {% if exercises %}
+                <h3>Exercises</h3>
+                <hr>
+                    <ul>
+                        {% for name, description in exercises %}
+                            <li><b>Name:</b> {{ name }}<br></li>
+                            <li><b>Description:</b> {{ description|safe }}</li>
+                            <hr>
+                            <br>
+                        {% endfor %}
+                    </ul>
+            {% else %}
+                <h3>Please select desired option from Muscle Groups buttons.</h3>
+                <hr>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+{% endblock content %}

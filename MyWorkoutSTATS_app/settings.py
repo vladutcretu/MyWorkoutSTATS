@@ -149,3 +149,12 @@ AUTH_USER_MODEL = 'backend.CustomUser'
 MEDIA_URL = 'profile_pics/'
 
 MEDIA_ROOT = BASE_DIR / 'static/profile_pics'
+
+# Environment variable
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+WGER_API_USERNAME = os.getenv('WGER_API_USERNAME')
+WGER_API_PASSWORD = os.getenv('WGER_API_PASSWORD')

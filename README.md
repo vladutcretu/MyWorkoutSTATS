@@ -30,7 +30,7 @@ You can safely register your own account or you can log into a demo account usin
 1. Username: user1 | Password: stats123
 2. Username: user2 | Password: stats123
 3. Username: user3 | Password: stats123
-Note:
+
 - on live demo you can't delete muscle groups, exercises, change password and delete account.
 - for above mentioned actions please contact project author: https://vladutcretu.pythonanywhere.com/about/
 
