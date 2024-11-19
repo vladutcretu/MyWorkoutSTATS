@@ -8,7 +8,7 @@ from core.models import CustomUser
 class MuscleGroup(models.Model):
     """Model for Muscle Groups"""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=30)
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -97,7 +97,7 @@ class WorkoutComment(models.Model):
     """Model for comments section on public workouts, allowing replies to other comments."""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     workout = models.ForeignKey(Workout, related_name='comments', on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(max_length=300)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
