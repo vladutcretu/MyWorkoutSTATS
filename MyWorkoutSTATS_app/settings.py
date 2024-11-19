@@ -33,7 +33,8 @@ ALLOWED_HOSTS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     # My apps
-    'backend.apps.BackendConfig', 
+    'core',
+    'fitness',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -142,7 +143,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Use CustomUser model
-AUTH_USER_MODEL = 'backend.CustomUser'
+AUTH_USER_MODEL = 'core.CustomUser'
 
 
 # Media (avatars)
