@@ -59,8 +59,8 @@
                     Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                 {% endif %}
                     <div class="inline-buttons">
-                        <a href='{% url "edit-workingset" workingset.id %}' class="button editBtn">Edit set</button></a>
-                        <a href='{% url "delete-workingset" workingset.id %}' class="button deleteBtn">Delete set</button></a>
+                        <a href='{% url "edit-set" workingset.id %}' class="button editBtn">Edit set</button></a>
+                        <a href='{% url "delete-set" workingset.id %}' class="button deleteBtn">Delete set</button></a>
                     </div>
                 </p>
             {% endfor %}

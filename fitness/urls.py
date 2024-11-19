@@ -42,11 +42,11 @@ urlpatterns = [
     path('remove-exercise/<int:exercise_id>/', exercise_to_workout.remove_exercise_from_workout, name='remove-exercise'),
 
     # Working sets urls
-    path('sets/', workingsets.view_workingsets, name='sets'),
-    path('create-set/<int:exercise_id>/<int:workout_id>/', workingsets.create_workingsets, name='create-workingset'),
-    path('copy-set/<int:workingset_id>', workingsets.copy_workingsets, name='copy-workingset'),
-    path('edit-set/<int:workingset_id>/', workingsets.edit_workingsets, name='edit-workingset'),
-    path('delete-set/<int:workingset_id>/', workingsets.delete_workingsets, name='delete-workingset'),
+    path('sets/', workingsets.view_sets, name='sets'),
+    path('create-set/<int:exercise_id>/<int:workout_id>/', workingsets.create_sets, name='create-set'),
+    path('copy-set/<int:workingset_id>', workingsets.copy_sets, name='copy-set'),
+    path('edit-set/<int:workingset_id>/', workingsets.edit_sets, name='edit-set'),
+    path('delete-set/<int:workingset_id>/', workingsets.delete_sets, name='delete-set'),
 
     # Public workout urls
     path('public-workouts/', public_workouts.view_public_workouts, name='public-workouts'),
@@ -55,8 +55,8 @@ urlpatterns = [
     # Comments (and replies) to public workout urls
     path('public-workouts/view/<int:workout_id>/comment/create/', comments.create_comment_or_reply, name='create-comment'),
     path('public-workouts/view/<int:workout_id>/comment/reply/<int:parent_id>/', comments.create_comment_or_reply, name='create-reply'),
-    path('public-workouts/view/<int:workout_id>/comment/edit/<int:comment_id>/', comments.edit_comment, name='edit-comment'),
-    path('public-workouts/view/<int:workout_id>/comment/delete/<int:comment_id>/', comments.delete_comment, name='delete-comment'),
+    path('public-workouts/view/<int:workout_id>/comment/<int:comment_id>/edit/', comments.edit_comment, name='edit-comment'),
+    path('public-workouts/view/<int:workout_id>/comment/<int:comment_id>/delete/', comments.delete_comment, name='delete-comment'),
     path('public-workouts/view/<int:workout_id>/like/', comments.like_workout, name='like-workout'),
 
     # Analysis urls

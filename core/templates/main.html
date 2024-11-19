@@ -55,7 +55,7 @@
             <p>
                 <b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b> -- muscle group: {{ exercise.musclegroup.name }}
                 <div class="inline-buttons">
-                    <a href='{% url "create-workingset" exercise.id workout.id %}' class="button addBtn">Add set</a>
+                    <a href='{% url "create-set" exercise.id workout.id %}' class="button addBtn">Add set</a>
                     <a href='{% url "remove-exercise" exercise.id %}' class="button deleteBtn">Remove exercise</a>
                 </div>
             </p>
@@ -71,9 +71,9 @@
                             Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
                         {% endif %}
                         <div class="inline-buttons">
-                            <a href='{% url "copy-workingset" workingset.id %}' class="button addBtn">Copy set</a>
-                            <a href='{% url "edit-workingset" workingset.id %}' class="button editBtn">Edit set</a>
-                            <a href='{% url "delete-workingset" workingset.id %}' class="button deleteBtn">Remove set</a>
+                            <a href='{% url "copy-set" workingset.id %}' class="button addBtn">Copy set</a>
+                            <a href='{% url "edit-set" workingset.id %}' class="button editBtn">Edit set</a>
+                            <a href='{% url "delete-set" workingset.id %}' class="button deleteBtn">Remove set</a>
                         </div>
                         <br /><br />
                     </li>

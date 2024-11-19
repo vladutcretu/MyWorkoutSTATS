@@ -10,7 +10,7 @@ from core.views.main import build_redirect_url
 
 
 @login_required(login_url='login')
-def view_workingsets(request):
+def view_sets(request):
    """View used by user to see all sets, with filter options"""
    workingsets = WorkingSet.objects.filter(user=request.user)
    workingsets_count = workingsets.count()
@@ -42,7 +42,7 @@ def view_workingsets(request):
 
 
 @login_required(login_url='login')
-def create_workingsets(request, exercise_id, workout_id):
+def create_sets(request, exercise_id, workout_id):
    """View used to add working set to an existing exercise in a workout"""
    exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
    workout = Workout.objects.get(pk=workout_id, user=request.user)
@@ -79,7 +79,7 @@ def create_workingsets(request, exercise_id, workout_id):
 
 
 @login_required(login_url='login')
-def copy_workingsets(request, workingset_id):
+def copy_sets(request, workingset_id):
    """View used to duplicate a working set already created for an exercise in a workout"""
    workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
 
@@ -99,7 +99,7 @@ def copy_workingsets(request, workingset_id):
 
 
 @login_required(login_url='login')
-def edit_workingsets(request, workingset_id):
+def edit_sets(request, workingset_id):
     """View used to edit values of existing working set"""
     workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
     form = WorkingSetForm(instance=workingset)
@@ -117,7 +117,7 @@ def edit_workingsets(request, workingset_id):
 
 
 @login_required(login_url='login')
-def delete_workingsets(request, workingset_id):
+def delete_sets(request, workingset_id):
    """View used to delete working set from an existing exercise in a workout"""
    workingset = get_object_or_404(WorkingSet, pk=workingset_id, user=request.user)
 

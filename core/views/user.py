@@ -7,6 +7,7 @@ from fitness.models import CustomUser, Workout
 from core.forms import EditProfileForm
 
 
+@login_required(login_url='login')
 def user_account(request):
    return render(request, 'user/account.html')
 
@@ -37,4 +38,4 @@ def user_profile_edit(request):
    context = {
       'form': form
    }
-   return render(request, 'user/profile_edit.html', context)
+   return render(request, 'user/edit_profile.html', context)
