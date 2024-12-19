@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<head>
+    <title>{% block title %}REST API{% endblock title %}</title>
+</head>
+
+<body>
+<div class="base-body">
+
+    <h3>REST API - Documentation</h3>
+    <hr>
+    <br>
+
+    <p>If you need guidance to use the My Workout STATS - REST API, this is the right place.</p>
+    <br>
+
+    <h4>Public endpoints</h4>
+    <ul>
+        
+        <li>SignUp</li>
+            <ul>
+                <li>URL: /api/signup/</li>
+                <li>Methods: POST</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: {"username": "example", "email": "example@mail.com", "password": "examplepass"}</li>
+                        <li>Successful request: Status -> 201 Created | { "message": "User account (via API endpoint) successfully created", "username": "example", "email": "examplepass"}</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+        
+    </ul>
+
+</div>
+</body>
+{% endblock content %}

@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     # My apps
     'core',
     'fitness',
+    # API apps
+    'rest_framework',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',

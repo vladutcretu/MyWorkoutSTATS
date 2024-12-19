@@ -16,6 +16,7 @@ urlpatterns = [
 
     # Utility urls
     path('about/', utility.page_about, name='about'),
+    path('rest-api/', utility.page_rest_api, name='rest-api'),
     path('help/', utility.page_help, name='help'),
     path('privacy/', utility.page_privacy, name='privacy'),
 
