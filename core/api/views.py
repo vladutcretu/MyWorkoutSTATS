@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 
 # App
 from core.models import CustomUser
-from core.api.serializers import SignUpSerializer, LogInSerializer
+from core.api.serializers import SignUpSerializer, LogInSerializer, CustomUserSerializer
 
 
 class SignUpAPIView(generics.CreateAPIView):
@@ -57,3 +57,18 @@ class LogOutAPIView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response({'message': 'Successfully logged out (via API endpoint).'}, status=status.HTTP_200_OK)
+    
+
+class CustomUserAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for the user profile"""
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        """Only allow access to appropriate (owned) object(s)"""
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        """Overwrite update method to display a personalized message"""
+        response = super().update(request, *args, **kwargs)
+        return Response({"message": "Profile updated successfully (via API endpoint).", "data": response.data}, status=status.HTTP_200_OK)

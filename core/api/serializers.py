@@ -42,3 +42,15 @@ class LogInSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+    
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'age', 'city', 'bio', 'instagram_url']
+        read_only_fields = ['id', 'username']
+    
+    def update(self, instance, validated_data):
+        validated_data.pop('id', None)
+        validated_data.pop('username', None)
+        return super().update(instance, validated_data)

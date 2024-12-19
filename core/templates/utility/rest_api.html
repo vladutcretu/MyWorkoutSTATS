@@ -71,7 +71,36 @@
                 </li>
             </ul>
 
-        
+
+    </ul>
+    <br>
+
+    <h4>Private endpoints</h4>
+    <ul>
+
+        <li>Profile</li>
+            <ul>
+                <li>URL: /api/profile/</li>
+                <li>Methods: GET, PUT, PATCH, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: 
+                            {
+                            "email": "example@email.com",
+                            "first_name": Test1,
+                            "last_name": Test2,
+                            "age": 18,
+                            "city": null,
+                            "bio": null,
+                            "instagram_url": "www.instagram.com"
+                        }</li>
+                        <li>Successful request: Status -> 200 OK | Body -> {"message": "Profile updated successfully (via API endpoint)."}</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+
+
     </ul>
 
 </div>
