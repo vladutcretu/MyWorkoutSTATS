@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('', include('fitness.urls')),
-    path('api/', include('core.api.urls'))
+    path('api/', include('core.api.urls')),
+    path('api/', include('fitness.api.urls'))
 ]
 
 # Needed for use media content (profile pics)

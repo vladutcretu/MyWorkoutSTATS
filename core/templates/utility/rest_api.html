@@ -15,6 +15,7 @@
     <p>If you need guidance to use the My Workout STATS - REST API, this is the right place.</p>
     <br>
 
+
     <h4>Public endpoints</h4>
     <ul>
         
@@ -75,6 +76,7 @@
     </ul>
     <br>
 
+
     <h4>Private endpoints</h4>
     <ul>
 
@@ -95,6 +97,23 @@
                             "instagram_url": "www.instagram.com"
                         }</li>
                         <li>Successful request: Status -> 200 OK | Body -> {"message": "Profile updated successfully (via API endpoint)."}</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+        
+            <li>MuscleGroups</li>
+            <ul>
+                <li>URL: /api/musclegroups/ & /api/musclegroups/id/</li>
+                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: 
+                            {
+                            "name": "Muscle group Example"
+                        }</li>
+                        <li>Successful request: Status -> 201 Created | Body -> { Muscle group }</li>
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
                 </li>
