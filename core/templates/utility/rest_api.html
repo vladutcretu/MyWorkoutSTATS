@@ -95,7 +95,7 @@
                             "city": null,
                             "bio": null,
                             "instagram_url": "www.instagram.com"
-                        }</li>
+                            }</li>
                         <li>Successful request: Status -> 200 OK | Body -> {"message": "Profile updated successfully (via API endpoint)."}</li>
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
@@ -103,21 +103,35 @@
             </ul>
         <br>
         
-            <li>MuscleGroups</li>
+        <li>MuscleGroups</li>
             <ul>
                 <li>URL: /api/musclegroups/ & /api/musclegroups/id/</li>
                 <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
                 <li>Informations and examples:
                     <ul>
-                        <li>Example of valid data: 
-                            {
-                            "name": "Muscle group Example"
-                        }</li>
+                        <li>Example of valid data: {"name": "Muscle group Example"}</li>
                         <li>Successful request: Status -> 201 Created | Body -> { Muscle group }</li>
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
                 </li>
             </ul>
+        <br>
+
+        <li>Exercises</li>
+            <ul>
+                <li>URL: /api/exercises/ & /api/exercises/id/</li>
+                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: {"name": "Test Exercises", "musclegroup": "Existing musclegroup"}</li>
+                        <li>Successful request: Status -> 201 Created | Body -> { Exercise }</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+
+
 
 
     </ul>
