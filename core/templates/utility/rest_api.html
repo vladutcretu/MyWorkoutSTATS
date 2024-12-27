@@ -131,8 +131,19 @@
             </ul>
         <br>
 
-
-
+        <li>Workouts</li>
+        <ul>
+            <li>URL: /api/workouts/ & /api/workouts/id/</li>
+            <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
+            <li>Informations and examples:
+                <ul>
+                    <li>Example of valid data: {"name": "Workout example", "public": "yes" (OR "no"), "created": "2024-12-26"}</li>
+                    <li>Successful request: Status -> 201 Created | Body -> { Workout }</li>
+                    <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                </ul>
+            </li>
+        </ul>
+    <br>
 
     </ul>
 

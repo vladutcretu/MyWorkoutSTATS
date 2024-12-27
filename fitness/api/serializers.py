@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 # App
-from fitness.models import MuscleGroup, Exercise
+from fitness.models import MuscleGroup, Exercise, Workout
 
 
 class MuscleGroupSerializer(serializers.ModelSerializer):
@@ -27,3 +27,25 @@ class ExerciseSerializer(serializers.ModelSerializer):
         except MuscleGroup.DoesNotExist:
             raise serializers.ValidationError("User does not have the specified muscle group. Try create it or specify an existing one!")
 
+
+class WorkoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = ['id', 'name', 'public', 'updated', 'created']
+    
+    def validate(self, attrs):
+        """Check if the user already has a workout for the specified date."""
+        user = self.context['request'].user
+        created_date = attrs.get('created')
+
+        # Check if request is POST or PUT/PATCH
+        if self.instance:
+            # PUT/PATCH request
+            existing_workouts = Workout.objects.filter(user=user, created=created_date).exclude(id=self.instance.id)
+        else:
+            # POST request
+            existing_workouts = Workout.objects.filter(user=user, created=created_date)
+
+        if existing_workouts.exists():
+            raise serializers.ValidationError({"created": "You already have a workout created for this date. Try another date or delete the existing workout!"})
+        return attrs
