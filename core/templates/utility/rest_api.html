@@ -132,18 +132,56 @@
         <br>
 
         <li>Workouts</li>
-        <ul>
-            <li>URL: /api/workouts/ & /api/workouts/id/</li>
-            <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
-            <li>Informations and examples:
-                <ul>
-                    <li>Example of valid data: {"name": "Workout example", "public": "yes" (OR "no"), "created": "2024-12-26"}</li>
-                    <li>Successful request: Status -> 201 Created | Body -> { Workout }</li>
-                    <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                </ul>
-            </li>
-        </ul>
-    <br>
+            <ul>
+                <li>URL: /api/workouts/ & /api/workouts/id/</li>
+                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: {"name": "Workout example", "public": "yes" (OR "no"), "created": "2024-12-26"}</li>
+                        <li>Successful request: Status -> 201 Created | Body -> { Workout }</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+
+        <li>WorkoutExercises</li>
+            <ul>
+                <li>URL: /api/workout-exercises/ & /api/workout-exercises/id/</li>
+                <li>Methods: GET, POST, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: {"workout_id": 1, "exercise_id": 2}</li>
+                        <li>Successful request: Status -> 201 Created | Body -> { WorkoutExercises }</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+
+
+        <li>Sets</li>
+            <ul>
+                <li>URL: /api/sets/ & /api/sets/id/</li>
+                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
+                <li>Informations and examples:
+                    <ul>
+                        <li>Example of valid data: {
+                            "workout": 1, (owned workout ID)
+                            "exercise": 2, (owned exercise ID)
+                            "type": "working", ("warmpup" / "dropset" / "restpause" / "myo" / "cluster" / "superset")
+                            "weight": 10, 
+                            "repetitions": 10,
+                            "distance": null,
+                            "time": null,
+                            "created": "2024-12-26"
+                        }</li>
+                        <li>Successful request: Status -> 201 Created | Body -> { Set }</li>
+                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
 
     </ul>
 

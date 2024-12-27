@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 # App
-from fitness.models import MuscleGroup, Exercise, Workout, WorkingSet
+from fitness.models import MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet
 
 
 class MuscleGroupSerializer(serializers.ModelSerializer):
@@ -49,13 +49,56 @@ class WorkoutSerializer(serializers.ModelSerializer):
         if existing_workouts.exists():
             raise serializers.ValidationError({"created": "You already have a workout created for this date. Try another date or delete the existing workout!"})
         return attrs
-    
+
+
+class WorkoutExerciseSerializer(serializers.ModelSerializer):
+    workout_id = serializers.IntegerField(write_only=True)  # Accept workout id in POST
+    exercise_id = serializers.IntegerField(write_only=True)  # Accept exercise id in POST
+    workout_details = WorkoutSerializer(read_only=True, source='workout')  # Return full workout details in GET
+    exercise_details = ExerciseSerializer(read_only=True, source='exercise')  # Return full exercise details in GET
+    order = serializers.IntegerField(read_only=True)  # order is automaticaly calculated
+
+    class Meta:
+        model = WorkoutExercise
+        fields = ['id', 'workout_id', 'exercise_id', 'workout_details', 'exercise_details', 'order']
+
+    def validate(self, attrs):
+        """Check if the workout and exercise are valid (existing and owned by requested user)."""
+        user = self.context['request'].user
+
+        # Check if workout ID exists and is owned by requested user
+        try:
+            workout = Workout.objects.get(id=attrs['workout_id'], user=user)
+        except Workout.DoesNotExist:
+            raise serializers.ValidationError({"workout_id": "User does not have the specified workout. Please specify an existing workout ID!"})
+
+        # Check if the exercise ID exists and is owned by requested user
+        try:
+            exercise = Exercise.objects.get(id=attrs['exercise_id'], user=user)
+        except Exercise.DoesNotExist:
+            raise serializers.ValidationError({"exercise_id": "User does not have the specified exercise. Please specify an existing exercise ID!"})
+
+        # Check if workout and exercise are already related (exercise is added to the workout)
+        if WorkoutExercise.objects.filter(workout=workout, exercise=exercise).exists():
+            raise serializers.ValidationError({"exercise_id": "The specified exercise is already associated with the specified workout!"})
+
+        attrs['workout'] = workout
+        attrs['exercise'] = exercise
+        return attrs
+
+    def create(self, validated_data):
+        """Create workout - exercise relationship"""
+        # Delete not needed fields
+        validated_data.pop('workout_id')
+        validated_data.pop('exercise_id')
+        return super().create(validated_data)
+
 
 class WorkingSetSerializer(serializers.ModelSerializer):
     workout = serializers.IntegerField(write_only=True) # Accept workout id in POST
     exercise = serializers.IntegerField(write_only=True) # Accept exercise id in POST
-    workout_details = MuscleGroupSerializer(read_only=True, source='workout')  # Return full workout details in GET
-    exercise_details = MuscleGroupSerializer(read_only=True, source='exercise')  # Return full exercise details in GET
+    workout_details = WorkoutSerializer(read_only=True, source='workout')  # Return full workout details in GET
+    exercise_details = ExerciseSerializer(read_only=True, source='exercise')  # Return full exercise details in GET
 
     class Meta:
         model = WorkingSet
@@ -79,7 +122,7 @@ class WorkingSetSerializer(serializers.ModelSerializer):
         except Exercise.DoesNotExist:
             raise serializers.ValidationError({"exercise": "User does not have the specified exercise. Please specify an existing exercise ID!"})
 
-        # Check if workout and exercise is related (exercise is added to the workout)
+        # Check if workout and exercise are related (exercise is added to the workout)
         if not workout.exercises.filter(id=exercise_id).exists():
             raise serializers.ValidationError({"exercise": "The specified exercise is not associated with the specified workout. Please add exercise to the workout first!"})
 

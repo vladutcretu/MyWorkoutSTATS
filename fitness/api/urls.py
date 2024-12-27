@@ -10,6 +10,7 @@ router = DefaultRouter()
 router.register(r'musclegroups', views.MuscleGroupAPIView, basename='musclegroups')
 router.register(r'exercises', views.ExerciseAPIView, basename='exercises')
 router.register(r'workouts', views.WorkoutAPIView, basename='workouts')
+router.register(r'workout-exercises', views.WorkoutExerciseAPIView, basename='workout-exercises')
 router.register(r'sets', views.WorkingSetAPIView, basename='sets')
 
 
