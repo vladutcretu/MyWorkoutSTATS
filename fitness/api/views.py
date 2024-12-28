@@ -19,6 +19,10 @@ class MuscleGroupAPIView(viewsets.ModelViewSet):
     """API endpoint for the muscle groups (CRUD operations)"""
     serializer_class = MuscleGroupSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    filterset_fields = ['created']
+    search_fields = ['name']
+    ordering_fields = ['id', 'name']
+    ordering = ['name']
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""
@@ -33,6 +37,10 @@ class ExerciseAPIView(viewsets.ModelViewSet):
     """API endpoint for the exercises (CRUD operations)"""
     serializer_class = ExerciseSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    filterset_fields = ['created']
+    search_fields = ['name']
+    ordering_fields = ['id']
+    ordering = ['-id']
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""
@@ -47,6 +55,10 @@ class WorkoutAPIView(viewsets.ModelViewSet):
     """API endpoint for the workouts (CRUD operations)"""
     serializer_class = WorkoutSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    filterset_fields = ['created', 'bodyweight', 'public']
+    search_fields = ['name']
+    ordering_fields = ['id', 'bodyweight', 'public', 'updated']
+    ordering = ['-id']
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""
@@ -109,6 +121,9 @@ class WorkingSetAPIView(viewsets.ModelViewSet):
     """API endpoint for the sets (CRUD operations)"""
     serializer_class = WorkingSetSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    filterset_fields = ['type', 'weight', 'repetitions', 'distance', 'time']
+    ordering_fields = ['id', 'type', 'weight', 'repetitions', 'distance', 'time', 'updated']
+    ordering = ['-id']
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""
@@ -123,6 +138,10 @@ class DetailedWorkoutAPIView(viewsets.ReadOnlyModelViewSet):
     """API endpoint for detailed version of workout (read only)"""
     serializer_class = DetailedWorkoutSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    filterset_fields = ['created', 'bodyweight', 'public']
+    search_fields = ['name']
+    ordering_fields = ['id', 'bodyweight', 'public', 'updated']
+    ordering = ['-id']
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""

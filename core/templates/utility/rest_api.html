@@ -114,6 +114,15 @@
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
                 </li>
+                <li>Searching, filtering and ordering:
+                    <ul>
+                        <li>/api/musclegroups/?created=2024-12-28</li>
+                        <li>/api/musclegroups/?search=Ab (search after name)</li>
+                        <li>/api/musclegroups/?ordering=name (can order after id, name)</li>
+                        <li>/api/musclegroups/?ordering=name&search=A</li>
+                        <li>by default the order of elements on the page is alphabetical</li>
+                    </ul>
+                </li>
             </ul>
         <br>
 
@@ -128,6 +137,15 @@
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
                 </li>
+                <li>Searching, filtering and ordering:
+                    <ul>
+                        <li>/api/exercises/?created=2024-12-28 </li>
+                        <li>/api/exercises/?search=Ab (search after name)</li>
+                        <li>/api/exercises/?ordering=-id (can order after id)</li>
+                        <li>/api/exercises/?ordering=-id&search=Ab</li>
+                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+                    </ul>
+                </li>
             </ul>
         <br>
 
@@ -140,6 +158,15 @@
                         <li>Example of valid data: {"name": "Workout example", "public": "yes" (OR "no"), "created": "2024-12-26"}</li>
                         <li>Successful request: Status -> 201 Created | Body -> { Workout }</li>
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                    </ul>
+                </li>
+                <li>Searching, filtering and ordering:
+                    <ul>
+                        <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
+                        <li>/api/workouts/?search=day (search after name)</li>
+                        <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
+                        <li>/api/workouts/?ordering=updated&search=day</li>
+                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
                     </ul>
                 </li>
             </ul>
@@ -180,6 +207,15 @@
                         <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
                     </ul>
                 </li>
+                <li>Searching, filtering and ordering:
+                    <ul>
+                        <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
+                        <li>/api/workouts/?search=day (search after name)</li>
+                        <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
+                        <li>/api/workouts/?ordering=updated&search=day</li>
+                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+                    </ul>
+                </li>
             </ul>
         <br>
 
@@ -191,6 +227,14 @@
                 <ul>
                     <li>Successful request: Status -> 201 Created | Body -> { Set }</li>
                     <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
+                </ul>
+            </li>
+            <li>Searching, filtering and ordering:
+                <ul>
+                    <li>/api/sets/?type=&weight=&repetitions=&distance=&time=
+                    (can filter after type - warmup, working, dropset, restpause, myo, cluster, super - and weight, repetitions, distance, time)</li>
+                    <li>/api/sets/?distance=&ordering=weight&repetitions=8 (can order after id, type, weight, repetitions, distance, time, updated date)</li>
+                    <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
                 </ul>
             </li>
         </ul>
