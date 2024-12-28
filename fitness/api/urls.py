@@ -12,6 +12,7 @@ router.register(r'exercises', views.ExerciseAPIView, basename='exercises')
 router.register(r'workouts', views.WorkoutAPIView, basename='workouts')
 router.register(r'workout-exercises', views.WorkoutExerciseAPIView, basename='workout-exercises')
 router.register(r'sets', views.WorkingSetAPIView, basename='sets')
+router.register(r'workouts-detailed', views.DetailedWorkoutAPIView, basename='workouts-detailed')
 
 
 urlpatterns = [
