@@ -1,0 +1,1544 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/exercises/:
+    get:
+      operationId: api_exercises_list
+      description: API endpoint for the exercises (CRUD operations)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExerciseList'
+          description: ''
+    post:
+      operationId: api_exercises_create
+      description: API endpoint for the exercises (CRUD operations)
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+          description: ''
+  /api/exercises/{id}/:
+    get:
+      operationId: api_exercises_retrieve
+      description: API endpoint for the exercises (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+          description: ''
+    put:
+      operationId: api_exercises_update
+      description: API endpoint for the exercises (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Exercise'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+          description: ''
+    patch:
+      operationId: api_exercises_partial_update
+      description: API endpoint for the exercises (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedExercise'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedExercise'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedExercise'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+          description: ''
+    delete:
+      operationId: api_exercises_destroy
+      description: API endpoint for the exercises (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/login/:
+    post:
+      operationId: api_login_create
+      description: API endpoint for log in
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/logout/:
+    post:
+      operationId: api_logout_create
+      description: API endpoint for log out
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/musclegroups/:
+    get:
+      operationId: api_musclegroups_list
+      description: API endpoint for the muscle groups (CRUD operations)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMuscleGroupList'
+          description: ''
+    post:
+      operationId: api_musclegroups_create
+      description: API endpoint for the muscle groups (CRUD operations)
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroup'
+          description: ''
+  /api/musclegroups/{id}/:
+    get:
+      operationId: api_musclegroups_retrieve
+      description: API endpoint for the muscle groups (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroup'
+          description: ''
+    put:
+      operationId: api_musclegroups_update
+      description: API endpoint for the muscle groups (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MuscleGroup'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroup'
+          description: ''
+    patch:
+      operationId: api_musclegroups_partial_update
+      description: API endpoint for the muscle groups (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMuscleGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMuscleGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMuscleGroup'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroup'
+          description: ''
+    delete:
+      operationId: api_musclegroups_destroy
+      description: API endpoint for the muscle groups (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/profile/:
+    get:
+      operationId: api_profile_retrieve
+      description: API endpoint for the user profile
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    put:
+      operationId: api_profile_update
+      description: API endpoint for the user profile
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    patch:
+      operationId: api_profile_partial_update
+      description: API endpoint for the user profile
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    delete:
+      operationId: api_profile_destroy
+      description: API endpoint for the user profile
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/sets/:
+    get:
+      operationId: api_sets_list
+      description: API endpoint for the sets (CRUD operations)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkingSetList'
+          description: ''
+    post:
+      operationId: api_sets_create
+      description: API endpoint for the sets (CRUD operations)
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkingSet'
+          description: ''
+  /api/sets/{id}/:
+    get:
+      operationId: api_sets_retrieve
+      description: API endpoint for the sets (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkingSet'
+          description: ''
+    put:
+      operationId: api_sets_update
+      description: API endpoint for the sets (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkingSet'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkingSet'
+          description: ''
+    patch:
+      operationId: api_sets_partial_update
+      description: API endpoint for the sets (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkingSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkingSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkingSet'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkingSet'
+          description: ''
+    delete:
+      operationId: api_sets_destroy
+      description: API endpoint for the sets (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/signup/:
+    post:
+      operationId: api_signup_create
+      description: API endpoint for sign up
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+          description: ''
+  /api/workout-exercises/:
+    get:
+      operationId: api_workout_exercises_list
+      description: List (GET) all workout - exercise relationships for the requested
+        user.
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutExercise'
+          description: ''
+    post:
+      operationId: api_workout_exercises_create
+      description: Add (POST) an exercise to workout.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutExercise'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkoutExercise'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkoutExercise'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutExercise'
+          description: ''
+  /api/workout-exercises/{id}/:
+    get:
+      operationId: api_workout_exercises_retrieve
+      description: Read/Retrieve (GET) a single workout - exercise relationship.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutExercise'
+          description: ''
+    delete:
+      operationId: api_workout_exercises_destroy
+      description: Remove (DELETE) an exercise from workout.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/workouts/:
+    get:
+      operationId: api_workouts_list
+      description: API endpoint for the workouts (CRUD operations)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkoutList'
+          description: ''
+    post:
+      operationId: api_workouts_create
+      description: API endpoint for the workouts (CRUD operations)
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Workout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Workout'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+          description: ''
+  /api/workouts-detailed/:
+    get:
+      operationId: api_workouts_detailed_list
+      description: API endpoint for detailed version of workout (read only)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDetailedWorkoutList'
+          description: ''
+  /api/workouts-detailed/{id}/:
+    get:
+      operationId: api_workouts_detailed_retrieve
+      description: API endpoint for detailed version of workout (read only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedWorkout'
+          description: ''
+  /api/workouts/{id}/:
+    get:
+      operationId: api_workouts_retrieve
+      description: API endpoint for the workouts (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+          description: ''
+    put:
+      operationId: api_workouts_update
+      description: API endpoint for the workouts (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Workout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Workout'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+          description: ''
+    patch:
+      operationId: api_workouts_partial_update
+      description: API endpoint for the workouts (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkout'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+          description: ''
+    delete:
+      operationId: api_workouts_destroy
+      description: API endpoint for the workouts (CRUD operations)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    CustomUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        age:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        city:
+          type: string
+          nullable: true
+          maxLength: 30
+        bio:
+          type: string
+          nullable: true
+          maxLength: 300
+        instagram_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 100
+      required:
+      - email
+      - id
+      - username
+    DetailedWorkout:
+      type: object
+      description: Detailed version of workout serializer to use it for Detailed workout
+        API view.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        created:
+          type: string
+          format: date
+          nullable: true
+        updated:
+          type: string
+          format: date
+          readOnly: true
+        bodyweight:
+          type: number
+          format: double
+          nullable: true
+        note:
+          type: string
+          nullable: true
+          maxLength: 100
+        public:
+          $ref: '#/components/schemas/PublicEnum'
+        exercises:
+          type: string
+          readOnly: true
+      required:
+      - exercises
+      - id
+      - name
+      - updated
+    Exercise:
+      type: object
+      description: Serializer for Exercise API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        musclegroup_id:
+          type: integer
+          writeOnly: true
+        musclegroup_details:
+          allOf:
+          - $ref: '#/components/schemas/MuscleGroup'
+          readOnly: true
+        created:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - created
+      - id
+      - musclegroup_details
+      - musclegroup_id
+      - name
+    MuscleGroup:
+      type: object
+      description: Serializer for MuscleGroup API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        created:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - created
+      - id
+      - name
+    PaginatedDetailedWorkoutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedWorkout'
+    PaginatedExerciseList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
+    PaginatedMuscleGroupList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MuscleGroup'
+    PaginatedWorkingSetList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkingSet'
+    PaginatedWorkoutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workout'
+    PatchedCustomUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        age:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        city:
+          type: string
+          nullable: true
+          maxLength: 30
+        bio:
+          type: string
+          nullable: true
+          maxLength: 300
+        instagram_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 100
+    PatchedExercise:
+      type: object
+      description: Serializer for Exercise API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        musclegroup_id:
+          type: integer
+          writeOnly: true
+        musclegroup_details:
+          allOf:
+          - $ref: '#/components/schemas/MuscleGroup'
+          readOnly: true
+        created:
+          type: string
+          format: date
+          readOnly: true
+    PatchedMuscleGroup:
+      type: object
+      description: Serializer for MuscleGroup API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        created:
+          type: string
+          format: date
+          readOnly: true
+    PatchedWorkingSet:
+      type: object
+      description: Serializer for WorkingSet API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        workout_id:
+          type: integer
+          writeOnly: true
+        workout_details:
+          allOf:
+          - $ref: '#/components/schemas/Workout'
+          readOnly: true
+        exercise_id:
+          type: integer
+          writeOnly: true
+        exercise_details:
+          allOf:
+          - $ref: '#/components/schemas/Exercise'
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        weight:
+          type: number
+          format: double
+          nullable: true
+        repetitions:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        distance:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        time:
+          type: number
+          format: double
+          nullable: true
+        updated:
+          type: string
+          format: date
+          readOnly: true
+        created:
+          type: string
+          format: date
+          nullable: true
+    PatchedWorkout:
+      type: object
+      description: Serializer for Workout API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        bodyweight:
+          type: number
+          format: double
+          nullable: true
+        note:
+          type: string
+          nullable: true
+          maxLength: 100
+        public:
+          $ref: '#/components/schemas/PublicEnum'
+        updated:
+          type: string
+          format: date
+          readOnly: true
+    PublicEnum:
+      enum:
+      - 'yes'
+      - 'no'
+      type: string
+      description: |-
+        * `yes` - Yes
+        * `no` - No
+    SignUp:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+      - username
+    TypeEnum:
+      enum:
+      - warmup
+      - working
+      - dropset
+      - restpause
+      - myo
+      - cluster
+      - super
+      type: string
+      description: |-
+        * `warmup` - Warm Up set
+        * `working` - Working set
+        * `dropset` - Drop set
+        * `restpause` - Rest pause set
+        * `myo` - Myo set
+        * `cluster` - Cluster set
+        * `super` - Super set
+    WorkingSet:
+      type: object
+      description: Serializer for WorkingSet API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        workout_id:
+          type: integer
+          writeOnly: true
+        workout_details:
+          allOf:
+          - $ref: '#/components/schemas/Workout'
+          readOnly: true
+        exercise_id:
+          type: integer
+          writeOnly: true
+        exercise_details:
+          allOf:
+          - $ref: '#/components/schemas/Exercise'
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        weight:
+          type: number
+          format: double
+          nullable: true
+        repetitions:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        distance:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        time:
+          type: number
+          format: double
+          nullable: true
+        updated:
+          type: string
+          format: date
+          readOnly: true
+        created:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - exercise_details
+      - exercise_id
+      - id
+      - updated
+      - workout_details
+      - workout_id
+    Workout:
+      type: object
+      description: Serializer for Workout API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        bodyweight:
+          type: number
+          format: double
+          nullable: true
+        note:
+          type: string
+          nullable: true
+          maxLength: 100
+        public:
+          $ref: '#/components/schemas/PublicEnum'
+        updated:
+          type: string
+          format: date
+          readOnly: true
+        created:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - id
+      - name
+      - updated
+    WorkoutExercise:
+      type: object
+      description: Serializer for WorkoutExercise API View
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        workout_id:
+          type: integer
+          writeOnly: true
+        exercise_id:
+          type: integer
+          writeOnly: true
+        workout_details:
+          allOf:
+          - $ref: '#/components/schemas/Workout'
+          readOnly: true
+        exercise_details:
+          allOf:
+          - $ref: '#/components/schemas/Exercise'
+          readOnly: true
+        order:
+          type: integer
+          readOnly: true
+      required:
+      - exercise_details
+      - exercise_id
+      - id
+      - order
+      - workout_details
+      - workout_id
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

@@ -7,241 +7,148 @@
 
 <body>
 <div class="base-body">
-
     <h3>REST API - Documentation</h3>
     <hr>
     <br>
 
     <p>If you need guidance to use the My Workout STATS - REST API, this is the right place.</p>
-    <br>
-
-
-    <h4>Public endpoints</h4>
-    <ul>
-        
-        <li>SignUp</li>
-            <ul>
-                <li>URL: /api/signup/</li>
-                <li>Methods: POST</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"username": "example", "email": "example@mail.com", "password": "examplepass"}</li>
-                        <li>Successful request: Status -> 201 Created | Body ->
-                            {
-                                "message": "User account (via API endpoint) successfully created",
-                                "username": "example",
-                                "email": "examplepass"
-                            }
-                        </li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>LogIn</li>
-            <ul>
-                <li>URL: /api/login/</li>
-                <li>Methods: POST</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"username": "example","password": "examplepass"}</li>
-                        <li>Successful request: Status -> 200 OK | Body ->
-                            {
-                                "message": "Successfully logged in (via API endpoint).",
-                                "username": "example",
-                                "token": "2000531643fb..."
-                            }
-                            </li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>LogOut</li>
-            <ul>
-                <li>URL: /api/logout/</li>
-                <li>Methods: POST</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"username": "example","password": "examplepass"}</li>
-                        <li>Successful request: Status -> 200 OK | Body -> {"message": "Successfully logged out (via API endpoint)."}</li>
-                        <li>Failed request: Status -> 403 Forbidden | Body -> { Errors }</li>
-                    </ul>
-                </li>
-            </ul>
-
-
-    </ul>
-    <br>
-
-
-    <h4>Private endpoints</h4>
-    <ul>
-
-        <li>Profile</li>
-            <ul>
-                <li>URL: /api/profile/</li>
-                <li>Methods: GET, PUT, PATCH, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: 
-                            {
-                            "email": "example@email.com",
-                            "first_name": Test1,
-                            "last_name": Test2,
-                            "age": 18,
-                            "city": null,
-                            "bio": null,
-                            "instagram_url": "www.instagram.com"
-                            }</li>
-                        <li>Successful request: Status -> 200 OK | Body -> {"message": "Profile updated successfully (via API endpoint)."}</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-        
-        <li>MuscleGroups</li>
-            <ul>
-                <li>URL: /api/musclegroups/ & /api/musclegroups/id/</li>
-                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"name": "Muscle group Example"}</li>
-                        <li>Successful request: Status -> 201 Created | Body -> { Muscle group }</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-                <li>Searching, filtering and ordering:
-                    <ul>
-                        <li>/api/musclegroups/?created=2024-12-28</li>
-                        <li>/api/musclegroups/?search=Ab (search after name)</li>
-                        <li>/api/musclegroups/?ordering=name (can order after id, name)</li>
-                        <li>/api/musclegroups/?ordering=name&search=A</li>
-                        <li>by default the order of elements on the page is alphabetical</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>Exercises</li>
-            <ul>
-                <li>URL: /api/exercises/ & /api/exercises/id/</li>
-                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"name": "Test Exercises", "musclegroup": "Existing musclegroup"}</li>
-                        <li>Successful request: Status -> 201 Created | Body -> { Exercise }</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-                <li>Searching, filtering and ordering:
-                    <ul>
-                        <li>/api/exercises/?created=2024-12-28 </li>
-                        <li>/api/exercises/?search=Ab (search after name)</li>
-                        <li>/api/exercises/?ordering=-id (can order after id)</li>
-                        <li>/api/exercises/?ordering=-id&search=Ab</li>
-                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>Workouts</li>
-            <ul>
-                <li>URL: /api/workouts/ & /api/workouts/id/</li>
-                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"name": "Workout example", "public": "yes" (OR "no"), "created": "2024-12-26"}</li>
-                        <li>Successful request: Status -> 201 Created | Body -> { Workout }</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-                <li>Searching, filtering and ordering:
-                    <ul>
-                        <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
-                        <li>/api/workouts/?search=day (search after name)</li>
-                        <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
-                        <li>/api/workouts/?ordering=updated&search=day</li>
-                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>WorkoutExercises</li>
-            <ul>
-                <li>URL: /api/workout-exercises/ & /api/workout-exercises/id/</li>
-                <li>Methods: GET, POST, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {"workout_id": 1, "exercise_id": 2}</li>
-                        <li>Successful request: Status -> 201 Created | Body -> { WorkoutExercises }</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-
-        <li>Sets</li>
-            <ul>
-                <li>URL: /api/sets/ & /api/sets/id/</li>
-                <li>Methods: GET, POST, PUT, PATCH, DELETE</li>
-                <li>Informations and examples:
-                    <ul>
-                        <li>Example of valid data: {
-                            "workout": 1, (owned workout ID)
-                            "exercise": 2, (owned exercise ID)
-                            "type": "working", ("warmpup" / "dropset" / "restpause" / "myo" / "cluster" / "superset")
-                            "weight": 10, 
-                            "repetitions": 10,
-                            "distance": null,
-                            "time": null,
-                            "created": "2024-12-26"
-                        }</li>
-                        <li>Successful request: Status -> 201 Created | Body -> { Set }</li>
-                        <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                    </ul>
-                </li>
-                <li>Searching, filtering and ordering:
-                    <ul>
-                        <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
-                        <li>/api/workouts/?search=day (search after name)</li>
-                        <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
-                        <li>/api/workouts/?ordering=updated&search=day</li>
-                        <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
-                    </ul>
-                </li>
-            </ul>
-        <br>
-
-        <li>WorkoutsDetailed</li>
+    <p>
+        The API is documented with <a href="https://github.com/tfranzel/drf-spectacular/">drf-spectacular</a>:
         <ul>
-            <li>URL: /api/workouts-detailed/ & /api/workouts-detailed/id/</li>
-            <li>Methods: GET</li>
-            <li>Informations and examples:
-                <ul>
-                    <li>Successful request: Status -> 201 Created | Body -> { Set }</li>
-                    <li>Failed request: Status -> 400 Bad Request | Body -> { Errors }</li>
-                </ul>
-            </li>
-            <li>Searching, filtering and ordering:
-                <ul>
-                    <li>/api/sets/?type=&weight=&repetitions=&distance=&time=
-                    (can filter after type - warmup, working, dropset, restpause, myo, cluster, super - and weight, repetitions, distance, time)</li>
-                    <li>/api/sets/?distance=&ordering=weight&repetitions=8 (can order after id, type, weight, repetitions, distance, time, updated date)</li>
-                    <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
-                </ul>
-            </li>
+            <li><a href='../api/'>Browsable API</a></li>
+            <li><a href='{% url "swagger-ui" %}'>Swagger UI</a></li>
+            <li><a href='{% url "redoc" %}'>Redoc</a></li>
+            <li><a href='{% url "schema" %}'>Download openAPI 3 schema file</a></li>
         </ul>
+    </p>
+</div>
+
+
+<div class="base-body">
+    <h3>REST API - Authentication</h3>
+    <hr>
     <br>
 
-    </ul>
+    <p>API endpoints, such as the list of workouts or exercises are user owned objects and can be accessed only with authentication.</p>
+    <p>To have access you need to generate a temporary token which you send in the header with each request that needs authorization.</p>
+    <p>Please follow the next steps to generate a token (instructions are for a tool like Postman):</p>
 
+    <ol type="1">
+        <li>Sign Up</li>
+            <p>
+                If you aren't already registered you can accomplish it using a POST request to the <b>/api/signup/</b> url:
+                {
+                    "username": "string",
+                    "email": "user@example.com",
+                    "password": "string"
+                }
+            </p>
+
+        <li>Log In</li>
+            <p> 
+                To get an access token (eg. "98e9edade0489ccf4605b...") you need to send username and password via POST request to the <b>/api/login/</b> url:
+                {
+                    "username": "string",
+                    "password": "string"
+                }
+            <p>
+
+        <li>Authorization with token</li>
+            <p>
+                Pass the access token in the Authorization header as "Authorization: Token 98e9edade0489ccf4605b..."
+                to every private endpoint.
+            </p>
+
+        <li>Log Out</li>
+            <p>If your token was compromised you can send a POST request to the <b>/api/logout/</b> to make it unavailable.</p>
+    </ol>
+</div>
+
+
+<div class="base-body">
+    <h3>REST API - Endpoints</h3>
+    <hr>
+    <br>
+
+    <h4>Public endpoints:</h4>
+    <ul>
+        <li>Sign Up: /api/signup/</li>
+        <li>Log In: /api/login/</li>
+        <li>Log Out: /api/logout/</li>
+    </ul>
+    
+    <h4>Private endpoints:</h4>
+    <ul>
+        <li>Profile: /api/profile/</li>
+        <li>MuscleGroups: /api/musclegroups/ & /api/musclegroups/id/</li>
+        <li>Exercises: /api/exercises/ & /api/exercises/id/</li>
+        <li>Workouts: /api/workouts/ & /api/workouts/id/</li>
+        <li>WorkoutExercises: /api/workout-exercises/ & /api/workout-exercises/id/</li>
+        <li>Sets: /api/sets/ & /api/sets/id/</li>
+        <li>WorkoutsDetailed: /api/workouts-detailed/ & /api/workouts-detailed/id/</li>
+    </ul>
+</div>
+
+
+<div class="base-body">
+    <h3>REST API - Miscellaneous operations</h3>
+    <hr>
+    <br>
+
+    <p>
+        <b>Pagination</b>: by default all results are paginated by 10 elements per page.
+        If you want to change this value, add a ?limit=numeric_value to your query - /api/exercises/?limit=20.
+        You will find in the answer JSON the next and previous keywords with links to the next or previous result pages.
+    </p>
+
+    <p>
+        <b>Ordering</b>: simply use ?ordering=field_name to order by that field - /api/workouts/?ordering=id.
+        You can also specify more than one field name, just give it a list separated by commas ?ordering=field1,field2 - /api/workouts/?ordering=id,public.
+        To reverse the order use like in django a - in front of the field - /api/workouts/?ordering=-bodyweight.
+        If you acces endpoint from your browser you can also use the Filters button from the page.
+    </p>
+
+    <p>
+        <b>Filtering</b>: you can easily filter all resources by specifying the filter queries in the URL: ?field_name=value - /api/workouts/?public=yes.
+        Combinations are possible, the filters will be AND-joined: ?fieldl1=value1&field2=value2 - /api/workouts/?bodyweight=75&public=no.
+        Please note that for boolean values you must pass 'False' or 'True' other values, e.g. 1, 0, false, etc. will be ignored.
+    </p>
+
+    <p>
+        <b>Some examples of ordering, filtering:</b>
+        <ul>
+            <li>/api/musclegroups/?created=2024-12-28</li>
+            <li>/api/musclegroups/?search=Ab (search after name)</li>
+            <li>/api/musclegroups/?ordering=name (can order after id, name)</li>
+            <li>by default the order of elements on the page is alphabetical</li>
+        </ul>
+        
+        <ul>
+            <li>/api/exercises/?created=2024-12-28 </li>
+            <li>/api/exercises/?search=Ab (search after name)</li>
+            <li>/api/exercises/?ordering=-id (can order after id)</li>
+            <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+        </ul>
+        
+        <ul>
+            <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
+            <li>/api/workouts/?search=day (search after name)</li>
+            <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
+            <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+        </ul>
+        <ul>
+            <li>/api/workouts/?created=&bodyweight=&public=no (can filter after created date, bodyweight or visibility - yes/no)</li>
+            <li>/api/workouts/?search=day (search after name)</li>
+            <li>/api/workouts/?ordering=updated (can order after id, bodyweight, public, updated date)</li>
+            <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+        </ul>
+        <ul>
+            <li>/api/sets/?type=&weight=&repetitions=&distance=&time=
+            (can filter after type - warmup, working, dropset, restpause, myo, cluster, super - and weight, repetitions, distance, time)</li>
+            <li>/api/sets/?distance=&ordering=weight&repetitions=8 (can order after id, type, weight, repetitions, distance, time, updated date)</li>
+            <li>by default the order of elements on the page is after the ID, descending (newest exercises will be first)</li>
+        </ul>
+    </p>
 </div>
 </body>
 {% endblock content %}

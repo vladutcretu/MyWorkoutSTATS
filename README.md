@@ -20,6 +20,7 @@ A web app that works as a workout notebook. It helps people to plan their workou
 - users can sort public workouts by number of likes and date
 - users can import their personal previous workouts or public workouts (copy exercises and sets)
 - users can track their body weight evolution, volume progress and records for each exercise
+- users can also perform various actions through the app's API (more information on the REST API page located in the footer)
 
 
 ## Try the APP
@@ -71,4 +72,4 @@ Follow these steps to download and try it local:
 
 
 ## Workflow
-![App workflow](https://i.imgur.com/OH28cU4.jpeg)
+![App workflow](https://i.imgur.com/tX3Fsat.jpeg)
