@@ -1,0 +1,75 @@
+name: CD on PythonAnywhere
+run-name: Repository is being deployed on PythonAnywhere
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      USERNAME: vladutcretu
+      TOKEN: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
+      HOST: www.pythonanywhere.com
+      DOMAIN_NAME: vladutcretu.pythonanywhere.com
+      WEB_APP: MyWorkoutSTATS_app
+      VENV_PATH: /home/vladutcretu/.virtualenvs/venv/bin/activate
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get most recent opened console ID
+        run: |
+          CONSOLE_ID=$(curl -s -X GET "https://${{ env.HOST }}/api/v0/user/${{ env.USERNAME }}/consoles/" \
+            -H "Authorization: Token ${{ env.TOKEN }}" | jq '.[0].id')
+          echo "Latest console ID: $CONSOLE_ID"
+          echo "CONSOLE_ID=$CONSOLE_ID" >> $GITHUB_ENV
+
+      - name: Delete current version of deployed repository
+        run: |
+          curl -X DELETE "https://${{ env.HOST }}/api/v0/user/${{ env.USERNAME }}/files/path/home/${{ env.USERNAME }}/${{ env.WEB_APP }}/" \
+          -H "Authorization: Token ${{ env.TOKEN }}"
+
+      - name: Send commands to PythonAnywhere console
+        run: |
+          function send_command {
+            curl -X POST "https://${{ env.HOST }}/api/v0/user/${{ env.USERNAME }}/consoles/${{ env.CONSOLE_ID }}/send_input/" \
+            -H "Authorization: Token ${{ env.TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data "{\"input\": \"$1\n\"}"
+          }
+
+          # Clone repository
+          send_command "git clone https://github.com/vladutcretu/MyWorkoutSTATS_app.git"
+
+          # Change directory to cloned repository
+          send_command "cd ${{ env.WEB_APP }}"
+
+          # Activate virtual environment
+          send_command "source ${{ env.VENV_PATH }}"
+
+          # Install dependencies
+          send_command "pip install -r requirements.txt"
+
+          # Migrate database
+          send_command "python manage.py migrate"
+
+          # Collect static files
+          send_command "python manage.py collectstatic --noinput"
+
+      - name: Wait for console commands to complete execution
+        run: sleep 30
+
+      - name: Close console
+        run: |
+          curl -X DELETE "https://${{ env.HOST }}/api/v0/user/${{ env.USERNAME }}/consoles/${{ env.CONSOLE_ID }}/" \
+          -H "Authorization: Token ${{ env.TOKEN }}"
+
+      - name: Reload web app to apply changes
+        run: |
+          curl -X POST "https://${{ env.HOST }}/api/v0/user/${{ env.USERNAME }}/webapps/${{ env.DOMAIN_NAME }}/reload/" \
+          -H "Authorization: Token ${{ env.TOKEN }}"
