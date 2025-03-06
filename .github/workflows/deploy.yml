@@ -15,7 +15,7 @@ jobs:
       TOKEN: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
       HOST: www.pythonanywhere.com
       DOMAIN_NAME: vladutcretu.pythonanywhere.com
-      WEB_APP: MyWorkoutSTATS_app
+      WEB_APP: MyWorkoutSTATS
       VENV_PATH: /home/vladutcretu/.virtualenvs/venv/bin/activate
 
     steps:
