@@ -81,7 +81,10 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=30)),
                 ("bodyweight", models.FloatField(blank=True, null=True)),
-                ("note", models.TextField(blank=True, max_length=100, null=True)),
+                (
+                    "note",
+                    models.TextField(blank=True, max_length=100, null=True),
+                ),
                 (
                     "public",
                     models.CharField(

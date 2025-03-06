@@ -27,7 +27,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "password",
+                    models.CharField(max_length=128, verbose_name="password"),
+                ),
                 (
                     "last_login",
                     models.DateTimeField(
@@ -76,19 +79,34 @@ class Migration(migrations.Migration):
                 (
                     "date_joined",
                     models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
+                        default=django.utils.timezone.now,
+                        verbose_name="date joined",
                     ),
                 ),
                 ("email", models.EmailField(max_length=254, unique=True)),
                 (
                     "profile_picture",
-                    models.ImageField(default="default.jpg", null=True, upload_to=""),
+                    models.ImageField(
+                        default="default.jpg", null=True, upload_to=""
+                    ),
                 ),
-                ("first_name", models.CharField(blank=True, max_length=30, null=True)),
-                ("last_name", models.CharField(blank=True, max_length=30, null=True)),
+                (
+                    "first_name",
+                    models.CharField(blank=True, max_length=30, null=True),
+                ),
+                (
+                    "last_name",
+                    models.CharField(blank=True, max_length=30, null=True),
+                ),
                 ("age", models.PositiveIntegerField(blank=True, null=True)),
-                ("city", models.CharField(blank=True, max_length=30, null=True)),
-                ("bio", models.TextField(blank=True, max_length=300, null=True)),
+                (
+                    "city",
+                    models.CharField(blank=True, max_length=30, null=True),
+                ),
+                (
+                    "bio",
+                    models.TextField(blank=True, max_length=300, null=True),
+                ),
                 (
                     "instagram_url",
                     models.URLField(blank=True, max_length=100, null=True),
