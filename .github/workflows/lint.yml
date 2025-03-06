@@ -1,5 +1,5 @@
 name: Linting & Code Quality
-run-name: Repository is being linted and code quality is verified
+run-name: Repository code is being linted and quality is verified
 
 on: push
 
@@ -22,7 +22,7 @@ jobs:
           pip install flake8 black
 
       - name: Run Flake8 (Python Linter)
-        run: flake8 . --count --show-source --statistics --exclude=migrations,settings.py
+        run: flake8 . --count --show-source --statistics --exclude=migrations,*migrations*,settings.py
 
       - name: Run Black (Code Formatter)
         run: black --check --line-length 79 .

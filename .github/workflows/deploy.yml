@@ -44,7 +44,7 @@ jobs:
           }
 
           # Clone repository
-          send_command "git clone https://github.com/vladutcretu/MyWorkoutSTATS_app.git"
+          send_command "git clone https://github.com/vladutcretu/MyWorkoutSTATS.git"
 
           # Change directory to cloned repository
           send_command "cd ${{ env.WEB_APP }}"
