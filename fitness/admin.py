@@ -2,7 +2,14 @@
 from django.contrib import admin
 
 # App
-from fitness.models import MuscleGroup, Exercise, Workout, WorkoutExercise, WorkingSet, WorkoutComment
+from fitness.models import (
+    MuscleGroup,
+    Exercise,
+    Workout,
+    WorkoutExercise,
+    WorkingSet,
+    WorkoutComment,
+)
 
 
 admin.site.register(MuscleGroup)

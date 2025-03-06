@@ -7,5 +7,8 @@ class CoreConfig(AppConfig):
     name = "core"
 
     def ready(self):
-        """Method created to read signals.py (used to create muscle groups and exercises to newly registered accounts)"""
-        import core.signals
+        """
+        Method created to read signals.py, used to create muscle groups and
+        exercises to newly registered accounts
+        """
+        import core.signals  # noqa: F401

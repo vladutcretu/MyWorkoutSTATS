@@ -9,19 +9,27 @@ from core.models import CustomUser
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=CustomUser.objects.all())])
-    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=CustomUser.objects.all())])
-    password = serializers.CharField(required=True, write_only=True, validators=[validate_password])
+    username = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=CustomUser.objects.all())],
+    )
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=CustomUser.objects.all())],
+    )
+    password = serializers.CharField(
+        required=True, write_only=True, validators=[validate_password]
+    )
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password']
+        fields = ["username", "email", "password"]
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password']
+            username=validated_data["username"],
+            email=validated_data.get("email", ""),
+            password=validated_data["password"],
         )
 
 
@@ -30,27 +38,37 @@ class LogInSerializer(serializers.Serializer):
     password = serializers.CharField(required=True, write_only=True)
 
     def validate(self, data):
-        username = data.get('username', '')
-        password = data.get('password', '')
+        username = data.get("username", "")
+        password = data.get("password", "")
 
         if not username:
-            raise serializers.ValidationError('Please provide an username.')
-        
+            raise serializers.ValidationError("Please provide an username.")
+
         user = authenticate(username=username, password=password)
         if not user:
             raise serializers.ValidationError("Invalid username or password.")
 
-        data['user'] = user
+        data["user"] = user
         return data
-    
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'age', 'city', 'bio', 'instagram_url']
-        read_only_fields = ['id', 'username']
-    
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "age",
+            "city",
+            "bio",
+            "instagram_url",
+        ]
+        read_only_fields = ["id", "username"]
+
     def update(self, instance, validated_data):
-        validated_data.pop('id', None)
-        validated_data.pop('username', None)
+        validated_data.pop("id", None)
+        validated_data.pop("username", None)
         return super().update(instance, validated_data)

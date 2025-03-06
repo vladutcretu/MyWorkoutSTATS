@@ -7,21 +7,24 @@ from core.forms import AccountRecoveryForm
 
 
 class AccountRecoveryFormTest(TestCase):
-    """Test AccountRecoveryForm"""
+    """
+    Test AccountRecoveryForm
+    """
+
     def setUp(self):
         """Pre-set up for testing the form"""
         self.user = CustomUser.objects.create_user(
             username="testuser",
             email="testuser@mail.com",
-            password="strongPass123"
+            password="strongPass123",
         )
 
         self.valid_data = {
-            'email': 'testuser@mail.com',
+            "email": "testuser@mail.com",
         }
 
         self.invalid_data = {
-            'email': 'invalidemail',
+            "email": "invalidemail",
         }
 
     def test_form_is_valid(self):
@@ -36,4 +39,3 @@ class AccountRecoveryFormTest(TestCase):
         # if not form.is_valid():
         #     print(form.errors)
         self.assertFalse(form.is_valid())
-

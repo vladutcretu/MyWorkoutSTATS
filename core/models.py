@@ -4,9 +4,12 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    """Model Custom for User to achieve profile feature"""
+    """
+    Model Custom for User to achieve profile feature
+    """
+
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(null=True, default='default.jpg')
+    profile_picture = models.ImageField(null=True, default="default.jpg")
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     age = models.PositiveIntegerField(blank=True, null=True)
