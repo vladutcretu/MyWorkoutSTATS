@@ -1,6 +1,7 @@
 # Django
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 # App
 from fitness.models import CustomUser, Workout
@@ -8,7 +9,11 @@ from core.forms import EditProfileForm
 
 
 @login_required(login_url="login")
+@cache_page(60 * 1440)  # one day
 def user_account(request):
+    """
+    View for User Account page
+    """
     return render(request, "user/account.html")
 
 

@@ -100,9 +100,7 @@ def get_record_data(request):
         if not record_set.weight and not record_set.repetitions:
             record_set = None
     elif record_type == "distance" and workingsets:
-        record_set = workingsets.order_by(
-            "-distance"
-        ).first()  # Longest distance
+        record_set = workingsets.order_by("-distance").first()  # Longest dist
         if not record_set.distance and not record_set.time:
             record_set = None
     elif record_type == "time" and workingsets:

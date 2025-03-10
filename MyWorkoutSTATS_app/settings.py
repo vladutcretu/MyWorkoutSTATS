@@ -196,10 +196,7 @@ REST_FRAMEWORK = {
 
 
 # Django debug toolbar
-INTERNAL_IPS = [
-    "127.0.0.1",
-    'localhost'
-]
+INTERNAL_IPS = ["127.0.0.1", "localhost"]
 
 # Django debug toolbar with Docker
 import socket
@@ -212,11 +209,11 @@ INTERNAL_IPS += internal_ips
 
 # Redis cache settings
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }

@@ -81,7 +81,9 @@ def user_signup(request):
 
 
 def user_account_recovery(request):
-    """View for User Account Recovery page"""
+    """
+    View for User Account Recovery page
+    """
     if request.user.is_authenticated:
         return redirect("main")
 
@@ -126,7 +128,9 @@ def user_change_password(request):
 
 @login_required(login_url="login")
 def user_delete_account(request):
-    """View used by an user to delete his account"""
+    """
+    View used by an user to delete his account
+    """
     user = request.user
 
     if request.method == "POST":
