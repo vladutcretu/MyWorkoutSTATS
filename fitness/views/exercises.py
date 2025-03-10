@@ -1,9 +1,9 @@
 # Django
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.conf import settings
 import requests
+from django.core.cache import cache
 
 # App
 from fitness.models import Exercise, MuscleGroup
@@ -16,24 +16,42 @@ def view_exercises(request):
     View used by user to see all exercises, with search them by their name or
     filter by muscle group options
     """
-    exercises = Exercise.objects.filter(user=request.user)
-    exercises_count = exercises.count()
-    musclegroups = MuscleGroup.objects.filter(user=request.user)
-
-    if request.user.is_authenticated:
-        q = request.GET.get("q", "")
-        exercises = Exercise.objects.filter(
-            Q(musclegroup__name__icontains=q) | Q(name__icontains=q),
-            user=request.user,
+    # Get exercises from cache (if exists) or from database
+    cache_key_exercises = f"view_exercises_exercises_{request.user.id}"
+    exercises = cache.get(cache_key_exercises)
+    if not exercises:
+        exercises = Exercise.objects.filter(user=request.user).select_related(
+            "musclegroup"
         )
+        cache.set(cache_key_exercises, exercises, timeout=60 * 60)
 
-        filter_by_musclegroup = request.GET.get("filter_by_musclegroup", "")
-        if filter_by_musclegroup:
-            exercises = exercises.filter(musclegroup=filter_by_musclegroup)
+    # Get musclegroups from cache (if exists) or from database
+    cache_key_musclegroups = f"view_exercises_musclegroups_{request.user.id}"
+    musclegroups = cache.get(cache_key_musclegroups)
+    if not musclegroups:
+        musclegroups = MuscleGroup.objects.filter(user=request.user)
+        cache.set(cache_key_musclegroups, musclegroups, timeout=60 * 60)
 
-        exercises_count = exercises.count()
-    else:
-        exercises = []
+    # Filter exercises by muscle group
+    filter_by_musclegroup = request.GET.get("filter_by_musclegroup", "")
+    if filter_by_musclegroup:
+        exercises = [
+            ex
+            for ex in exercises
+            if ex.musclegroup.id == int(filter_by_musclegroup)
+        ]
+
+    # Filter exercises based on search query
+    q = request.GET.get("q", "")
+    if q:
+        exercises = [
+            ex
+            for ex in exercises
+            if q.lower() in ex.name.lower()
+            or q.lower() in ex.musclegroup.name.lower()
+        ]
+
+    exercises_count = len(exercises)
 
     context = {
         "exercises": exercises,
@@ -45,13 +63,20 @@ def view_exercises(request):
 
 @login_required(login_url="login")
 def create_exercises(request):
-    """View used to create exercise"""
+    """
+    View used to create exercise
+    """
     if request.method == "POST":
         form = ExerciseForm(request.user, request.POST)
         if form.is_valid():
             exercise = form.save(commit=False)
             exercise.user = request.user
             exercise.save()
+
+            # Once create a exercise invalidate exercises cache
+            cache_key_exercises = f"view_exercises_exercises_{request.user.id}"
+            cache.delete(cache_key_exercises)
+
             return redirect("exercises")
     else:
         form = ExerciseForm(request.user)
@@ -62,7 +87,9 @@ def create_exercises(request):
 
 @login_required(login_url="login")
 def edit_exercises(request, exercise_id):
-    """View used to edit fields from existing muscle group"""
+    """
+    View used to edit fields from existing muscle group
+    """
     exercise = get_object_or_404(Exercise, pk=exercise_id, user=request.user)
     form = ExerciseForm(instance=exercise, user=request.user)
 
@@ -70,6 +97,11 @@ def edit_exercises(request, exercise_id):
         form = ExerciseForm(request.user, request.POST, instance=exercise)
         if form.is_valid():
             form.save()
+
+            # Once edit a exercise invalidate exercises cache
+            cache_key_exercises = f"view_exercises_exercises_{request.user.id}"
+            cache.delete(cache_key_exercises)
+
             return redirect("exercises")
 
     context = {"form": form}
@@ -78,11 +110,18 @@ def edit_exercises(request, exercise_id):
 
 @login_required(login_url="login")
 def delete_exercises(request, exercise_id):
-    """View used to delete exercise"""
+    """
+    View used to delete exercise
+    """
     exercise = get_object_or_404(Exercise, pk=exercise_id, user=request.user)
 
     if request.method == "POST":
         exercise.delete()
+
+        # Once delete a exercise invalidate exercises cache
+        cache_key_exercises = f"view_exercises_exercises_{request.user.id}"
+        cache.delete(cache_key_exercises)
+
         return redirect("exercises")
 
     context = {"exercise": exercise}
@@ -158,7 +197,7 @@ def get_WGER_token_and_auth(username, password):
 
 def fetch_WGER_paginated_data(url, headers, process_function):
     """
-    Parse paginated results and collect all data using `process_function`.
+    Parse paginated results and collect all data using `process_function`
     """
     all_items = []
 
@@ -179,7 +218,9 @@ def fetch_WGER_paginated_data(url, headers, process_function):
 
 
 def fetch_WGER_musclegroups_data(username, password):
-    """Get data for musclegroups."""
+    """
+    Get data for musclegroups
+    """
     access_token = get_WGER_token_and_auth(username, password)
 
     if not access_token:
@@ -192,7 +233,9 @@ def fetch_WGER_musclegroups_data(username, password):
 
 
 def get_WGER_musclegroups(data):
-    """Get data for every musclegroup."""
+    """
+    Get data for every musclegroup
+    """
     return [
         (musclegroup.get("id"), musclegroup.get("name"))
         for musclegroup in data.get("results", [])
@@ -200,7 +243,9 @@ def get_WGER_musclegroups(data):
 
 
 def fetch_WGER_exercises_data(username, password, category):
-    """Get data for exercises"""
+    """
+    Get data for exercises
+    """
     access_token = get_WGER_token_and_auth(username, password)
 
     if not access_token:
@@ -216,7 +261,9 @@ def fetch_WGER_exercises_data(username, password, category):
 
 
 def get_WGER_exercises(data):
-    """Get data for every exercise."""
+    """
+    Get data for every exercise
+    """
     return [
         (exercise.get("name"), exercise.get("description"))
         for exercise in data.get("results", [])
