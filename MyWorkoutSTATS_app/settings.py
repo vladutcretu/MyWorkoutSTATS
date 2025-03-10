@@ -29,11 +29,11 @@ SECRET_KEY = (
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
-# ALLOWED_HOSTS = ["127.0.0.1"]
-ALLOWED_HOSTS = ["vladutcretu.pythonanywhere.com"]
+ALLOWED_HOSTS = ["127.0.0.1"]
+# ALLOWED_HOSTS = ["vladutcretu.pythonanywhere.com"]
 
 
 # Application definition
@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "django_filters",
     "drf_spectacular",
+    # 3rd party apps
+    "debug_toolbar",
     # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # My middlewares
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     # Default middlewares
     "django.middleware.security.SecurityMiddleware",
@@ -190,3 +193,9 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+
+# Django debug toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
