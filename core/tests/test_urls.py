@@ -1,6 +1,8 @@
 # Django
 from django.test import TestCase
 from django.urls import reverse
+from unittest.mock import patch
+from django.core.cache import cache
 
 # App
 from core.models import CustomUser
@@ -29,7 +31,9 @@ class UtilityUrlTest(TestCase):
     Test utility URLs
     """
 
-    def test_url_resolves_about_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_about_page(self, mock_cache_get, mock_cache_set):
         """
         Test about URL
         """
@@ -41,7 +45,23 @@ class UtilityUrlTest(TestCase):
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "utility/about.html")
 
-    def test_url_resolves_help_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_restapi_page(self, mock_cache_get, mock_cache_set):
+        """
+        Test rest api URL
+        """
+        response = self.client.get(reverse("rest-api"))
+        # Test if the URL resolves correctly and returns status 200
+        self.assertEqual(response.status_code, 200)
+        # Test if the URL uses the correct view
+        self.assertEqual(response.resolver_match.view_name, "rest-api")
+        # Test if the URL renders the correct template
+        self.assertTemplateUsed(response, "utility/rest_api.html")
+
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_help_page(self, mock_cache_get, mock_cache_set):
         """
         Test help URL
         """
@@ -53,7 +73,9 @@ class UtilityUrlTest(TestCase):
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "utility/help.html")
 
-    def test_url_resolves_privacy_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_privacy_page(self, mock_cache_get, mock_cache_set):
         """
         Test privacy URL
         """
@@ -174,7 +196,9 @@ class UserUrlTest(TestCase):
         )
         self.profile_url = reverse("profile", kwargs={"user_id": self.user.id})
 
-    def test_url_resolves_account_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_account_page(self, mock_cache_get, mock_cache_set):
         """
         Test account URL
         """

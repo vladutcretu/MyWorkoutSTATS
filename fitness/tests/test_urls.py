@@ -1,6 +1,8 @@
 # Django
 from django.test import TestCase
 from django.urls import reverse
+from unittest.mock import patch
+from django.core.cache import cache
 
 # App
 from core.models import CustomUser
@@ -25,6 +27,9 @@ class MuscleGroupUrlTest(TestCase):
         self.user = CustomUser.objects.create_user(
             username="testuser", password="password123"
         )
+        self.musclegroup = MuscleGroup.objects.create(
+            user=self.user, name="Biceps"
+        )
         self.edit_musclegroup_url = reverse(
             "edit-musclegroup", kwargs={"musclegroup_id": 1}
         )
@@ -32,7 +37,11 @@ class MuscleGroupUrlTest(TestCase):
             "delete-musclegroup", kwargs={"musclegroup_id": 1}
         )
 
-    def test_url_resolves_musclegroups_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_musclegroups_page(
+        self, mock_cache_get, mock_cache_set
+    ):
         """
         Test musclegroups URL
         """
@@ -48,6 +57,8 @@ class MuscleGroupUrlTest(TestCase):
         self.assertEqual(response.resolver_match.view_name, "musclegroups")
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "musclegroups/view.html")
+        # Test if Musclegroup object is being sent to context
+        self.assertContains(response, "Biceps")
 
     def test_url_resolves_musclegroups_create_page(self):
         """
@@ -117,6 +128,12 @@ class ExerciseUrlTest(TestCase):
         self.user = CustomUser.objects.create_user(
             username="testuser", password="password123"
         )
+        self.musclegroup = MuscleGroup.objects.create(
+            user=self.user, name="Biceps"
+        )
+        self.exercise = Exercise.objects.create(
+            user=self.user, name="Curl", musclegroup=self.musclegroup
+        )
         self.edit_exercise_url = reverse(
             "edit-exercise", kwargs={"exercise_id": 1}
         )
@@ -124,7 +141,9 @@ class ExerciseUrlTest(TestCase):
             "delete-exercise", kwargs={"exercise_id": 1}
         )
 
-    def test_url_resolves_exercises_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_exercises_page(self, mock_cache_get, mock_cache_set):
         """
         Test exercises URL
         """
@@ -140,6 +159,8 @@ class ExerciseUrlTest(TestCase):
         self.assertEqual(response.resolver_match.view_name, "exercises")
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "exercises/view.html")
+        # Test if Exercise object is being sent to context
+        self.assertContains(response, "Curl")
 
     def test_url_resolves_exercises_create_page(self):
         """
@@ -237,7 +258,9 @@ class WorkoutUrlTest(TestCase):
             "view-private-workout", kwargs={"workout_id": 1}
         )
 
-    def test_url_resolves_workouts_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_workouts_page(self, mock_cache_get, mock_cache_set):
         """
         Test workouts URL
         """
@@ -253,6 +276,8 @@ class WorkoutUrlTest(TestCase):
         self.assertEqual(response.resolver_match.view_name, "workouts")
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "workouts/view_all.html")
+        # Test if Workout object is being sent to context
+        self.assertContains(response, "Test Workout")
 
     def test_url_resolves_workouts_create_page(self):
         """
