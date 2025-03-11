@@ -539,13 +539,17 @@ class PublicWorkoutsUrlTest(TestCase):
             username="testuser", password="password123"
         )
         self.workout = Workout.objects.create(
-            user=self.user, name="Test Workout"
+            user=self.user, name="Test Workout", public="yes"
         )
         self.view_public_workout_url = reverse(
             "view-public-workout", kwargs={"workout_id": 1}
         )
 
-    def test_url_resolves_public_workouts_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_public_workouts_page(
+        self, mock_cache_get, mock_cache_set
+    ):
         """
         Test public workouts URL
         """
@@ -561,8 +565,14 @@ class PublicWorkoutsUrlTest(TestCase):
         self.assertEqual(response.resolver_match.view_name, "public-workouts")
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "public_workouts/view_all.html")
+        # Test if Workout object is being sent to context
+        self.assertContains(response, "Test Workout")
 
-    def test_url_resolves_view_public_workout_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_view_public_workout_page(
+        self, mock_cache_get, mock_cache_set
+    ):
         """
         Test view public workout URL
         """
@@ -580,6 +590,8 @@ class PublicWorkoutsUrlTest(TestCase):
         )
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "public_workouts/view.html")
+        # Test if Workout object is being sent to context
+        self.assertContains(response, "Test Workout")
 
 
 class WorkoutCommentsUrlTest(TestCase):

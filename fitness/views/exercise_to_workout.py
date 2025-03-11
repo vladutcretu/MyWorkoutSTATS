@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core.cache import cache
 
 # App
 from fitness.models import (
@@ -61,6 +62,28 @@ def add_exercise_to_workout(request, exercise_id, workout_id):
         workout=workout, exercise=exercise, order=order
     )
 
+    if workout.public == "no":
+        # Once add an exercise from private workout invalidate cache
+        cache_key_workouts = f"view_workouts_{request.user.id}"
+        cache.delete(cache_key_workouts)
+        cache_key_private_workout = (
+            f"view_private_workouts_workout_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_workout)
+        cache_key_private_workingsets = (
+            f"view_private_workouts_workingsets_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_workingsets)
+        cache_key_private_musclegroups = (
+            f"view_private_workouts_musclegroups_"
+            f"{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_musclegroups)
+    else:
+        # Once add an from public workout invalidate cache
+        cache_key_public_workouts = f"view_public_workouts_{request.user.id}"
+        cache.delete(cache_key_public_workouts)
+
     return redirect(build_redirect_url(request, default_url=""))
 
 
@@ -82,12 +105,42 @@ def remove_exercise_from_workout(request, exercise_id):
 
             # Delete associated working sets for the exercise removed
             working_sets_to_delete = WorkingSet.objects.filter(
-                exercise=exercise, user=request.user
+                workout_exercise__exercise=exercise, user=request.user
             )
             working_sets_to_delete.delete()
 
             # Remove exercise from the workout
             workout.exercises.remove(exercise)
+
+            if workout.public == "no":
+                # Once remove an exercise from private workout invalidate cache
+                cache_key_private_workout = (
+                    f"view_private_workouts_workout_"
+                    f"{request.user.id}_{workout.id}"
+                )
+                cache.delete(cache_key_private_workout)
+                cache_key_private_workingsets = (
+                    f"view_private_workouts_workingsets_"
+                    f"{request.user.id}_{workout.id}"
+                )
+                cache.delete(cache_key_private_workingsets)
+                cache_key_private_musclegroups = (
+                    f"view_private_workouts_musclegroups_"
+                    f"{request.user.id}_{workout.id}"
+                )
+                cache.delete(cache_key_private_musclegroups)
+            else:
+                # Once remove an from public workout invalidate cache
+                cache_key_public_workout_workout = (
+                    f"view_public_workout_workout_"
+                    f"{request.user.id}_{workout.id}"
+                )
+                cache.delete(cache_key_public_workout_workout)
+                cache_key_public_workout_workingsets = (
+                    f"view_public_workout_workingsets_"
+                    f"{request.user.id}_{workout.id}"
+                )
+                cache.delete(cache_key_public_workout_workingsets)
 
             return redirect(build_redirect_url(request, default_url=""))
 

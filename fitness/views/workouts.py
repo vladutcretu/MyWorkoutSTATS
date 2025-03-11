@@ -104,6 +104,13 @@ def create_workouts(request):
             cache_key_workouts = f"view_workouts_{request.user.id}"
             cache.delete(cache_key_workouts)
 
+            # Once create a public workout invalidate public workouts cache
+            if workout.public == "yes":
+                cache_key_public_workouts = (
+                    f"view_public_workouts_{request.user.id}"
+                )
+                cache.delete(cache_key_public_workouts)
+
             return redirect(build_redirect_url(request, default_url=""))
     else:
         form = WorkoutForm()
@@ -248,7 +255,17 @@ def edit_workout(request, workout_id):
             )
             cache.delete(cache_key_private_musclegroups)
 
-            return redirect(build_redirect_url(request, default_url=""))
+            # Once edit a public workout invalidate public workouts cache
+            if workout.public == "yes":
+                cache_key_public_workouts = (
+                    f"view_public_workouts_{request.user.id}"
+                )
+                cache.delete(cache_key_public_workouts)
+
+            cache_key_public_workout_workout = (
+                f"view_public_workout_workout_{request.user.id}_{workout_id}"
+            )
+            cache.delete(cache_key_public_workout_workout)
 
     context = {"form": form}
     return render(request, "workouts/create.html", context)
@@ -280,6 +297,13 @@ def delete_workout(request, workout_id):
             f"{request.user.id}_{workout_id}"
         )
         cache.delete(cache_key_private_musclegroups)
+
+        # Once delete a public workout invalidate public workouts cache
+        if workout.public == "yes":
+            cache_key_public_workouts = (
+                f"view_public_workouts_{request.user.id}"
+            )
+            cache.delete(cache_key_public_workouts)
 
         return redirect(build_redirect_url(request, default_url=""))
 

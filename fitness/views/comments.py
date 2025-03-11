@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.cache import cache
 
 # App
 from fitness.models import Workout, WorkoutComment
@@ -34,6 +35,13 @@ def create_comment_or_reply(request, workout_id, parent_id=None):
                 parent=parent_comment,  # This will be None for top-level comms
             )
             messages.success(request, "Your comment has been added.")
+
+        # Once create a comment invalidate public workout cache
+        cache_key_public_workout_comments = (
+            f"view_public_workout_comments_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_public_workout_comments)
+
         return redirect("view-public-workout", workout_id=workout.id)
 
     return redirect("view-public-workout", workout_id=workout.id)
@@ -54,6 +62,13 @@ def edit_comment(request, workout_id, comment_id):
         form = WorkoutCommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
+
+            # Once edit a comment invalidate public workout cache
+            cache_key_public_workout_comments = (
+                f"view_public_workout_comments_{request.user.id}_{workout_id}"
+            )
+            cache.delete(cache_key_public_workout_comments)
+
             return redirect(
                 "view-public-workout", workout_id=comment.workout.id
             )
@@ -74,6 +89,13 @@ def delete_comment(request, workout_id, comment_id):
 
     if request.method == "POST":
         comment.delete()
+
+        # Once delete a comment invalidate public workout cache
+        cache_key_public_workout_comments = (
+            f"view_public_workout_comments_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_public_workout_comments)
+
         return redirect("view-public-workout", workout_id=comment.workout.id)
 
     context = {"workout": workout, "comment": comment}
@@ -91,5 +113,13 @@ def like_workout(request, workout_id):
         workout.likes.remove(request.user)
     else:
         workout.likes.add(request.user)
+
+    # Once like/unlike a public workout invalidate public workouts cache
+    cache_key_public_workouts = f"view_public_workouts_{request.user.id}"
+    cache.delete(cache_key_public_workouts)
+    cache_key_public_workout_workout = (
+        f"view_public_workout_workout_{request.user.id}_{workout_id}"
+    )
+    cache.delete(cache_key_public_workout_workout)
 
     return redirect("view-public-workout", workout_id=workout.id)

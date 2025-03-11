@@ -35,7 +35,12 @@
         {% for public_workout in public_workouts %}
             <p>
                 <a href='{% url "view-public-workout" public_workout.id %}'>{{ public_workout.name }}</a>
-                -- Created by {% if public_workout.user == request.user %}you {% else %}<a href='{% url "profile" public_workout.user.id %}'>{{ public_workout.user }}</a> {% endif %}
+                -- Created by
+                    {% if public_workout.user == request.user %}
+                        you 
+                    {% else %}
+                        <a href='{% url "profile" public_workout.user.id %}'>{{ public_workout.user }}</a>
+                    {% endif %}
                 on {{ public_workout.created }} (latest update on {{ public_workout.updated }})
                 -- liked by {{ public_workout.total_likes }} users
                 <a href='{% url "import-workout" public_workout.id %}' class="button addBtn">Import workout</a>
