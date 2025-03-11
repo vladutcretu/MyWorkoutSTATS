@@ -1,9 +1,9 @@
 # Django
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from datetime import date
 from django.http import HttpResponse
+from django.core.cache import cache
 
 # App
 from fitness.models import (
@@ -22,41 +22,52 @@ def view_workouts(request):
     """
     View used by user to see all his workouts, with search function by workout
     name or filter function to find a specific one(s)"""
-    workouts = Workout.objects.filter(user=request.user)
-    workouts_count = workouts.count()
+    # Get workouts from cache (if exists) or from database
+    cache_key_workouts = f"view_workouts_{request.user.id}"
+    workouts = cache.get(cache_key_workouts)
+    if not workouts:
+        workouts = Workout.objects.filter(user=request.user)
+        cache.set(cache_key_workouts, workouts, timeout=60 * 60)
 
-    if request.user.is_authenticated:
-        q = request.GET.get("q", "")
-        workouts = Workout.objects.filter(
-            Q(name__icontains=q), user=request.user
-        )
+    # Filter workouts by his fields values
+    filter_by_created_date = request.GET.get("filter_by_created_date", "")
+    if filter_by_created_date:
+        workouts = [
+            w
+            for w in workouts
+            if w.created.strftime("%Y-%m-%d") == filter_by_created_date
+        ]
 
-        filter_by_created_date = request.GET.get("filter_by_created_date", "")
-        if filter_by_created_date:
-            workouts = workouts.filter(created=filter_by_created_date)
+    filter_by_updated_date = request.GET.get("filter_by_updated_date", "")
+    if filter_by_updated_date:
+        workouts = [
+            w
+            for w in workouts
+            if w.updated.strftime("%Y-%m-%d") == filter_by_updated_date
+        ]
 
-        filter_by_updated_date = request.GET.get("filter_by_updated_date", "")
-        if filter_by_updated_date:
-            workouts = workouts.filter(updated=filter_by_updated_date)
+    filter_by_visibility = request.GET.get("filter_by_visibility", "")
+    if filter_by_visibility:
+        workouts = [
+            w for w in workouts if str(w.public) == filter_by_visibility
+        ]
 
-        filter_by_visibility = request.GET.get("filter_by_visibility", "")
-        if filter_by_visibility:
-            workouts = workouts.filter(public=filter_by_visibility)
+    filter_by_bodyweight = request.GET.get("filter_by_bodyweight", "")
+    if filter_by_bodyweight:
+        try:
+            bodyweight_filter = float(filter_by_bodyweight)
+            workouts = [
+                w for w in workouts if w.bodyweight == bodyweight_filter
+            ]
+        except ValueError:
+            pass
 
-        filter_by_bodyweight = request.GET.get("filter_by_bodyweight", "")
-        if filter_by_bodyweight.isnumeric():
-            # For integer values will be displayed results with floats number
-            # but integer part equal to filtered value
-            if filter_by_bodyweight.isdigit():
-                workouts = workouts.filter(
-                    bodyweight__icontains=int(filter_by_bodyweight)
-                )
-            else:
-                workouts = workouts.filter(bodyweight=filter_by_bodyweight)
+    # Filter exercises based on search query
+    q = request.GET.get("q", "")
+    if q:
+        workouts = [w for w in workouts if q.lower() in w.name.lower()]
 
-        workouts_count = workouts.count()
-    else:
-        workouts = []
+    workouts_count = len(workouts)
 
     context = {"workouts": workouts, "workouts_count": workouts_count}
 
@@ -65,7 +76,9 @@ def view_workouts(request):
 
 @login_required(login_url="login")
 def create_workouts(request):
-    """View used to create workout"""
+    """
+    View used to create workout
+    """
     # Import cookie to use same target_data as the workout shown in main page
     # (to create workout with the same date as date selected)
     target_date = request.COOKIES.get("targetDate", date.today())
@@ -86,6 +99,11 @@ def create_workouts(request):
             workout.user = request.user
             workout.created = target_date
             workout.save()
+
+            # Once create a workout invalidate workout cache
+            cache_key_workouts = f"view_workouts_{request.user.id}"
+            cache.delete(cache_key_workouts)
+
             return redirect(build_redirect_url(request, default_url=""))
     else:
         form = WorkoutForm()
@@ -145,46 +163,11 @@ def import_workouts(request, workout_id):
             target_date,
         )
 
+    # Once import a workout invalidate workout cache
+    cache_key_workouts = f"view_workouts_{request.user.id}"
+    cache.delete(cache_key_workouts)
+
     return redirect(build_redirect_url(request, default_url=""))
-
-
-@login_required(login_url="login")
-def edit_workout(request, workout_id):
-    """View used to edit fields from existing workout"""
-    workout = Workout.objects.get(pk=workout_id, user=request.user)
-    form = WorkoutForm(instance=workout)
-
-    if request.method == "POST":
-        form = WorkoutForm(request.POST, instance=workout)
-        if form.is_valid():
-            form.save()
-            return redirect(build_redirect_url(request, default_url=""))
-
-    context = {"form": form}
-    return render(request, "workouts/create.html", context)
-
-
-@login_required(login_url="login")
-def delete_workout(request, workout_id):
-    """View used to delete existing workout"""
-    workout = get_object_or_404(Workout, pk=workout_id, user=request.user)
-
-    if request.method == "POST":
-        workout.delete()
-        return redirect(build_redirect_url(request, default_url=""))
-
-    context = {"workout": workout}
-    return render(request, "workouts/delete.html", context)
-
-
-@login_required(login_url="login")
-def view_private_workout(request, workout_id):
-    """View used by user to see a specific owned workout"""
-    workout = get_object_or_404(Workout, pk=workout_id)
-    workingsets = WorkingSet.objects.filter(user=request.user).order_by("id")
-
-    context = {"workout": workout, "workingsets": workingsets}
-    return render(request, "workouts/view.html", context)
 
 
 def get_or_create_musclegroup_and_exercise(imported_exercise, user):
@@ -230,3 +213,62 @@ def import_workingsets(
             time=imported_workingset.time,
             created=created,
         )
+
+
+@login_required(login_url="login")
+def edit_workout(request, workout_id):
+    """
+    View used to edit fields from existing workout
+    """
+    workout = Workout.objects.get(pk=workout_id, user=request.user)
+    form = WorkoutForm(instance=workout)
+
+    if request.method == "POST":
+        form = WorkoutForm(request.POST, instance=workout)
+        if form.is_valid():
+            form.save()
+
+            # Once edit a workout invalidate workout cache
+            cache_key_workouts = f"view_workouts_{request.user.id}"
+            cache.delete(cache_key_workouts)
+
+            return redirect(build_redirect_url(request, default_url=""))
+
+    context = {"form": form}
+    return render(request, "workouts/create.html", context)
+
+
+@login_required(login_url="login")
+def delete_workout(request, workout_id):
+    """
+    View used to delete existing workout
+    """
+    workout = get_object_or_404(Workout, pk=workout_id, user=request.user)
+
+    if request.method == "POST":
+        workout.delete()
+
+        # Once delete a workout invalidate workout cache
+        cache_key_workouts = f"view_workouts_{request.user.id}"
+        cache.delete(cache_key_workouts)
+
+        return redirect(build_redirect_url(request, default_url=""))
+
+    context = {"workout": workout}
+    return render(request, "workouts/delete.html", context)
+
+
+@login_required(login_url="login")
+def view_private_workout(request, workout_id):
+    """
+    View used by user to see a specific owned workout
+    """
+    workout = get_object_or_404(Workout, pk=workout_id)
+    workingsets = (
+        WorkingSet.objects.filter(user=request.user, workout=workout)
+        .select_related("exercise")
+        .order_by("id")
+    )
+
+    context = {"workout": workout, "workingsets": workingsets}
+    return render(request, "workouts/view.html", context)
