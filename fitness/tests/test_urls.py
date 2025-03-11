@@ -10,6 +10,7 @@ from fitness.models import (
     Workout,
     MuscleGroup,
     Exercise,
+    WorkoutExercise,
     WorkingSet,
     WorkoutComment,
 )
@@ -330,7 +331,11 @@ class WorkoutUrlTest(TestCase):
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "workouts/delete.html")
 
-    def test_url_resolves_workouts_view_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_workouts_view_page(
+        self, mock_cache_get, mock_cache_set
+    ):
         """
         Test workouts view URL
         """
@@ -432,20 +437,27 @@ class WorkingSetsUrlTest(TestCase):
         self.exercise = Exercise.objects.create(
             user=self.user, musclegroup=self.musclegroup, name="Test Exercise"
         )
+        self.workout_exercise = WorkoutExercise.objects.create(
+            workout=self.workout, exercise=self.exercise, order=1
+        )
         self.workingset = WorkingSet.objects.create(
-            user=self.user,
-            workout=self.workout,
-            exercise=self.exercise,
+            user=self.user, workout_exercise=self.workout_exercise, weight=10
         )
         self.create_set_url = reverse(
-            "create-set", kwargs={"exercise_id": 1, "workout_id": 1}
+            "create-set",
+            kwargs={
+                "exercise_id": self.exercise.id,
+                "workout_id": self.workout.id,
+            },
         )
         self.edit_set_url = reverse("edit-set", kwargs={"workingset_id": 1})
         self.delete_set_url = reverse(
             "delete-set", kwargs={"workingset_id": 1}
         )
 
-    def test_url_resolves_sets_page(self):
+    @patch.object(cache, "set")
+    @patch.object(cache, "get", return_value=None)
+    def test_url_resolves_sets_page(self, mock_cache_get, mock_cache_set):
         """
         Test sets URL
         """
@@ -461,6 +473,8 @@ class WorkingSetsUrlTest(TestCase):
         self.assertEqual(response.resolver_match.view_name, "sets")
         # Test if the URL renders the correct template
         self.assertTemplateUsed(response, "workingsets/view.html")
+        # Test if Workingset object is being sent to context
+        self.assertContains(response, 10)
 
     def test_url_resolves_workingsets_create_page(self):
         """

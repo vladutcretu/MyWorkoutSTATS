@@ -2,36 +2,60 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from django.core.cache import cache
 
 # App
-from fitness.models import Workout, Exercise, WorkingSet
+from fitness.models import WorkoutExercise, Exercise, WorkingSet
 from fitness.forms import WorkingSetForm
 from core.views.main import build_redirect_url
 
 
 @login_required(login_url="login")
 def view_sets(request):
-    """View used by user to see all sets, with filter options"""
-    workingsets = WorkingSet.objects.filter(user=request.user)
-    workingsets_count = workingsets.count()
-    exercises = Exercise.objects.filter(user=request.user)
+    """
+    View used by user to see all sets, with filter options
+    """
+    # Get sets from cache (if exists) or from database
+    cache_key_workingsets = f"view_sets_workingsets{request.user.id}"
+    workingsets = cache.get(cache_key_workingsets)
+    if not workingsets:
+        workingsets = WorkingSet.objects.filter(
+            user=request.user
+        ).select_related(
+            "workout_exercise__exercise", "workout_exercise__workout"
+        )
+        cache.set(cache_key_workingsets, workingsets, timeout=60 * 60)
 
-    if request.user.is_authenticated:
-        filter_by_created_date = request.GET.get("filter_by_created_date", "")
-        if filter_by_created_date:
-            workingsets = workingsets.filter(created=filter_by_created_date)
+    # Get exercises from cache (if exists) or from database
+    cache_key_exercises = f"view_sets_exercises_{request.user.id}"
+    exercises = cache.get(cache_key_exercises)
+    if not exercises:
+        exercises = Exercise.objects.filter(user=request.user)
+        cache.set(cache_key_exercises, exercises, timeout=60 * 60)
 
-        filter_by_exercise = request.GET.get("filter_by_exercise", "")
-        if filter_by_exercise:
-            workingsets = workingsets.filter(exercise=filter_by_exercise)
+    # Filter sets by his fields values
+    filter_by_created_date = request.GET.get("filter_by_created_date", "")
+    if filter_by_created_date:
+        workingsets = [
+            ws
+            for ws in workingsets
+            if ws.workout_exercise.workout.created.strftime("%Y-%m-%d")
+            == filter_by_created_date
+        ]
 
-        filter_by_type = request.GET.get("filter_by_type", "")
-        if filter_by_type:
-            workingsets = workingsets.filter(type=filter_by_type)
+    filter_by_exercise = request.GET.get("filter_by_exercise", "")
+    if filter_by_exercise:
+        workingsets = [
+            ws
+            for ws in workingsets
+            if ws.workout_exercise.exercise.id == int(filter_by_exercise)
+        ]
 
-        workingsets_count = workingsets.count()
-    else:
-        workingsets = []
+    filter_by_type = request.GET.get("filter_by_type", "")
+    if filter_by_type:
+        workingsets = [ws for ws in workingsets if ws.type == filter_by_type]
+
+    workingsets_count = len(workingsets)
 
     context = {
         "workingsets": workingsets,
@@ -43,9 +67,14 @@ def view_sets(request):
 
 @login_required(login_url="login")
 def create_sets(request, exercise_id, workout_id):
-    """View used to add working set to an existing exercise in a workout"""
-    exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
-    workout = Workout.objects.get(pk=workout_id, user=request.user)
+    """
+    View used to add working set to an existing exercise in a workout
+    """
+    # exercise = Exercise.objects.get(pk=exercise_id, user=request.user)
+    # workout = Workout.objects.get(pk=workout_id, user=request.user)
+    workout_exercise = WorkoutExercise.objects.get(
+        exercise_id=exercise_id, workout_id=workout_id
+    )
 
     target_date = request.COOKIES.get("targetDate", date.today())
 
@@ -59,8 +88,7 @@ def create_sets(request, exercise_id, workout_id):
 
         WorkingSet.objects.create(
             user=request.user,
-            workout=workout,
-            exercise=exercise,
+            workout_exercise=workout_exercise,
             type=type_weight if weight else type_endurance,
             repetitions=repetitions if repetitions else None,
             weight=weight if weight else None,
@@ -71,7 +99,8 @@ def create_sets(request, exercise_id, workout_id):
 
         return redirect(build_redirect_url(request, default_url=""))
 
-    context = {"exercise": exercise, "workout": workout}
+    # context = {"exercise": exercise, "workout": workout}
+    context = {"workout_exercise": workout_exercise}
     return render(request, "workingsets/create.html", context)
 
 
@@ -102,7 +131,9 @@ def copy_sets(request, workingset_id):
 
 @login_required(login_url="login")
 def edit_sets(request, workingset_id):
-    """View used to edit values of existing working set"""
+    """
+    View used to edit values of existing working set
+    """
     workingset = get_object_or_404(
         WorkingSet, pk=workingset_id, user=request.user
     )

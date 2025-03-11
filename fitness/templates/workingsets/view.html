@@ -51,13 +51,16 @@
         {% if workingsets %}
             {% for workingset in workingsets reversed %}
                 <p>
-                Set <b>#{{ forloop.revcounter }}</b> logged for exercise: <b>{{ workingset.exercise.name }}</b><br> 
-                Created on: <b>{{ workingset.created }}</b> -- Type: <b>{{ workingset.get_type_display }}</b> --
-                {% if workingset.weight or workingset.repetitions %}
-                    Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
-                {% elif workingset.distance or workingset.time %}
-                    Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
-                {% endif %}
+                    Set <b>#{{ forloop.revcounter }}</b>
+                    logged for exercise: <b>{{ workingset.workout_exercise.exercise.name }}</b>
+                    added on workout: <b>{{ workingset.workout_exercise.workout.name }} - {{ workingset.workout_exercise.workout.created }}</b>
+                    <br> 
+                    Set type: <b>{{ workingset.get_type_display }}</b>
+                    {% if workingset.weight or workingset.repetitions %}
+                        Weight: <b>{{ workingset.weight }}</b>, Reps: <b>{{ workingset.repetitions }}</b>
+                    {% elif workingset.distance or workingset.time %}
+                        Distance: <b>{{ workingset.distance }}</b>, Time: <b>{{ workingset.time }}</b>
+                    {% endif %}
                     <div class="inline-buttons">
                         <a href='{% url "edit-set" workingset.id %}' class="button editBtn">Edit set</button></a>
                         <a href='{% url "delete-set" workingset.id %}' class="button deleteBtn">Delete set</button></a>

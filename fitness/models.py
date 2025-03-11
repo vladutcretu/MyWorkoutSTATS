@@ -102,11 +102,8 @@ class WorkingSet(models.Model):
     ]
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    workout = models.ForeignKey(
-        Workout, on_delete=models.CASCADE, null=True, blank=True
-    )
-    exercise = models.ForeignKey(
-        Exercise, on_delete=models.CASCADE, related_name="workingsets"
+    workout_exercise = models.ForeignKey(
+        WorkoutExercise, on_delete=models.CASCADE, related_name="workingsets"
     )
     type = models.CharField(
         max_length=10, choices=TYPE_CHOICES, default="working"
@@ -119,11 +116,18 @@ class WorkingSet(models.Model):
     created = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return (
-            f"{self.exercise} "
-            f"- Set: {self.weight} weight, {self.repetitions} reps | "
-            f"{self.distance} meters, {self.time} minutes"
-        )
+        if self.weight or self.repetitions:
+            return (
+                f"Set for {self.workout_exercise} "
+                f"- {self.weight} weight, {self.repetitions} reps"
+            )
+        elif self.distance or self.time:
+            return (
+                f"Set for {self.workout_exercise} "
+                f"- {self.distance} distance, {self.time} time"
+            )
+        else:
+            return f"Set for {self.workout_exercise} "
 
 
 class WorkoutComment(models.Model):

@@ -27,7 +27,7 @@
 
             <ol type="1">
             {% for workingset in workingsets %}
-                {% if workingset.exercise == exercise and workingset.created == workout.created %}
+                {% if workingset.workout_exercise.exercise == exercise %}
                     <li>
                         Set type: <b>{{ workingset.get_type_display }}</b> --
                         {% if workingset.weight or workingset.repetitions %}

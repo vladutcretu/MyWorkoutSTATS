@@ -21,11 +21,14 @@
 
     <h4>Exercises:</h4>
     {% for exercise in workout.exercises.all %}
-        <p><b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b> -- muscle group: {{ exercise.musclegroup.name }}:</p>
+        <p>
+            <b>Exercise #{{ forloop.counter }}: {{ exercise.name }}</b>
+            -- muscle group: <b>{{ workingset.workout_exercise.exercise.musclegroup.name }}</b>:
+        </p>
 
         <ol type="1">
             {% for workingset in workingsets %}
-                {% if workingset.exercise == exercise and workingset.created == workout.created %}
+                {% if workingset.workout_exercise.exercise == exercise %}
                     <li>
                         Set type: <b>{{ workingset.get_type_display }}</b> --
                         {% if workingset.weight or workingset.repetitions %}

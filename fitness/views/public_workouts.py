@@ -50,7 +50,9 @@ def view_public_workouts(request):
 def view_public_workout(request, workout_id):
     """View used by user to see a specific public workout"""
     workout = get_object_or_404(Workout, pk=workout_id)
-    workingsets = WorkingSet.objects.filter().order_by("id")
+    workingsets = WorkingSet.objects.filter(
+        workout_exercise__workout=workout
+    ).order_by("id")
     comments = WorkoutComment.objects.filter(workout=workout, parent=None)
 
     context = {

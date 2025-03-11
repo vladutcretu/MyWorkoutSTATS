@@ -39,7 +39,7 @@ def get_volume_data(request):
     exercise_id = request.GET.get("exercise_id")
 
     workingsets = WorkingSet.objects.filter(
-        user=request.user, exercise_id=exercise_id
+        user=request.user, workout_exercise__exercise_id=exercise_id
     )
 
     # Group sets by days and calculate the total volume (weight * repetitions)
@@ -48,7 +48,13 @@ def get_volume_data(request):
         date_str = workingset.created.strftime(
             "%Y-%m-%d"
         )  # Group all sets from specific day
-        volume = workingset.weight * workingset.repetitions
+        if workingset.weight and workingset.repetitions:
+            volume = workingset.weight * workingset.repetitions
+        elif workingset.distance and workingset.time:
+            volume = workingset.distance * workingset.time
+        else:
+            volume = 0
+
         if date_str in volume_data:
             volume_data[date_str] += volume
         else:
@@ -72,7 +78,9 @@ def analysis_records(request):
     View used by user to see each exercise record, based by his sets logged
     """
     exercises = Exercise.objects.filter(user=request.user)
-    workingsets = WorkingSet.objects.filter(user=request.user)
+    workingsets = WorkingSet.objects.filter(user=request.user).select_related(
+        "workout_exercise__exercise"
+    )
 
     context = {"exercises": exercises, "workingsets": workingsets}
 
@@ -88,7 +96,7 @@ def get_record_data(request):
     record_type = request.GET.get("record_type")
 
     workingsets = WorkingSet.objects.filter(
-        user=request.user, exercise_id=exercise_id
+        user=request.user, workout_exercise__exercise_id=exercise_id
     )
 
     if record_type == "weight" and workingsets:
@@ -112,7 +120,7 @@ def get_record_data(request):
 
     if record_set:
         data = {
-            "exercise": record_set.exercise.name,
+            "exercise": record_set.workout_exercise.exercise.name,
             "type": record_set.type,
             "weight": record_set.weight,
             "reps": record_set.repetitions,

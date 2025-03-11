@@ -149,7 +149,7 @@ def import_workouts(request, workout_id):
         )
 
         # Add exercise to newly imported workout
-        WorkoutExercise.objects.create(
+        workout_exercise = WorkoutExercise.objects.create(
             workout=new_workout, exercise=exercise, order=order
         )
 
@@ -158,8 +158,7 @@ def import_workouts(request, workout_id):
             imported_exercise,
             imported_workout.created,
             request.user,
-            new_workout,
-            exercise,
+            workout_exercise,
             target_date,
         )
 
@@ -193,20 +192,23 @@ def import_workingsets(
     imported_exercise,
     imported_workout_created,
     user,
-    workout,
-    exercise,
+    workout_exercise,
     created,
 ):
     """
     Creating (importing) workingsets of an exercise from an imported workout
     """
-    for imported_workingset in imported_exercise.workingsets.filter(
-        created=imported_workout_created
-    ):
+    # Get sets associated of every exercise from imported workout
+    imported_workoutsets = WorkingSet.objects.filter(
+        workout_exercise__exercise=imported_exercise,
+        workout_exercise__workout__created=imported_workout_created,
+    )
+
+    # Import sets to newly created workout
+    for imported_workingset in imported_workoutsets:
         WorkingSet.objects.create(
             user=user,
-            workout=workout,
-            exercise=exercise,
+            workout_exercise=workout_exercise,
             weight=imported_workingset.weight,
             repetitions=imported_workingset.repetitions,
             distance=imported_workingset.distance,
@@ -231,6 +233,20 @@ def edit_workout(request, workout_id):
             # Once edit a workout invalidate workout cache
             cache_key_workouts = f"view_workouts_{request.user.id}"
             cache.delete(cache_key_workouts)
+            cache_key_private_workout = (
+                f"view_private_workouts_workout_{request.user.id}_{workout_id}"
+            )
+            cache.delete(cache_key_private_workout)
+            cache_key_private_workingsets = (
+                f"view_private_workouts_workingsets_"
+                f"{request.user.id}_{workout_id}"
+            )
+            cache.delete(cache_key_private_workingsets)
+            cache_key_private_musclegroups = (
+                f"view_private_workouts_musclegroups_"
+                f"{request.user.id}_{workout_id}"
+            )
+            cache.delete(cache_key_private_musclegroups)
 
             return redirect(build_redirect_url(request, default_url=""))
 
@@ -251,6 +267,19 @@ def delete_workout(request, workout_id):
         # Once delete a workout invalidate workout cache
         cache_key_workouts = f"view_workouts_{request.user.id}"
         cache.delete(cache_key_workouts)
+        cache_key_private_workout = (
+            f"view_private_workouts_workout_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_workout)
+        cache_key_private_workingsets = (
+            f"view_private_workouts_workingsets_{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_workingsets)
+        cache_key_private_musclegroups = (
+            f"view_private_workouts_musclegroups_"
+            f"{request.user.id}_{workout_id}"
+        )
+        cache.delete(cache_key_private_musclegroups)
 
         return redirect(build_redirect_url(request, default_url=""))
 
@@ -263,12 +292,44 @@ def view_private_workout(request, workout_id):
     """
     View used by user to see a specific owned workout
     """
-    workout = get_object_or_404(Workout, pk=workout_id)
-    workingsets = (
-        WorkingSet.objects.filter(user=request.user, workout=workout)
-        .select_related("exercise")
-        .order_by("id")
+    # Get workouts from cache (if exists) or from database
+    cache_key_private_workout = (
+        f"view_private_workouts_workout_{request.user.id}_{workout_id}"
     )
+    workout = cache.get(cache_key_private_workout)
+    if not workout:
+        workout = get_object_or_404(Workout, pk=workout_id)
+        cache.set(cache_key_private_workout, workout, timeout=60 * 60)
 
-    context = {"workout": workout, "workingsets": workingsets}
+    # Get workingsets from cache (if exists) or from database
+    cache_key_private_workingsets = (
+        f"view_private_workouts_workingsets_{request.user.id}_{workout_id}"
+    )
+    workingsets = cache.get(cache_key_private_workingsets)
+    if not workingsets:
+        workingsets = (
+            WorkingSet.objects.filter(
+                user=request.user, workout_exercise__workout=workout
+            )
+            .select_related("workout_exercise__exercise__musclegroup")
+            .order_by("id")
+        )
+        cache.set(cache_key_private_workingsets, workingsets, timeout=60 * 60)
+
+    # Get musclegroups from cache (if exists) or from database
+    cache_key_private_musclegroups = (
+        f"view_private_workouts_musclegroups_{request.user.id}_{workout_id}"
+    )
+    musclegroups = cache.get(cache_key_private_musclegroups)
+    if not musclegroups:
+        musclegroups = MuscleGroup.objects.filter(user=request.user)
+        cache.set(
+            cache_key_private_musclegroups, musclegroups, timeout=60 * 60
+        )
+
+    context = {
+        "workout": workout,
+        "workingsets": workingsets,
+        "musclegroups": musclegroups,
+    }
     return render(request, "workouts/view.html", context)
