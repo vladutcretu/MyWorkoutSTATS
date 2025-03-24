@@ -38,8 +38,7 @@ class WorkingSetModelTest(TestCase):
         )
         self.workingset = WorkingSet.objects.create(
             user=self.user,
-            workout=self.workout,
-            exercise=self.exercise,
+            workout_exercise=self.workout_exercise,
             created="2024-12-01",
         )
 
@@ -48,8 +47,9 @@ class WorkingSetModelTest(TestCase):
         Test if new exercise is correctly created
         """
         self.assertEqual(self.workingset.user, self.user)
-        self.assertEqual(self.workingset.workout, self.workout)
-        self.assertEqual(self.workingset.exercise, self.exercise)
+        self.assertEqual(
+            self.workingset.workout_exercise, self.workout_exercise
+        )
         self.assertEqual(self.workingset.type, "working")
         self.assertIsNone(self.workingset.weight)
         self.assertIsNone(self.workingset.repetitions)
@@ -62,13 +62,21 @@ class WorkingSetModelTest(TestCase):
         """
         Test model's str method
         """
-        expected_str = (
-            f"{self.exercise} - Set "
-            f"{self.workingset.weight} weight, "
-            f"{self.workingset.repetitions} reps | "
-            f"{self.workingset.distance} meters, "
-            f"{self.workingset.time} minutes "
-        )
+        if self.workingset.weight or self.workingset.repetitions:
+            expected_str = (
+                f"Set for {self.workingset.workout_exercise} "
+                f"- {self.workingset.weight} weight, "
+                f"{self.workingset.repetitions} reps"
+            )
+        elif self.workingset.distance or self.workingset.time:
+            expected_str = (
+                f"Set for {self.workingset.workout_exercise} "
+                f"- {self.workingset.distance} distance, "
+                f"{self.workingset.time} time"
+            )
+        else:
+            expected_str = f"Set for {self.workingset.workout_exercise} "
+
         self.assertEqual(str(self.workingset), expected_str)
 
     def test_delete_user_then_deletes_workingsets(self):

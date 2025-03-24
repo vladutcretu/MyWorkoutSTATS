@@ -221,27 +221,19 @@ class WorkingSetSerializer(serializers.ModelSerializer):
     Serializer for WorkingSet API View
     """
 
-    workout_id = serializers.IntegerField(
+    workout_exercise_id = serializers.IntegerField(
         write_only=True
-    )  # Accept workout id in POST
-    exercise_id = serializers.IntegerField(
-        write_only=True
-    )  # Accept exercise id in POST
-    workout_details = WorkoutSerializer(
-        read_only=True, source="workout"
-    )  # Return full workout details in GET
-    exercise_details = ExerciseSerializer(
-        read_only=True, source="exercise"
-    )  # Return full exercise details in GET
+    )  # Accept workout_exercise id in POST
+    workout_exercise_details = WorkoutExerciseSerializer(
+        read_only=True, source="workout_exercise"
+    )  # Return full workout_exercise details in GET
 
     class Meta:
         model = WorkingSet
         fields = [
             "id",
-            "workout_id",
-            "workout_details",
-            "exercise_id",
-            "exercise_details",
+            "workout_exercise_id",
+            "workout_exercise_details",
             "type",
             "weight",
             "repetitions",
@@ -253,17 +245,17 @@ class WorkingSetSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         """
-        Check if the workout and exercise are related and valid,
-        existing and owned by requested user).
+        Check if the workout_exercise exists and is owned by requested user
         """
         user = self.context["request"].user
-        workout_id = attrs.get("workout_id")
-        exercise_id = attrs.get("exercise_id")
+        workout_exercise_id = attrs.get("workout_exercise_id")
 
-        # Check if workout ID exists and is owned by requested user
+        # Check if workout_exercise ID exists and is owned by requested user
         try:
-            workout = Workout.objects.get(id=workout_id, user=user)
-        except Workout.DoesNotExist:
+            workout_exercise = WorkoutExercise.objects.get(
+                id=workout_exercise_id, user=user
+            )
+        except WorkoutExercise.DoesNotExist:
             raise serializers.ValidationError(
                 {
                     "workout": (
@@ -273,34 +265,7 @@ class WorkingSetSerializer(serializers.ModelSerializer):
                 }
             )
 
-        # Check if the exercise ID exists and is owned by requested user
-        try:
-            exercise = Exercise.objects.get(id=exercise_id, user=user)
-        except Exercise.DoesNotExist:
-            raise serializers.ValidationError(
-                {
-                    "exercise": (
-                        "User does not have the specified exercise. "
-                        "Please specify an existing exercise ID!"
-                    )
-                }
-            )
-
-        # Check if workout and exercise are related,
-        # exercise is not added to the workout
-        if not workout.exercises.filter(id=exercise_id).exists():
-            raise serializers.ValidationError(
-                {
-                    "exercise": (
-                        "The specified exercise is not associated with the "
-                        "specified workout. Please add exercise to the "
-                        "workout first!"
-                    )
-                }
-            )
-
-        attrs["workout"] = workout
-        attrs["exercise"] = exercise
+        attrs["workout_exercise"] = workout_exercise
         return attrs
 
 
@@ -365,12 +330,24 @@ class DetailedWorkoutSerializer(serializers.ModelSerializer):
         Get all exercises associated with this workout, alongside with their
         sets.
         """
-        workout_exercises = WorkoutExercise.objects.filter(
-            workout=obj
-        ).select_related(
-            "exercise"
+        workout_exercises = (
+            WorkoutExercise.objects.filter(workout=obj)
+            .select_related("exercise")
+            .prefetch_related("workingsets")
         )  # Optimized filter with select_related
-        serializer = DetailedExerciseSerializer(
-            workout_exercises, many=True, context={"workout_id": obj.id}
-        )
-        return serializer.data
+        # serializer = DetailedExerciseSerializer(
+        #     workout_exercises, many=True, context={"workout_id": obj.id}
+        # )
+        # return serializer.data
+
+        # Create a custom data structure for the response
+        exercises_data = []
+        for we in workout_exercises:
+            exercise_data = {
+                "sets": WorkingSetSerializer(
+                    we.workingsets.all(), many=True
+                ).data
+            }
+            exercises_data.append(exercise_data)
+
+        return exercises_data
