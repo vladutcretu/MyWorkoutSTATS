@@ -16,6 +16,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+# For test environment
+import sys
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -218,3 +221,12 @@ CACHES = {
         },
     }
 }
+
+# LocMemCache settings for test environment
+# Setting for command: python manage.py test
+if "test" in sys.argv:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }

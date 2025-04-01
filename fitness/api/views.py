@@ -1,6 +1,8 @@
 # Django & DRF
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 # App
 from fitness.models import (
@@ -33,6 +35,18 @@ class MuscleGroupAPIView(viewsets.ModelViewSet):
     ordering_fields = ["id", "name"]
     ordering = ["name"]
 
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="List_MuscleGroupAPIView")
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_MuscleGroupAPIView")
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
         """
         Only allow access to appropriate (owned) object(s)
@@ -57,6 +71,16 @@ class ExerciseAPIView(viewsets.ModelViewSet):
     search_fields = ["name"]
     ordering_fields = ["id"]
     ordering = ["-id"]
+
+    @method_decorator(cache_page(60 * 15, key_prefix="List_ExerciseAPIView"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_ExerciseAPIView")
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
         """
@@ -83,6 +107,16 @@ class WorkoutAPIView(viewsets.ModelViewSet):
     ordering_fields = ["id", "bodyweight", "public", "updated"]
     ordering = ["-id"]
 
+    @method_decorator(cache_page(60 * 15, key_prefix="List_WorkoutAPIView"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_WorkoutAPIView")
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
         """
         Only allow access to appropriate (owned) object(s)
@@ -106,6 +140,9 @@ class WorkoutExerciseAPIView(viewsets.ViewSet):
         """
         return WorkoutExercise.objects.filter(workout__user=self.request.user)
 
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="List_WorkoutExerciseAPIView")
+    )
     def list(self, request):
         """
         List (GET) all workout - exercise relationships for the requested user
@@ -133,6 +170,9 @@ class WorkoutExerciseAPIView(viewsets.ViewSet):
         order = WorkoutExercise.objects.filter(workout=workout).count() + 1
         serializer.save(order=order)
 
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_WorkoutExerciseAPIView")
+    )
     def retrieve(self, request, pk=None):
         """
         Read/Retrieve (GET) a single workout - exercise relationship
@@ -195,6 +235,16 @@ class WorkingSetAPIView(viewsets.ModelViewSet):
     ]
     ordering = ["-id"]
 
+    @method_decorator(cache_page(60 * 15, key_prefix="List_WorkingSetAPIView"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_WorkingSetAPIView")
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
         """
         Only allow access to appropriate (owned) object(s)
@@ -219,6 +269,18 @@ class DetailedWorkoutAPIView(viewsets.ReadOnlyModelViewSet):
     search_fields = ["name"]
     ordering_fields = ["id", "bodyweight", "public", "updated"]
     ordering = ["-id"]
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="List_DetailedWorkoutAPIView")
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(
+        cache_page(60 * 15, key_prefix="Retrieve_DetailedWorkoutAPIView")
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
         """Only allow access to appropriate (owned) object(s)"""
