@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% load socialaccount %}
+
 {% block content %}
 <head>
     <title>{% block title %}Log In{% endblock title %}</title>
@@ -7,7 +9,7 @@
 
 <body>
 <div class="base-body">
-    <h3>Log In</h3>
+    <h3>Log In using your personal MyWorkoutSTATS account</h3>
     <hr>
     <br>
 
@@ -24,17 +26,30 @@
     </form>
 
     {% if messages %}
-        <p>Login attempt unsuccessful:</p>
+        <p>Log In attempt unsuccessful:</p>
         <ul class="messages">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
+</div>
 
+<div class="base-body">
+    <h3>Log In using your personal Google account</h3>
+    <hr>
     <br>
-    <p>Forgot username or password? <a href="{% url "recover" %}"><b>Recover account</b></a></p>
-    <p>Haven't signed up yet? <a href="{% url 'signup' %}"><b>Sign Up</b></a></p>
+
+    <a href="{% provider_login_url 'google' %}" class="button addBtn">Sign In with Google</a>
+</div>
+
+<div class="base-body">
+    <h3>Creating or recovering an account</h3>
+    <hr>
+    <br>
+
+    <p>Haven't signed up yet? <a href="{% url 'signup' %}" class="button addBtn"><b>Create account</b></a></p>
+    <p>Forgot username or password? <a href="{% url "recover" %}" class="button editBtn"><b>Recover account</b></a></p>
 </div>
 </body>
 {% endblock content %}

@@ -52,6 +52,11 @@ INSTALLED_APPS = [
     "drf_spectacular",
     # 3rd party apps
     "debug_toolbar",
+    # OAuth apps
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -64,6 +69,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     # My middlewares
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     # Default middlewares
     "django.middleware.security.SecurityMiddleware",
@@ -230,3 +236,37 @@ if "test" in sys.argv:
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         }
     }
+
+
+# django-allauth library
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by email
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APP": {
+            "client_id": GOOGLE_CLIENT_ID,
+            "secret": GOOGLE_CLIENT_SECRET,
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+    }
+}
+
+LOGIN_REDIRECT_URL = "main"
+LOGOUT_REDIRECT_URL = "main"
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Improved UI for Google Login

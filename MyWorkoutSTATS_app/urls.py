@@ -50,6 +50,8 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    # Allauth urls
+    path("accounts/", include("allauth.urls")),
 ] + debug_toolbar_urls()
 
 # Needed for use media content (profile pics)
