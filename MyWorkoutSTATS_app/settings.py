@@ -19,6 +19,9 @@ from dotenv import load_dotenv
 # For test environment
 import sys
 
+# For JWT settings
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,11 +35,11 @@ SECRET_KEY = (
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]
-# ALLOWED_HOSTS = ["vladutcretu.pythonanywhere.com"]
+# ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["vladutcretu.pythonanywhere.com"]
 
 
 # Application definition
@@ -47,7 +50,7 @@ INSTALLED_APPS = [
     "fitness",
     # API apps
     "rest_framework",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "django_filters",
     "drf_spectacular",
     # 3rd party apps
@@ -186,7 +189,7 @@ WGER_API_PASSWORD = os.getenv("WGER_API_PASSWORD")
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -270,3 +273,10 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL = "main"
 LOGOUT_REDIRECT_URL = "main"
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Improved UI for Google Login
+
+
+# JWT settings
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}

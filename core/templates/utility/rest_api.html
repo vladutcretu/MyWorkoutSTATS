@@ -29,38 +29,72 @@
     <hr>
     <br>
 
-    <p>API endpoints, such as the list of workouts or exercises are user owned objects and can be accessed only with authentication.</p>
-    <p>To have access you need to generate a temporary token which you send in the header with each request that needs authorization.</p>
-    <p>Please follow the next steps to generate a token (instructions are for a tool like Postman):</p>
+    <p>Some API endpoints, such as the list of workouts or exercises are private (because they contain user owned objects) and can be accessed only with authentication.</p>
+    <p>A list of public and private endpoints is available further in this page or they can be found reading API documentation.</p>
+    <p>To have access to a private endpoint you need to generate a temporary token which you send in the header with each request that needs authorization.</p>
+    <p>Please follow the next steps to generate access token:</p>
 
     <ol type="1">
-        <li>Sign Up</li>
+        <li>Sign Up or Log In</li>
             <p>
-                If you aren't already registered you can accomplish it using a POST request to the <b>/api/signup/</b> url:
+                If you aren't already registered you can generate tokens (and register an account) using a POST request to the <b>/api/signup/</b> url:
                 {
                     "username": "string",
                     "email": "user@example.com",
                     "password": "string"
                 }
             </p>
+            <p>
+                Output should be:
+                {
+                    "message": "User account (via API) successfully created",
+                    "username": "string",
+                    "email": "user@example.com",
+                    "refresh token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                    "access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
 
-        <li>Log In</li>
+            <br><br>
+
             <p> 
-                To get an access token (eg. "98e9edade0489ccf4605b...") you need to send username and password via POST request to the <b>/api/login/</b> url:
+                If you are already registered you can generate tokens (and login account) using a POST request to the <b>/api/login/</b> url:
                 {
                     "username": "string",
                     "password": "string"
                 }
-            <p>
-
-        <li>Authorization with token</li>
-            <p>
-                Pass the access token in the Authorization header as "Authorization: Token 98e9edade0489ccf4605b..."
-                to every private endpoint.
             </p>
+                Output should be:
+                {
+                    "message": "Successfully logged in (via API).",
+                    "username": "user@example.com",
+                    "refresh token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                    "access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            <p>
 
-        <li>Log Out</li>
-            <p>If your token was compromised you can send a POST request to the <b>/api/logout/</b> to make it unavailable.</p>
+        <li>Authorization with token and Refreshing the token</li>
+            <p>
+                Pass the access token in the Authorization header as "Authorization: Bearer <b>access token value</b>" to every private endpoint.
+            </p>
+            <p>
+                Please be aware that access token is valid for 60 minutes.
+                When your access token expire or it has been compromised you can generate a new one sending refresh token via a POST request to the <b>/api/token/refresh/</b> url:
+                {
+                    "username": "string",
+                    "password": "string",
+                    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            </p>
+            <p>
+                Output should be:
+                {
+                    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            </p>
+            <p>
+                Please be aware that refresh token is valid for 1 day.
+                When your refresh token expire or it has been compromised you can generate a new one logging in.
+            </p>
     </ol>
 </div>
 
@@ -74,7 +108,7 @@
     <ul>
         <li>Sign Up: /api/signup/</li>
         <li>Log In: /api/login/</li>
-        <li>Log Out: /api/logout/</li>
+        <li>Refresh token: /api/token/refresh/</li>
     </ul>
     
     <h4>Private endpoints:</h4>

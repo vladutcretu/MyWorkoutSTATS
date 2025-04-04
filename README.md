@@ -38,14 +38,15 @@ A web app that works as a workout notebook. It helps people to plan their workou
 - 🚀 [Django 5.1](https://www.djangoproject.com) framework for the backend.
    - 🗃️ Django ORM to query a [SQLite](https://www.sqlite.org) database.
    - 🐛 [Django unittest](https://docs.djangoproject.com/en/5.1/topics/testing/overview/) for testing the code.
+   - 🔐 [Django-allauth](https://docs.allauth.org/en/dev/introduction/index.html) for signing up and logging in with social account.
 - 🖧  [Django REST framework](https://www.django-rest-framework.org) to    create the RESTful API.
    - 🌐 [Postman](https://www.postman.com) for testing the API endpoints.
+   - 🔑 [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/index.html) to authorize API endpoints access.
    - 📜 [drf-spectaclar](https://github.com/tfranzel/drf-spectacular/) to generate the API documentation.
 - ♻️ [GitHub Actions](https://github.com/features/actions) to implement a CI/CD pipeline.
 - 🧶 [Flake8](https://flake8.pycqa.org/en/latest/) for linting and [Black](https://black.readthedocs.io/en/stable/) for code formatting.
 - 🐋 [Docker Compose](https://www.docker.com/) for development and containerize app with Redis.
 - ♨️ [Django-redis](https://github.com/jazzband/django-redis) to leverage caching.
-- 🔐 [Django-allauth](https://docs.allauth.org/en/dev/introduction/index.html) for signing up and logging in with social account.
 
 
 ## Try the APP

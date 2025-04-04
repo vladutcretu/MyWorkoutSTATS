@@ -28,6 +28,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+# API JWT Auth
+from rest_framework_simplejwt.views import TokenRefreshView
+
+
 # 3rd party library
 from debug_toolbar.toolbar import debug_toolbar_urls
 
@@ -52,6 +56,10 @@ urlpatterns = [
     ),
     # Allauth urls
     path("accounts/", include("allauth.urls")),
+    # JWT auth urls
+    path(
+        "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
+    ),
 ] + debug_toolbar_urls()
 
 # Needed for use media content (profile pics)

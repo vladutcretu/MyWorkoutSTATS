@@ -2,7 +2,8 @@
 from rest_framework import generics, permissions, throttling, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 # App
 from core.api.serializers import (
@@ -10,6 +11,14 @@ from core.api.serializers import (
     LogInSerializer,
     CustomUserSerializer,
 )
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
+    }
 
 
 class SignUpAPIView(generics.CreateAPIView):
@@ -25,11 +34,14 @@ class SignUpAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        tokens = get_tokens_for_user(user)
         return Response(
             {
                 "message": "User account (via API) successfully created",
                 "username": user.username,
                 "email": user.email,
+                "refresh token": tokens["refresh"],
+                "access token": tokens["access"],
             },
             status=status.HTTP_201_CREATED,
         )
@@ -46,32 +58,18 @@ class LogInAPIView(APIView):
         serializer = LogInSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
-            token, created = Token.objects.get_or_create(user=user)
+            tokens = get_tokens_for_user(user)
             return Response(
                 {
                     "message": "Successfully logged in (via API).",
                     "username": user.username,
-                    "token": token.key,
+                    "refresh token": tokens["refresh"],
+                    "access token": tokens["access"],
                 },
                 status=status.HTTP_200_OK,
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LogOutAPIView(APIView):
-    """
-    API endpoint for log out
-    """
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        request.user.auth_token.delete()
-        return Response(
-            {"message": "Successfully logged out (via API)."},
-            status=status.HTTP_200_OK,
-        )
 
 
 class CustomUserAPIView(generics.RetrieveUpdateDestroyAPIView):
